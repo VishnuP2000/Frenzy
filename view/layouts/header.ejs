@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla - Bootstrap eCommerce Template</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/icons/site.html">
+    <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="/assets/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="/assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/plugins/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="/assets/css/plugins/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="/assets/css/plugins/jquery.countdown.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/skins/skin-demo-7.css">
+    <link rel="stylesheet" href="/assets/css/demos/demo-7.css">
+     <!-- SweetAlert2 CSS File -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+           <!-- update sweet alert -->
+     <style>
+       .custom-swal-width {
+          width: 421px; /* or any other larger value */
+            /* width: 100%; */
+            height: 298px;
+        }
+    </style>
+</head>
+<header class="header header-7">
+  
+    <div class="header-middle sticky-header">
+        <div class="container-fluid">
+            <div class="header-left">
+                <button class="mobile-menu-toggler">
+                    <span class="sr-only">Toggle mobile menu</span>
+                    <i class="icon-bars"></i>
+                </button>
+                
+                <a href="index.html" class="logo">
+                    <img src="/assets/images/demos/demo-7/logo.png" alt="Molla Logo" width="105" height="25">
+                </a>
+
+                <nav class="main-nav">
+                    <ul class="menu sf-arrows">
+                        <li class="megamenu-container active">
+                            <a href="index.html" class="sf-with">Home</a>
+
+                        
+                        </li>
+                        <li>
+                            <a href="/shope" class="sf-with">Shop</a>
+
+                           
+                        </li>
+                        <li>
+                            <a href="product" class="sf-with">contact</a>
+
+                        
+                        </li>
+                        <li>
+                            <a href="#" class="sf-with">Pages</a>
+
+                           
+                        </li>
+                        
+                        </li>
+                       
+                    </ul><!-- End .menu -->
+                </nav><!-- End .main-nav -->
+            </div><!-- End .header-left -->
+
+            <div class="header-right">
+               
+                
+                <div class="dropdown cart-dropdown">
+                   
+                    <% if(name){ %>
+                        
+                        <!-- <a href="/homeLogout" style="color: #000;;"><img src="/userImages/logout.png"  style="max-width: 44px;margin-right: 41px;" alt="">Logout</a> -->
+                        <a href="javascript:void(0)" id="logout" style="color: #000;"><img src="/userImages/logout.png" style="max-width: 44px;margin-right: 41px;" alt="">Logout</a>                        
+                        <% }else{ %>
+
+                            <a href="/login" style="color: #000;;"><img src="/userImages/enter.png"  style="max-width: 44px;margin-right: 41px;" alt="">Login</a>
+
+             <%  } %>
+                        
+                
+
+                   
+                </div><!-- End .cart-dropdown -->
+            </div><!-- End .header-right -->
+        </div><!-- End .container-fluid -->
+    </div><!-- End .header-middle -->
+    <script>
+        document.getElementById('logout').addEventListener('click', function() {
+          Swal.fire({
+            title: "Are you sure you want to logout?",
+            text: "You will be logged out of your account.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, logout!",
+            customClass: {
+        popup: 'custom-swal-width'
+      }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/homeLogout";
+            }
+          });
+        });
+      </script>
+</header><!-- End .header -->
+<body>

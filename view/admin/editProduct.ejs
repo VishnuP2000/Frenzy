@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Page</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<script>
+    
+</script>
+<body>
+  <div class="container mt-5" style="background-color:#d5e6d4">
+    <h1 class="mb-4">Edit Product</h1>
+    <form action="/admin/AddProduct" method="POST" enctype="multipart/form-data">
+      <p><%= errmsg %></p>
+        <input type="hidden" name="productId" value="<%editData._id %>">
+      <div class="form-group">
+        <label for="name">Product Name</label>
+        <input type="text" class="form-control" id="name" value="<%=editData.name %>" name="name" placeholder="Enter product name">
+      </div>
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input type="text" class="form-control" id="category" value="<%=editData.category.name %>" name="category" placeholder="Enter category">
+      </div>
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price" value="<%=editData.price %>" name="price" placeholder="Enter price">
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="number" class="form-control" id="quantity" value="<%=editData.quantity %>" name="quantity" placeholder="Enter quantity">
+      </div>
+      <div class="form-group">
+        <label for="image">Product Image</label>
+        <input type="file" class="form-control-file" id="image"  name="image">
+        <% editData.images.forEach((img)=>{ %>
+            <img src="/userImages/<%=img%>" alt="No Images" style="width: 100px;">
+            <input type="hidden" name="existingImages" value="<%=img %>">
+        <% })  %> 
+      </div>
+      
+      
+      <button type="submit" class="btn " style="background-color: #4CAF50;">Save</button>
+      <button type="button" class="btn btn-secondary" onclick="window.location.href='/products'">Cancel</button>
+    </form>
+  </div>
+<style>
+
+    body {
+  background-color: #f8f9fa;
+}
+
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+}
+</style>
+</body>
+</html>

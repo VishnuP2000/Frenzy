@@ -1,0 +1,100 @@
+<%- include('../layouts/adminHead.ejs') %>
+
+    <body>
+        <div class="screen-overlay"></div>
+        <%- include('../layouts/aside.ejs') %>
+        <main class="main-wrap">
+            <%- include('../layouts/adminHeader.ejs') %>
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Products List</h2>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <div>
+                        
+                        <a href="/admin/AddProduct" class="btn btn-primary btn-sm rounded">Add Product</a>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                           <div  class="text-center" > <th scope="col">Images</th></div>
+                            <th scope="col">Offer</th>
+                            <th scope="col">Offer Price</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <% if(productDetails.length >0){ %>
+                                <% productDetails.forEach((val,i)=>{%>
+
+                            <td> <%= val.name  %></td>
+                            <td><%= val.category.name %></td>                           
+                            <td><%= val.price  %></td>
+                            <td><%= val.quantity  %></td>
+
+                            <td>
+                                <% val.images.forEach((image)=>{ %>
+
+                                    <img src="/userImages/<%= image %>" class="img-sm img-thumbnail" alt="Item"style="margin-left: -9px" />
+                                <% }) %>
+                            </td>
+                                
+                            <td>No</td>
+                            <td>-</td>
+                            <td>
+                                <% console.log('id',val._id) %>
+                                <a href="/admin/editProduct?editId=<%=val._id %>"class="btn btn-sm font-sm rounded btn-brand" >Edit</a>
+                                <a href="/admin/deletProduct?deletId=<%=val._id %>"class="btn btn-sm font-sm btn-light rounded" >Delete</a>
+                            </td>
+                        </tr>
+                        
+
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                    <% }) %>
+
+                    <%  } else{%>
+                        <p>NO Products</p>
+                    <%  }%>
+                </table>
+                <!-- card end// -->
+                <div class="pagination-area mt-30 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03</a></li>
+                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+            <!-- content-main end// -->
+            <footer class="main-footer font-xs">
+                <div class="row pb-30 pt-15">
+                    <div class="col-sm-6">
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        &copy; Nest - HTML Ecommerce Template .
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end">All rights reserved</div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+       <%- include('../layouts/footer.ejs') %>
+    </body>
+</html>

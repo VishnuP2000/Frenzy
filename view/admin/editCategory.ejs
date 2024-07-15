@@ -1,0 +1,45 @@
+<%- include('../layouts/adminHead.ejs') %>
+
+<body>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="login-container card p-4 shadow-sm" style="background-color: #d5e6d4;
+        width: 400px;">
+        <p style="color: red;font-size: 25px;"><%=findError%></p>
+            <h2 class="card-title text-center mb-4">Edit category</h2>
+            <form id="form" action="/admin/changeCategory?categoryId=<%=categoryId %>" method="post">
+                <div class="form-group">
+                    <label for="username">Name</label>
+                    <input type="text" id="name" value="<%= name %>" class="form-control" id="username" name="name" >
+                    <span class="text-danger" id="nameError"></span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block" style="margin-bottom: -48px;">Update</button>
+            </form>
+            <div id="error-message" class="text-danger mt-3"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<script>
+    form.addEventListener('submit',function(event){
+        let name = document.getElementById('name').value.trim()
+       
+
+        let nameError = document.getElementById('nameError')
+        if(name ===''){
+            nameError.textContent = 'Please enter a name';
+            event.preventDefault();
+            return;
+        }else{
+            nameError.textContent = ''
+        }
+
+       
+    });
+</script>

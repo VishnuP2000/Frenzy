@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+</head>
+<body style="padding-left: 591px; padding-top: 52px; margin-top: 77px;" >
+    <div>
+        <h1 style="    margin-left: 48px;">OTP Verification</h1>
+    </div>
+  
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OTP Verification</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            /* Custom CSS */
+            .otp-input {
+                width: 40px;
+                height: 40px;
+            }
+            .otp-label {
+                margin-top: 72px;
+            }
+            .resend-link {
+                margin-left: 121px;
+            }
+            .verify-btn {
+                margin-left: 147px;
+                margin-top: 42px;
+            }
+            /* Adjustments for smaller screens */
+            @media (max-width: 576px) {
+                .verify-btn {
+                    margin-top: 12px; /* Adjust margin for smaller screens */
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            
+            <form action="/paswordOtp" method="post" style="margin-top: 46px;">
+                <p style="margin-left: 131px;color: red;" ></p>
+                <input type="hidden" name="email">
+                <div style="margin-left: 86px;" class="form-group d-flex ">
+                    <!-- <label class="otp-label" for="otp">Enter OTP:</label> --> 
+                    <input class="form-control otp-input" type="text" id="otp1" name="otp1" required>
+                    <input class="form-control otp-input" type="text" id="otp2" name="otp2" required>
+                    <input class="form-control otp-input" type="text" id="otp3" name="otp3" required>
+                    <input class="form-control otp-input" type="text" id="otp4" name="otp4" required>
+                </div>
+                
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary verify-btn">Verify</button>
+                </div>
+            </form>
+            <div style="margin-top:1px;" class="form-group" >
+                
+
+                <!-- <a href="/resend?email=" style="margin-left: 134px;">  RESEND OTP</a> -->
+              
+            </div>
+        </div>
+    </body>
+    </html>
+    
+</body>
+</html>

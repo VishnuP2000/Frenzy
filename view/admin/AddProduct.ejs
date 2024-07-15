@@ -1,0 +1,123 @@
+<%- include('../layouts/adminHead.ejs') %>
+<body>
+    <h1>Add Product</h1>
+    <form id="productForm" class="form-group" action="/admin/AddProduct" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="name" class="form-control">
+            <small id="nameError" class="form-text text-danger"></small>
+        </div>
+        
+        <div class="form-group">
+            <label for="productSelectCategory">Category:</label>
+            <select id="productSelectCategory" name="category" class="form-control">
+                <% category.forEach(element => { %>
+                    <option value="<%= element._id %>"><%= element.name %></option>
+                <% }); %>
+            </select>
+            <small id="categoryError" class="form-text text-danger"></small>
+        </div>
+        
+        <div class="form-group">
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" name="price" class="form-control">
+            <small id="priceError" class="form-text text-danger"></small>
+        </div>
+        
+        <div class="form-group">
+            <label for="productQuantity">Quantity:</label>
+            <input type="number" id="productQuantity" name="quantity" class="form-control">
+            <small id="quantityError" class="form-text text-danger"></small>
+        </div>
+        
+        <div class="form-group">
+            <label for="productUploadImage">Images:</label>
+            <input type="file" id="images" name="images" class="form-control" multiple>
+            <small id="imageError" class="form-text text-danger"></small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+
+    <ul id="productList" class="list-group product-list"></ul>
+
+    <script>
+        document.getElementById('productForm').addEventListener('submit', function(event) {
+            let isValid = true;
+
+            // Clear previous error messages
+            document.getElementById('nameError').textContent = '';
+            document.getElementById('categoryError').textContent = '';
+            document.getElementById('priceError').textContent = '';
+            document.getElementById('quantityError').textContent = '';
+            document.getElementById('imageError').textContent = '';
+
+            // Validate Product Name
+            const productName = document.getElementById('productName').value.trim();
+            if (productName === '') {
+                isValid = false;
+                document.getElementById('nameError').textContent = 'Product Name is required.';
+            }
+
+            // Validate Category
+            const productCategory = document.getElementById('productSelectCategory').value.trim();
+            if (productCategory === '') {
+                isValid = false;
+                document.getElementById('categoryError').textContent = 'Category is required.';
+            }
+
+            // Validate Price
+            const productPrice = document.getElementById('productPrice').value.trim();
+            if (productPrice === '' || isNaN(productPrice) || productPrice <= 0) {
+                isValid = false;
+                document.getElementById('priceError').textContent = 'Valid Price is required.';
+            }
+
+            // Validate Quantity
+            const productQuantity = document.getElementById('productQuantity').value.trim();
+            if (productQuantity === '' || isNaN(productQuantity)) {
+                isValid = false;
+                document.getElementById('quantityError').textContent = 'Valid Quantity is required.';
+            }
+
+            // Validate Images
+            const images = document.getElementById('images').files;
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            for (let i = 0; i < images.length; i++) {
+                if (!validImageTypes.includes(images[i].type)) {
+                    isValid = false;
+                    document.getElementById('imageError').textContent = 'Only image files are allowed (jpeg, png, gif).';
+                    break;
+                }
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+    <style>
+        body {
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .product-list {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .text-danger {
+            color: red;
+        }
+    </style>
+</body>
+</html>

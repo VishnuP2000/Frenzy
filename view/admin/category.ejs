@@ -1,0 +1,226 @@
+<%- include('../layouts/adminHead.ejs') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <body>
+        <div class="screen-overlay"></div>
+        <%- include('../layouts/aside.ejs') %>
+            <main class="main-wrap">
+                <%- include('../layouts/adminHeader.ejs') %>
+                    <section class="content-main">
+                        <div class="content-header">
+                            <div>
+                                <h2 class="content-title card-title">Categories</h2>
+                                <p>Add, edit or delete a category</p>
+                            </div>
+                            <div>
+                                <p style="color: red;font-size: 25px;"><%=errorMessage%></p>
+                            </div>
+                            <div>
+                                <input type="text" placeholder="Search Categories" class="form-control bg-white" />
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <form action="/admin/addCategory" method="post"
+                                            onsubmit="return validateForm(event)">
+                                            <div class="mb-4">
+                                                <label for="product_name" class="form-label">Name</label>
+                                                <input type="text" name="name" placeholder="Type here"
+                                                    class="form-control" id="product_name" />
+                                            </div>
+                                            <div class="mb-4">
+                                                <label class="form-label">Description</label>
+                                                <textarea placeholder="Type here" name="discription"
+                                                    class="form-control"></textarea>
+                                            </div>
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="" />
+                                                            </div>
+                                                        </th>
+
+                                                        <th>Name</th>
+                                                        <th>Description</th>
+
+                                                        <th class="text-end">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <% if(categoryData.length>0){ %>
+                                                            <% categoryData.forEach((value)=>{ %>
+                                                                <td class="text-center">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="" />
+                                                                    </div>
+                                                                </td>
+
+                                                                <td><b>
+                                                                        <%= value.name %>
+                                                                    </b></td>
+                                                                <td><b>
+                                                                        <%=value.discription %>
+                                                                    </b></td>
+
+                                                                <td class="text-end">
+                                                                    <div class="dropdown">
+
+                                                                        <a href="#" data-bs-toggle="dropdown"
+                                                                            class="btn btn-light rounded btn-sm font-sm">
+                                                                            <i class="material-icons md-more_horiz"></i>
+                                                                        </a>
+                                                                        <div class="dropdown-menu">
+                                                                            <% if(value.is_Listed==true){ %>
+                                                                                <a class="dropdown-item"
+                                                                                    id="category_ids<%=value._id %>"
+                                                                                    onclick="categoryShow('<%=value._id %>')"
+                                                                                    href="#">list</a>
+                                                                                <% }else{ %>
+                                                                                    <a class="dropdown-item"
+                                                                                        id="category_ids<%=value._id %>"
+                                                                                        onclick="categoryShow('<%=value._id %>')"
+                                                                                        href="#">Unlist</a>
+                                                                                    <% } %>
+                                                                                        <a class="dropdown-item text-danger"
+                                                                                            href='/admin/editCategory?categoryId=<%= value._id %>'>Edit</a>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <!-- dropdown //end -->
+                                                                </td>
+                                                    </tr>
+                                                    <% }) %>
+                                                        <% } %>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- .col// -->
+                                </div>
+                                <!-- .row // -->
+                            </div>
+                            <!-- card body .// -->
+                        </div>
+                        <!-- card .// -->
+                    </section>
+                    <!-- content-main end// -->
+                    <footer class="main-footer font-xs">
+                        <div class="row pb-30 pt-15">
+                            <div class="col-sm-6">
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                                &copy; Nest - HTML Ecommerce Template .
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-end">All rights reserved</div>
+                            </div>
+                        </div>
+                    </footer>
+            </main>
+            <script>
+                function categoryShow(categoryId) {
+                    // console.log('function',categoryId);
+                    cat = document.getElementById(`category_ids${categoryId}`)
+                    fetch(`/admin/categoryShow?id=${categoryId}`, {
+
+                        method: 'get',
+
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error("ok")
+                            }
+                            return response.json()
+                        })
+                        .then((data) => {
+                            console.log(data);
+                            if (data.is_Listed == false) {
+                                cat.textConunlist = "list";
+                                cat.className = "dropdown-item";
+                            } else {
+                                window.location.reload()
+                                cat.textContent = "unlist";
+                                cat.className = "dropdown-item";
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error + "fetch issue");
+                        })
+                }
+            </script>
+            <script>
+                form.addEventListener('submit', function (event) {
+                    let name = document.getElementById('product_name').value.trim()
+                    let discription = document.getElementById('form-control').value.trim()
+
+                    let nameError = document.getElementById('nameError')
+                    if (name === '') {
+                        nameError.textContent = 'Please enter a name';
+                        event.preventDefault();
+                        return;
+                    } else {
+                        nameError.textContent = ''
+                    }
+
+                    let discError = document.getElementById('discError');
+                    if (discription === '') {
+                        discError.textContent = 'Please give a disciption'
+                        event.preventDefault();
+                        return;
+                    } else {
+                        discError.textContent = ''
+                    }
+                });
+            </script>
+            <script>
+                function validateForm() {
+                    const name = document.getElementById('product_name').value.trim();
+                    const description = document.querySelector('textarea[name="discription"]').value.trim();
+
+                    if (!name) {
+                        alert("Name cannot be empty");
+                        return false;
+                    }
+                    if (!description) {
+                        alert("Description cannot be empty");
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+
+            <script>
+                function validateForm(event) {
+                    const name = document.getElementById('product_name').value.trim();
+                    const description = document.getElementsByName('discription')[0].value.trim();
+
+                    if (name === '' || description === '') {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                            footer: '<a href="#">Why do I have this issue?</a>'
+                        });
+                        event.preventDefault();
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+
+            <%- include('../layouts/footer.ejs') %>
