@@ -399,14 +399,70 @@ const DetailProduct = async (req, res) => {
         const proId = req.query.ProductId
         console.log('pro id', proId);
         const product = await Product.find({ _id: proId }).populate('category')
-        const category=await cat.find({})
+        const category=await cat.find({ _id: proId }).populate('category')
         
         if (proId) {
 
-            res.render('user/productDetail', { product })
+            res.render('user/productDetail', {product,category})
         }
     } catch (error) {
         console.log('error', error)
+    }
+}
+
+
+
+const googleAuth = async (req, res) => {
+    try {
+
+
+        // let googleid =mongoose.createFromHexString(req.user.id)
+
+
+        let googleId = req.user.id
+
+        let usergoogle = await User.findOne({ googleId: googleId })
+
+
+
+        if (usergoogle) {
+
+            req.session.user_id = usergoogle._id
+            console.log('it is inside of the existing googleauth')
+            res.redirect('/')
+
+        } else {
+          
+
+            const googleRegister = new User({
+                username: req.user.name.givenName,
+                email: req.user.email,
+                googleId: req.user.id,
+                is_verified: 1
+            })
+
+ 
+            let googledoc = await googleRegister.save()
+
+            //create wallet
+
+            let createWallet = new Wallet({
+                balance: 0,
+                userId: googledoc._id,
+            })
+            await createWallet.save()
+            // req.session.user_id = req.user._id
+            req.session.user_id = googledoc._id
+            console.log(req.session.user_id)
+            res.redirect('/')
+        }
+
+
+
+
+
+    } catch (error) {
+        console.log(error)
     }
 }
 
@@ -531,6 +587,7 @@ module.exports = {
     verifyresendOtp,
     logoutHome,
     DetailProduct,
+    googleAuth,
     mailVarify,
     verifyMail,
     paswordOtp,

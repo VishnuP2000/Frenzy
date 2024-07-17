@@ -1,10 +1,37 @@
-const express = require('express')
+const express = require('express');
+const router = express.Router();
+
+const passport = require('passport');
+require('../passport')
+router.use(passport.initialize());
+router.use(passport.session());
+
+
+
 const user_Rout = express()
 console.log('iam reached the user page')
 const userController = require('../controller/userController')
 const flash=require('express-flash')
 
 user_Rout.use(flash())
+
+
+//Auth google 
+router.get('/auth/google', passport.authenticate('google', {
+    scope:
+        ['email', 'profile']
+}))
+
+//Auth Callback
+router.get('/auth/google/callback',
+    passport.authenticate('google', {
+        successRedirect: '/success'
+    })
+)
+//google auth 
+
+router.get('/success', userController.googleAuth)
+
 
 // const consig=require('..')
 user_Rout.set('view engine','ejs')

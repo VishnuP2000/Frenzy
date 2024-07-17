@@ -31,7 +31,7 @@ app.use(express.static(publicPath));
 
 
 app.use(session({
-    secret: 'MySessionSecret',
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
 }))

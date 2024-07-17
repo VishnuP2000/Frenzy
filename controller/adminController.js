@@ -305,37 +305,52 @@ const ProductEdit=async(req,res)=>{
         console.log('error',error);
     }
 }
-const updateProduct=async (req,res)=>{
+const updateProduct = async (req, res) => {
     try {
-        const {name,productId,category,price,quantity}=req.body
-        const exist=await sProduct.findOne({name:name})
-        if(exist&& exist._id.toString() != productId){
-            req.flash('errmsg','Sorry this product is already existing!!')
-            return res.redirect('/admin/editProduct')
-        }else{
-            const images = req.files.images ? req.files.images.map(file => file.filename): []
-
-            const editStatus = await sProduct.findByIdAndUpdate({_id: productId},{
-                $set: {
-                    name: name,
-                    price: price,
-                    quantity: quantity,
-                    images: images.length ? images : req.body.existingImages,
-                    category: category,
-                    is_blocked: false
-                }
-            },{new: true});
-
-            if(editStatus){
-                res.redirect('/admin/product');
-            }else{
-                res.status(500).json({error: 'Internal server error',message: 'cant update product'})
-            }
+      const { name, productId, category, price, quantity } = req.body;
+      const exist = await sProduct.findOne({ name: name });
+  
+      if (exist && exist._id.toString() != productId) {
+        req.flash('errmsg', 'Sorry this product already exists!!');
+        return res.redirect('/admin/editProduct');
+      } else {
+        // Check if files are uploaded
+        let images = [];
+        if (req.files && req.files.length > 0) {
+          images = req.files.map(file => file.filename);
+        } else {
+          // If no new images, use existing ones
+          images = req.body.existingImages ? (Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages]) : [];
         }
-    } catch (error) {
-        console.log(error);
+  
+        const editStatus = await sProduct.findByIdAndUpdate(
+          { _id: productId },
+          {
+            $set: {
+              name: name,
+              price: price,
+              quantity: quantity,
+              images: images,
+              category: category,
+              is_blocked: false
+            }
+          },
+          { new: true }
+        );
+  
+        if (editStatus) {
+          res.redirect('/admin/product');
+        } else {
+            console.log('update edit')
+            res.status(500).json({ error: 'Internal server error', message: 'Cannot update product' });
+        }
     }
-}
+} catch (error) {
+        
+      console.log('update edit',error);
+      res.status(500).json({ error: 'Internal server error', message: 'An error occurred' });
+    }
+  };
 
 const deletProduct=async(req,res)=>{
     try {
