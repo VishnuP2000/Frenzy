@@ -771,6 +771,55 @@ const verifyAddress = async (req, res) => {
     }
 };
 
+const deleteAddress=async(req,res)=>{
+    try {
+        console.log('entet the deleteAddress')
+        const del=req.query.delId
+        console.log('del',del)
+        if(del){
+            
+            console.log('entet the del',del)
+           await userAddress.deleteMany({_id:del}) 
+            res.redirect('/Dashboard')
+        }
+       
+    } catch (error) {
+        
+    }
+}
+
+const LoadEditAddress=async(req,res)=>{
+    try {
+        console.log('enter the LoadEditAddress')
+        const editid=req.query.editId
+        console.log('editid',editid)
+        const addresData=await userAddress.find({_id:editid})
+        if(addresData){
+
+            console.log('enter the addresData',addresData)
+            res.render('user/editAddress',{addresData})
+        }
+    } catch (error) {
+        console.log('error')
+    }
+}
+
+const verifyEditAddress=async(req,res)=>{
+    try {
+        console.log('enter the verifyEditAddress')
+        const editid=req.query.editId
+        const { firstName, lastName, country, streetName, town, state, postCode, phone, email} = req.body;
+        const verify=await userAddress.find({_id:editid})
+        if(verify){
+            console.log('enter the verify')
+            const changeAddress=await userAddress.findOneAndUpdate({firstName, lastName, country, streetName, town, state, postCode, phone, email})
+            res.redirect('/Dashboard')
+        }
+    } catch (error) {
+        
+    }
+}
+
 
 module.exports = {
     loadHome,
@@ -801,7 +850,10 @@ module.exports = {
     LoadEditProfile,
     editProfile,
     LoadAddress,
-    verifyAddress
+    verifyAddress,
+    deleteAddress,
+    LoadEditAddress,
+    verifyEditAddress
    
 
 }

@@ -64,13 +64,13 @@
 
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
-                                <li class="megamenu-container active">
-                                    <a href="" class="sf-with">Home</a>
+                                <li class="megamenu-container">
+                                    <a href="/" class="sf-with">Home</a>
 
                                    
                                 </li>
                                 <li>
-                                    <a href="" class="sf-with">Shop</a>
+                                    <a href="/shope" class="sf-with">Shop</a>
 
                                     
                                 </li>
@@ -206,8 +206,8 @@
                 <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
                     <div class="container">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/shope">Shop</a></li>
                             <li class="breadcrumb-item active" aria-current="page">My Account</li>
                         </ol>
                 </div><!-- End .container -->
@@ -232,7 +232,7 @@
 								   
 								    <li class="nav-item">
 								        <!-- <a class="nav-link" href="#">Sign Out</a> -->
-                                        <% if(userData){ %>
+                                            <% if(userData){ %>
                         
                                             <!-- <a href="/homeLogout" style="color: #000;;"><img src="/userImages/logout.png"  style="max-width: 44px;margin-right: 41px;" alt="">Logout</a> -->
                                             <a class="nav-link" href="javascript:void(0)" id="logout" alt="">Logout</a>                        
@@ -279,10 +279,10 @@
 								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                                         <div class="container mt-5">
                                             <a href="/Address">
-                                                <button class="btn btn-primary edit-profile-btn">Add Address</button>
+                                                <button class="btn btn-primary edit-profile-btn" style="margin-left: 800px;" >Add Address</button>
                                             </a>
                                         </div>
-								    	<p>The following addresses will be used on the checkout page by default.</p>
+								    	
 
 								    	<div class="row">
 								    		<div class="col-lg-6">
@@ -293,10 +293,10 @@
                                                         
                                                         
                                                     </div> -->
-                                                    <h2>ADDRESS</h2>
+                                                    <h2  style="margin-left: 107px;" >ADDRESS</h2>
+                                                
                                                     <% if(address.length>0) { %>
 
-                                                    
                                                         <%address.forEach((value)=>{ %>
                             
                             
@@ -340,8 +340,9 @@
                                                                     margin-left: 0.5rem;
                                                                 }
                                                             </style>
+                                                            <br>
                             
-                                                            <div class="user-info w-50 ">
+                                                            <div class="user-info w-50  " style="font-size: 11px;">
                                                                 <div class="row  ">
                                                                     <div class="cal col-md-6">First Name:</div>
                                                                     <div class="cal col-md-6">
@@ -398,8 +399,8 @@
                                                                 </div>
                                                                 <div class="row actions">
                                                                     <div class="">
-                                                                        <a href="/editAddress/<%=value._id %>" class="btn btn-primary">Edit</a>
-                                                                        <a href="/deleteAddress/<%=value._id%>" class="btn btn-danger">Delete</a>
+                                                                        <a href="/editAddress/?editId=<%=value._id%>" class="btn btn-primary" style="margin-right: 32px;">Edit</a>
+                                                                        <a href="/deleteAddress/?delId=<%=value._id%>" class="btn btn-danger" style="margin-right: 32px;" >Delete</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -413,16 +414,7 @@
 								    			</div><!-- End .card-dashboard -->
 								    		</div><!-- End .col-lg-6 -->
 
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
-								    					<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
-
-														<p>You have not set up this type of address yet.<br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
-								    				</div><!-- End .card-body -->
-								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
+							
 								    	</div><!-- End .row -->
 								    </div><!-- .End .tab-pane -->
 

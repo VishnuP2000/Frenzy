@@ -67,6 +67,9 @@ user_Rout.post('/editProfile',userAuth.isLogin, userController.editProfile)
 
 user_Rout.get('/Address',userAuth.isLogin, userController.LoadAddress)
 user_Rout.post('/Address',userAuth.isLogin, userController.verifyAddress)
+user_Rout.get('/deleteAddress',userAuth.isLogin, userController.deleteAddress)
+user_Rout.get('/editAddress',userAuth.isLogin, userController.LoadEditAddress)
+user_Rout.post('/editAddress',userAuth.isLogin, userController.verifyEditAddress)
 
 
 
