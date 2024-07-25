@@ -178,6 +178,28 @@ const categoryStatus=async (req,res)=>{
         console.log('categoryStatus',error);
     }
 }
+const PoductStatus=async (req,res)=>{
+    try {
+        console.log('kjhkjh');
+        const prodId=req.query.id
+        const prData=await sProduct.findById({_id:prodId})
+        console.log('prData',prData)
+        if(prData.is_blocked==true){
+            const result=await sProduct.findOneAndUpdate({_id:prodId},{$set:{is_blocked:false}})
+            res.json({result})
+            console.log('enter the result if');
+        }else{
+            const result=await sProduct.findOneAndUpdate({_id:prodId},{$set:{is_blocked:true}})
+            res.json({result})
+            console.log('enter the result else');
+        }
+    } catch (error) {
+        console.log('productStatus',error)
+        
+    }
+}
+
+
 const categoryEdit=async(req,res)=>{
     try {
         const findError=req.flash('findErr')
@@ -237,11 +259,43 @@ const Logout=async(req,res)=>{
 }
 const LoadProduct=async (req,res)=>{
     try {
-        let productDetails = await sProduct.find().populate('category').exec()
-       
-        res.render('product',{productDetails})
-    } catch (error) {
+        console.log('enter the loadProduct')
+        let productDetails = await product.find({}).populate('category').exec()
+        console.log('enter the productDetail')
         
+        let page = parseInt(req.query.page) || 1;
+        console.log('enter the page')
+        let limit = 7;
+        let usersDetails = await product.find({}).sort({ Date: -1 });
+        console.log('enter the userDetails')
+        if(usersDetails.length){
+
+        let totalUsers = usersDetails.length;
+        console.log(totalUsers);
+        let totalPages = Math.ceil(totalUsers / limit);
+
+        console.log(totalPages);
+        
+        // let totalPages=totalUsers/limit
+
+        let start = (page - 1) * limit;
+        let end = page * limit;
+        let users = productDetails.slice(start, end);
+        
+        console.log('enter the users')
+       
+        res.render('product',{
+            productDetails:users,
+            totalPages:totalPages,
+            totalUsers:totalUsers,
+            currentPage:page})
+
+        }else{
+            res.render('product',{users:[]})
+        }
+
+    } catch (error) {
+        console.log('Load product error')
     }
 }
 
@@ -270,6 +324,7 @@ const ProductAdding=async(req,res)=>{
         console.log("req.files", req.files);
         const {name,category,price,quantity,description}=req.body
         const images = req.files.images.map(file => file.filename);
+        console.log('image',images)
         const data=new product({
             name,
             category,
@@ -294,68 +349,89 @@ const ProductAdding=async(req,res)=>{
 const ProductEdit=async(req,res)=>{
     try {
         const idEdit=req.query.editId
+        console.log('productEdit',idEdit);
         const editData=await sProduct.findOne({_id:idEdit}).populate('category')
+        const cateData=await category.find({is_Listed:true})
+        console.log('cateData',cateData);
         console.log('editData',editData)
         const errmsg = req.flash('errmsg')
         if(editData){
 
-            res.render('editProduct',{editData,errmsg})
+            res.render('editProduct',{editData,errmsg,cateData,idEdit})
         }
     } catch (error) {
         console.log('error',error);
     }
 }
+
 const updateProduct = async (req, res) => {
     try {
-      const { name, productId, category, price, quantity } = req.body;
-      const exist = await sProduct.findOne({ name: name });
+        console.log('req.body',req.body);
+        prId=req.query.productId;
+
+      const { name, category, price, quantity } = req.body;
+    //   console.log('Received data:', { name, category, price, quantity });
+    //   console.log('product id',prId);
   
-      if (exist && exist._id.toString() != productId) {
-        req.flash('errmsg', 'Sorry this product already exists!!');
+      const exist = await sProduct.findOne({ name });
+    //   console.log('Product check result:', exist);
+  
+      if (exist && exist._id.toString() !== prId) {
+          console.log('Product already exists');
+          req.flash('errmsg', 'Sorry, this product already exists!!');
         return res.redirect('/admin/editProduct');
+      }
+  
+      let images = [];
+    
+      if (req.files && req.files.images.length > 0) {
+        images = req.files.images.map(file => file.filename);
+        console.log('Uploaded images:', images);
       } else {
-        // Check if files are uploaded
-        let images = [];
-        if (req.files && req.files.length > 0) {
-          images = req.files.map(file => file.filename);
-        } else {
-          // If no new images, use existing ones
-          images = req.body.existingImages ? (Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages]) : [];
+        if (req.body.existingImages) {
+          images = Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages];
         }
+        // console.log('Using existing images:', images);
+      }
   
-        const editStatus = await sProduct.findByIdAndUpdate(
-          { _id: productId },
-          {
-            $set: {
-              name: name,
-              price: price,
-              quantity: quantity,
-              images: images,
-              category: category,
-              is_blocked: false
-            }
+      
+      const editStatus = await sProduct.findOneAndUpdate(
+        {_id:prId}, // Pass the productId directly here
+        {
+          $set: {
+            name,
+            price,
+            quantity,
+            images,
+            category,
+            is_blocked: false,
           },
-          { new: true }
-        );
+        },
+        { new: true }
+      );
   
-        if (editStatus) {
-          res.redirect('/admin/product');
-        } else {
-            console.log('update edit')
-            res.status(500).json({ error: 'Internal server error', message: 'Cannot update product' });
-        }
-    }
-} catch (error) {
-        
-      console.log('update edit',error);
-      res.status(500).json({ error: 'Internal server error', message: 'An error occurred' });
+    //   console.log('Edit status:', editStatus);
+  
+      if (editStatus) {
+        // console.log('enter the edit status if');
+        res.redirect('/admin/product');
+      } else {
+        console.log('enter the edit status');
+        console.error('Failed to update product else');
+        res.status(500).json({ error: 'Internal server error', message: 'Cannot update product' });
+      }
+    } catch (error) {
+      console.log('enter the edit status catch');
+      console.error('Error in updateProduct:', error);
+      res.status(500).json({ error: 'Internal server error', message: 'An error occurred', error });
     }
   };
+  
 
 const deletProduct=async(req,res)=>{
     try {
         console.log('deletProduct');
-        const dtId=req.query.deletId
+        const dtId=req.query.deleteId
         console.log('deleId',dtId);
         if(dtId){
             const delData=await sProduct.deleteOne({_id:dtId})
@@ -388,6 +464,7 @@ module.exports={
     ProductEdit,
     updateProduct,
     deletProduct,
+    PoductStatus
   
     
 

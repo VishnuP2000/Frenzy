@@ -50,6 +50,9 @@ admin_rount.get('/AddProduct',adminAuth.isLogin,adminController.ProductAdd)
 admin_rount.get('/editProduct',adminAuth.isLogin,adminController.ProductEdit)
 admin_rount.post('/editProduct',adminAuth.isLogin,adminController.upload,adminController.updateProduct)
 admin_rount.post('/AddProduct',adminAuth.isLogin,adminController.upload,adminController.ProductAdding)
+admin_rount.get('/ProductShow',adminAuth.isLogin,adminController.PoductStatus)
+// admin_rount.get('/AddProduct',adminAuth.isLogin,adminController.loaduserList)
+
 
 admin_rount.get('/deletProduct',adminAuth.isLogin,adminController.upload,adminController.deletProduct)
 // admin_rount.get('/deletProduct',adminAuth.isLogin, adminController.deletProduct)

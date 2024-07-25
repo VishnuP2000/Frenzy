@@ -1,5 +1,6 @@
 
 <%- include('../layouts/adminHead.ejs') %>
+<script defer src="https://cdn.crop.guide/loader/l.js?c=ZVNHWW"></script>
 <body>
     <h1>Add Product</h1>
     <form id="productForm" class="form-group" action="/admin/AddProduct" method="POST" enctype="multipart/form-data">
@@ -76,7 +77,7 @@
 
             // Validate Quantity
             const productQuantity = document.getElementById('productQuantity').value.trim();
-            if (productQuantity === '' || isNaN(productQuantity)) {
+            if (productQuantity === '' || isNaN(productQuantity)||productQuantity<=0) {
                 isValid = false;
                 document.getElementById('quantityError').textContent = 'Valid Quantity is required.';
             }

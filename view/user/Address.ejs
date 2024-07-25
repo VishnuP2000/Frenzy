@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e9ecef;
+        }
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn-block {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-container">
+                    <h2 class="form-header">Address Form</h2>
+                    <form id="addressForm" action="/Address" method="post">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="lastName">Last Name:</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="phone">Phone:</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="street">Street:</label>
+                            <input type="text" class="form-control" id="street" name="streetName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="town">Town:</label>
+                            <input type="text" class="form-control" id="town" name="town" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State/Province:</label>
+                            <input type="text" class="form-control" id="state" name="state" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postalCode">Post Code:</label>
+                            <input type="text" class="form-control" id="postalCode" name="postCode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country:</label>
+                            <select class="form-control" id="country" name="country" required>
+                                <option value="">Select a country</option>
+                                <option value="USA">United States</option>
+                                <option value="CAN">Canada</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="AUS">Australia</option>
+                                <option value="IND">india</option>
+                                <option value="DEU">Germany</option>
+                                <option value="FRA">France</option>
+                                <option value="ITA">Italy</option>
+                                <option value="ESP">Spain</option>
+                                <option value="JPN">Japan</option>
+                                <option value="CHN">China</option>
+                                <option value="BRA">Brazil</option>
+                                <option value="RUS">Russia</option>
+                                <option value="MEX">Mexico</option>
+                                <option value="ZAF">South Africa</option>
+                                <!-- Add more countries as needed -->
+                            </select>
+                        </div>
+                        <div class="form-group btn-block">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/home'">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+</body>
+</html>

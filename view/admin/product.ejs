@@ -1,5 +1,15 @@
 <%- include('../layouts/adminHead.ejs') %>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- update sweet alert -->
+<style>
+.custom-swal-width {
+width: 421px; /* or any other larger value */
+ /* width: 100%; */
+ height: 298px;
+}
+</style>
+
     <body>
         <div class="screen-overlay"></div>
         <%- include('../layouts/aside.ejs') %>
@@ -48,11 +58,32 @@
                                 
                             <td>No</td>
                             <td>-</td>
+                          
+
                             <td>
-                                <% console.log('id',val._id) %>
-                                <a href="/admin/editProduct?editId=<%=val._id %>"class="btn btn-sm font-sm rounded btn-brand" >Edit</a>
-                                <a href="/admin/deletProduct?deletId=<%=val._id %>"class="btn btn-sm font-sm btn-light rounded" >Delete</a>
+                            <div class="dropdown">
+
+                                <a href="#" data-bs-toggle="dropdown"
+                                    class="btn btn-light rounded btn-sm font-sm">
+                                    <i class="material-icons md-more_horiz"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <% if(val.is_blocked==true){ %>
+                                        <a class="dropdown-item"
+                                            id="Product_ids<%=val._id %>"
+                                            onclick="ProductShow('<%=val._id %>')"
+                                            href="#">list</a>
+                                        <% }else{ %>
+                                            <a class="dropdown-item"
+                                                id="Product_ids<%=val._id %>"
+                                                onclick="ProductShow('<%=val._id %>')"
+                                                href="#">Unlist</a>
+                                            <% } %>
+                                                <a class="dropdown-item text-danger"
+                                                    href='/admin/editProduct?editId=<%= val._id %>'>Edit</a>
+                                </div>
                             </td>
+
                         </tr>
                         
 
@@ -67,17 +98,17 @@
                 <!-- card end// -->
                 <div class="pagination-area mt-30 mb-50">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
+                        <ul class="pagination justify-content-start" style="margin-left: 419px;">
+                            <% if (currentPage > 1) { %>
+                                <li class="page-item"><a class="page-link" href="?page=<%= currentPage - 1 %>">&laquo;</a></li>
+                            <% } %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li >
+                            <% } %>
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item"><a class="page-link" href="?page=<%= currentPage + 1 %>">&raquo;</a></li>
+                            <% } %>
                         </ul>
-                    </nav>
                 </div>
             </section>
             <!-- content-main end// -->
@@ -95,6 +126,38 @@
                 </div>
             </footer>
         </main>
+        <script>
+            function ProductShow(ProductId) {
+                // console.log('function',ProductId);
+                cat = document.getElementById(`Product_ids${ProductId}`)
+                fetch(`/admin/ProductShow?id=${ProductId}`, {
+
+                    method: 'get',
+
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("ok")
+                        }
+                        return response.json()
+                    })
+                    .then((data) => {
+                        console.log(data);
+                        if (data.is_blocked == false) {
+                            cat.textConunlist = "list";
+                            cat.className = "dropdown-item";
+                        } else {
+                            window.location.reload()
+                            cat.textContent = "unlist";
+                            cat.className = "dropdown-item";
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error + "fetch issue");
+                    })
+            }
+        </script>
+
        <%- include('../layouts/footer.ejs') %>
     </body>
 </html>

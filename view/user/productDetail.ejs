@@ -114,14 +114,12 @@
                                     <div class="row">
                                     
 
-                                            <% if(product.length>0){  %>
-                                                <% product.forEach((val)=>{ %>
 
-                                        
+                                        <%console.log(product.images)%>
                                     
                                         <figure class="product-main-image">
-                                            <img id="product-zoom" src="/userImages/<%=val.images[0]  %>" data-zoom-image="/userImages/<%=val.images[0]  %>" alt="product image">                                            <% console.log('product images',product) %>
-                                            <% if(val.quantity <= 0){ %>
+                                            <img id="product-zoom" src="/userImages/<%=product.images[0]  %>" data-zoom-image="/userImages/<%=product.images[0]  %>" alt="product image">                                            <% console.log('product images',product) %>
+                                            <% if(product.quantity <= 0){ %>
                                                 <span class="product-label label-sale">Outof stock</span>
                                             <% } %>
 
@@ -130,22 +128,17 @@
                                             </a>
                                         </figure><!-- End .product-main-image -->
 
+                                        
+                                       
+                                        
                                         <div id="product-zoom-gallery" class="product-image-gallery">
-                                            <a class="product-gallery-item active" href="#" data-image="/userImages/<%=val.images[0]  %>" data-zoom-image="/userImages/<%=val.images[0]  %>">
-                                                <img src="/userImages/<%=val.images[0]  %>" alt="product side">
+                                            <div class="image-container">
+                                            <% product.images.forEach((val)=>{ %>
+                                            <a class="product-gallery-item " href="#" data-image="/userImages/<%=val%>" data-zoom-image="/userImages/<%=val%>">
+                                                <img src="/userImages/<%=val%>" alt="product side">
                                             </a>
-                                            
-                                            <a class="product-gallery-item" href="#" data-image="/userImages/<%=val.images[1]  %>" data-zoom-image="/userImages/<%=val.images[1]  %>">
-                                                <img src="/userImages/<%=val.images[1]  %>" alt="product cross">
-                                            </a>
-                                            
-                                            <a class="product-gallery-item" href="#" data-image="/userImages/<%=val.images[2]  %>" data-zoom-image="/userImages/<%=val.images[2]  %>">
-                                                <img src="/userImages/<%=val.images[2]  %>" alt="product with model">
-                                            </a>
-                                            
-                                            <a class="product-gallery-item" href="#" data-image="/userImages/<%=val.images[3]  %>" data-zoom-image="/userImages/<%=val.images[3]  %>">
-                                                <img src="/userImages/<%=val.images[3]  %>" alt="product back">
-                                            </a>
+                                            <%  }) %>
+                                          </div>
                                         </div><!-- End .product-image-gallery -->
                                
                                     </div><!-- End .row -->
@@ -155,7 +148,7 @@
 
                             <div class="col-md-6">
                                 <div class="product-details">
-                                    <h1 class="product-title"><%=val.name  %></h1><!-- End .product-title -->
+                                    <h1 class="product-title"><%=product.name  %></h1><!-- End .product-title -->
                                     
                                      
                                     
@@ -168,7 +161,7 @@
                                     </div><!-- End .rating-container -->
 
                                     <div class="product-price">
-                                        <%=val.price  %>
+                                        <%=product.price  %>
                                     </div><!-- End .product-price -->
 
                                     
@@ -195,9 +188,8 @@
                                     <div class="product-details-footer">
                                         <div class="product-cat">
                                             <span>Category:</span>
-                                            <a href="#"><%=val.category.name %></a>
-                                            <%  }) %>
-                                            <%   } %>
+                                            <a href="#"><%=product.category.name %></a>
+                                          
                                         </div><!-- End .product-cat -->
 
                                         <div class="social-icons social-icons-sm">
@@ -327,7 +319,7 @@
                         </div><!-- End .tab-content -->
                     </div><!-- End .product-details-tab -->
 
-                    <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
+                    <!-- <h2 class="title text-center mb-4">You May Also Like</h2>End .title text-center -->
 
                     <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
                         data-owl-options='{
@@ -357,40 +349,40 @@
                         }'>
                    
 
-                        <div class="product product-7 text-center">
+                        <!-- <div class="product product-7 text-center">
                             <figure class="product-media">
                                 <span class="product-label label-out">Out of Stock</span>
                                 <a href="product.html">
                                     <img src="assets/images/products/product-6.jpg" alt="Product image" class="product-image">
-                                </a>
+                                </a> -->
 
-                                <div class="product-action-vertical">
+                                <!-- <div class="product-action-vertical">
                                     <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                     <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                     <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
+                                </div>End .product-action-vertical -->
 
-                                <div class="product-action">
+                                <!-- <div class="product-action">
                                     <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
+                                </div>End .product-action -->
+                            <!-- </figure>End .product-media -->
+<!-- 
                             <div class="product-body">
                                 <div class="product-cat">
                                     <a href="#">Jackets</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Khaki utility boiler jumpsuit</a></h3><!-- End .product-title -->
-                                <div class="product-price">
+                                </div>End .product-cat -->
+                                <!-- <h3 class="product-title"><a href="product.html">Khaki utility boiler jumpsuit</a></h3>End .product-title -->
+                                <!-- <div class="product-price">
                                     <span class="out-price">$120.00</span>
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 6 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div>
+                                </div>End .product-price -->
+                                <!-- <div class="ratings-container">
+                                    <div class="ratings"> -->
+                                        <!-- <div class="ratings-val" style="width: 80%;"></div>End .ratings-val -->
+                                    <!-- </div>End .ratings -->
+                                    <!-- <span class="ratings-text">( 6 Reviews )</span> -->
+                                <!-- </div>End .rating-container -->
+                            <!-- </div>End .product-body -->
+                        <!-- </div> -->
 
 
                       
@@ -683,6 +675,27 @@
     <script src="assets/js/main.js"></script>
 </body>
 
+<style>
+    .product-image-gallery {
+    display: flex;
+    justify-content: center; /* Center the gallery horizontally */
+    align-items: center; /* Center the gallery vertically if needed */
+    flex-wrap: wrap; /* Allow items to wrap onto the next line if needed */
+}
+
+.image-container {
+    display: flex;
+    flex-wrap: wrap; /* Wrap images within the container */
+    gap: 10px; /* Adjust gap between images */
+}
+
+.product-gallery-item img {
+    max-width: 100%; /* Ensure images do not overflow their container */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Cover the container */
+    border-radius: 5px; /* Optional: Add some border radius for aesthetics */
+}
+</style>
 
 <!-- molla/product.html  22 Nov 2019 09:55:05 GMT -->
 </html>

@@ -32,7 +32,8 @@
     <link rel="stylesheet" href="/assets/css/demos/demo-7.css">
      <!-- SweetAlert2 CSS File -->
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-           <!-- update sweet alert -->
+           <!-- cDN for account icon -->
+           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
      <style>
        .custom-swal-width {
           width: 421px; /* or any other larger value */
@@ -78,26 +79,26 @@
                            
                         </li>
                         
+                        <li>
+                           
+                             
+                            
+                            <div style="padding-left: 880px;font-size: 35px;"><a href="/Dashboard"> <i class="bi bi-person-circle"></i> </a></div>
+
                         </li>
                        
                     </ul><!-- End .menu -->
                 </nav><!-- End .main-nav -->
             </div><!-- End .header-left -->
 
+            
+        
+
             <div class="header-right">
                
                 
                 <div class="dropdown cart-dropdown">
-                   
-                    <% if(name){ %>
-                        
-                        <!-- <a href="/homeLogout" style="color: #000;;"><img src="/userImages/logout.png"  style="max-width: 44px;margin-right: 41px;" alt="">Logout</a> -->
-                        <a href="javascript:void(0)" id="logout" style="color: #000;"><img src="/userImages/logout.png" style="max-width: 44px;margin-right: 41px;" alt="">Logout</a>                        
-                        <% }else{ %>
-
-                            <a href="/login" style="color: #000;;"><img src="/userImages/enter.png"  style="max-width: 44px;margin-right: 41px;" alt="">Login</a>
-
-             <%  } %>
+                  
                         
                 
 
@@ -106,25 +107,10 @@
             </div><!-- End .header-right -->
         </div><!-- End .container-fluid -->
     </div><!-- End .header-middle -->
-    <script>
-        document.getElementById('logout').addEventListener('click', function() {
-          Swal.fire({
-            title: "Are you sure you want to logout?",
-            text: "You will be logged out of your account.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, logout!",
-            customClass: {
-        popup: 'custom-swal-width'
-      }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "/homeLogout";
-            }
-          });
-        });
-      </script>
+  
 </header><!-- End .header -->
+
+
+
+
 <body>

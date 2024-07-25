@@ -6,7 +6,9 @@ const bcrypt = require('bcrypt');
 const user_Rout = require('../router/userRout');
 const product = require('../model/product_Model');
 const Otp = require('../model/otpModel')
-const cat=require('../model/categoryModel')
+const cat = require('../model/categoryModel')
+const userAddress=require('../model/Address');
+
 
 
 //  bcrypt function
@@ -25,18 +27,17 @@ const securepassword = async (password) => {
 const loadHome = async (req, res) => {
 
     try {
-        const userId = req.session.user_id;
-        const userData = await user.findOne({ _id: userId })
-        const productsData = await product.find({is_blocked: false}).populate('category');
-
-        let products = productsData.filter((pro)=> pro.category&&pro.category.is_Listed)
-
-        if (userData) {
-            res.render('user/home', { products, name: userData.name })
-        } else {
-            res.render('user/home', { name: '', products })
-        }
-
+        console.log('enter the load home')
+       
+        
+        const productsData = await product.find({ is_blocked: false }).populate('category');
+        
+        let products = productsData.filter((pro) => pro.category && pro.category.is_Listed)
+        
+       
+            console.log('enter the products')
+            res.render('user/home', { products})
+        
     } catch (error) {
         console.log(error);
     }
@@ -45,33 +46,58 @@ const loadHome = async (req, res) => {
 const loadShope = async (req, res) => {
     try {
         const products = await Product.find({ is_blocked: false }).populate('category').exec();
-        
+
+
         // Filter products that belong to listed categories
         const producters = products.filter(prod => prod.category && prod.category.is_Listed);
+        const catData = await cat.find({ is_Listed: true })
+        console.log('catData', catData)
 
         if (producters.length) {
             const que = parseInt(req.query.page) || 1;
             const limit = 7;
-            const usersDetails=await Product.find({}).sort({Date:-1})
+            const usersDetails = await Product.find({}).sort({ Date: -1 })
 
-            const totalUsers=usersDetails.length;
+            const totalUsers = usersDetails.length;
             const totalPages = Math.ceil(totalUsers / limit);
-            
+
             const start = (que - 1) * limit;
             const end = que * limit;
-            let users=usersDetails.slice(start,end)
+            let users = usersDetails.slice(start, end)
 
             const paginatedProducts = producters.slice(start, end);
 
-            res.render('user/shope', { producters: paginatedProducts, que:que, totalUsers:totalUsers, totalPages:totalPages,users:users });
+            res.render('user/shope', { producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, users: users, catData: catData });
         } else {
-            res.render('user/shope', { producters: [] });
+            res.render('user/shope', { producters: [], catData: catData });
         }
 
     } catch (error) {
         console.log(error);
     }
 };
+
+const filterShope = async (req, res) => {
+    try {
+        console.log('filtershope22222222222222222222222222');
+        const catData = await cat.find({ is_Listed: true })
+        const id = req.query.id
+        console.log(id, ' it is id of categoryu')
+        let cData = await product.find({ category: id }).populate('category')
+        console.log('CData', cData);
+        let cgory = cData.filter((value) => {
+            return value.category.is_Listed == true
+
+
+        })
+        console.log('cgory', cgory);
+
+        res.render('user/filterShop', { cgory,catData })
+
+    } catch (error) {
+        console.log('error')
+    }
+}
 
 const loadProduct = async (req, res) => {
     try {
@@ -81,10 +107,23 @@ const loadProduct = async (req, res) => {
     }
 }
 
+const Dashboard=async(req,res)=>{
+    try {
+        const userId= req.session.user_id
+        const userData=await user.findOne({_id:userId})
+        console.log('userid',userId)
+       
+        const address=await userAddress.find({userId:userId})
+        res.render('user/Dashboard',{userData,address})
+    } catch (error) {
+     console.log('error')   
+    }
+}
+
 const logoutHome = async (req, res) => {
     try {
         req.session.user_id = null
-
+        console.log('req.session.user_id');
         res.redirect('/')
 
     } catch (error) {
@@ -94,7 +133,8 @@ const logoutHome = async (req, res) => {
 
 const loadLoagin = async (req, res) => {
     try {
-        const block= req.flash('block')
+      
+        const block = req.flash('block')
         const login_id = req.session.user_id
         console.log('entering the load login', login_id)
 
@@ -103,7 +143,7 @@ const loadLoagin = async (req, res) => {
 
             res.redirect('/')
         } else {
-            res.render('user/login',{block})
+            res.render('user/login', { block })
         }
 
     } catch (error) {
@@ -122,10 +162,12 @@ const creatLoagin = async (req, res) => {
         console.log(password)
         console.log('checking data is exist or not')
         const data = await user.findOne({ email: email })
-        console.log("data")
+        
+        console.log("data",email)
         if (data) {
             console.log(data)
-
+            req.session.loginData=data
+            
             const passwordMatch = await bcrypt.compare(password, data.password)
 
             if (passwordMatch) {
@@ -133,19 +175,20 @@ const creatLoagin = async (req, res) => {
                 if (data.is_blocked == false) {
                     console.log("it is not bloked ");
                     req.session.user_id = data._id;
+                    req.session.password=password
                     console.log('it is session storage', req.session.user_id)
                     res.redirect('/')
                 } else {
                     console.log("it is blocked");
-                    req.flash('block','Blocked')
+                    req.flash('block', 'Blocked')
                     return res.redirect('/login')
                 }
             } else {
-                req.flash('block','email and password are not match')
-                return res.redirect('/login' )
+                req.flash('block', 'email and password are not match')
+                return res.redirect('/login')
             }
         } else {
-            req.flash('block','user is not exist')
+            req.flash('block', 'user is not exist')
             return res.render('/login')
         }
     } catch (error) {
@@ -187,11 +230,12 @@ const loadRegister = async (req, res) => {
         console.log(name, email, password, mobile)
         const dataUser = await user.findOne({ email: email })
         console.log("here")
+
         const secuPasssword = await securepassword(password)
         console.log("here1")
         console.log(secuPasssword)
         if (dataUser) {
-            req.flash('regMesg', 'users already exist')
+            req.flash('regMesg', 'users already exist') 
             return res.redirect('/register')
 
         } else {
@@ -206,9 +250,10 @@ const loadRegister = async (req, res) => {
             console.log(name, email, password, mobile)
             const save = await dBase.save()
             console.log('save', save)
+            
             //    const{otp,email}=req.body
             const genOtp = generateOTP()
-             req.session.regen=generateOTP()
+            req.session.regen = generateOTP()
             console.log(genOtp)
             const dbsOtp = new Otp({
                 otp: genOtp,
@@ -226,6 +271,7 @@ const loadRegister = async (req, res) => {
 
             console.log("get the otp");
             req.session.email = email
+            req.session.id=dbsOtp
             res.redirect(`/otp?email=${email}`)
         }
 
@@ -262,7 +308,7 @@ const verifyresendOtp = async (req, res) => {
             email: email
         })
         await dbsOtp.save()
-        req.session.resend=dbsOtp.otp
+        req.session.resend = dbsOtp.otp
         console.log('after the dbsOtp save');
         const mailOptions = {
             from: process.env.user,
@@ -294,20 +340,20 @@ const loadOtp = async (req, res) => {
 const otpverification = async (req, res) => {
     try {
         console.log("enter the verification page");
-        
+
         // Extract email and OTP parts from the request body
         const email = req.body.email;
         const { otp1, otp2, otp3, otp4 } = req.body;
         const otp = parseInt([otp1, otp2, otp3, otp4].join(''));
-        
+
         // Get the resend OTP from the session
         const resendOtp = req.session.resend;
         console.log('otp from resend', resendOtp);
 
         // Log before finding OTP data
         console.log('before resend otp');
-        const regenarate=req.session.regen;
-     
+        const regenarate = req.session.regen;
+
         // Find the OTP data from the database
         const otpData = await Otp.findOne({ email: email });
         console.log('after finding otp data');
@@ -398,12 +444,12 @@ const DetailProduct = async (req, res) => {
         console.log('comme baby');
         const proId = req.query.ProductId
         console.log('pro id', proId);
-        const product = await Product.find({ _id: proId }).populate('category')
-        const category=await cat.find({ _id: proId }).populate('category')
-        
+        const product = await Product.findOne({ _id: proId }).populate('category')
+        const category = await cat.find({ _id: proId }).populate('category')
+
         if (proId) {
 
-            res.render('user/productDetail', {product,category})
+            res.render('user/productDetail', { product, category })
         }
     } catch (error) {
         console.log('error', error)
@@ -414,59 +460,58 @@ const DetailProduct = async (req, res) => {
 
 const googleAuth = async (req, res) => {
     try {
-
-
-        // let googleid =mongoose.createFromHexString(req.user.id)
-
-
-        let googleId = req.user.id
-
-        let usergoogle = await User.findOne({ googleId: googleId })
-
-
-
-        if (usergoogle) {
-
-            req.session.user_id = usergoogle._id
-            console.log('it is inside of the existing googleauth')
-            res.redirect('/')
-
-        } else {
-          
-
-            const googleRegister = new User({
-                username: req.user.name.givenName,
-                email: req.user.email,
-                googleId: req.user.id,
-                is_verified: 1
-            })
-
- 
-            let googledoc = await googleRegister.save()
-
-            //create wallet
-
-            let createWallet = new Wallet({
-                balance: 0,
-                userId: googledoc._id,
-            })
-            await createWallet.save()
-            // req.session.user_id = req.user._id
-            req.session.user_id = googledoc._id
-            console.log(req.session.user_id)
-            res.redirect('/')
+        // console.log('$$$$$$$$',req,'req  fdjkfjdfjdksjfdkjfdklfjdfjkdlsj');
+        // console.log(req.profile.email,'req.profile.email ...................*******************');
+        console.log('enter the googleAuth first')
+        if (!req.user) {
+            res.redirect('/failure')
         }
 
 
 
 
 
+        let usergoogle = await user.findOne({ email: req.user.email })
+        console.log('enter the googleAuth')
+
+
+        if (usergoogle) {
+            console.log('enter the googleAuth,usergoogle')
+
+            req.session.user_id = usergoogle._id
+            console.log('it is inside of the existing googleauth')
+            res.redirect('/')
+
+        } else {
+
+
+            const googleRegister = new user({
+                username: req.user.name.givenName,
+                email: req.user.email,
+                // googleId: req.user.id,
+                is_verified: 1
+            })
+
+
+            let googledoc = await googleRegister.save()
+
+            req.session.user_id = googledoc._id
+            console.log(req.session.user_id)
+            res.redirect('/')
+        }
+
     } catch (error) {
         console.log(error)
     }
 }
 
-
+const googleFail = async (req, res) => {
+    try {
+        res.send('googleFail error')
+    } catch (error) {
+        console.log('googleFail error', error);
+    }
+}
 
 
 
@@ -573,6 +618,160 @@ const passUpdate = async (req, res) => {
 }
 
 
+
+const LoadchangePassword=async(req,res)=>{
+    try {
+        console.log('enter the change password')
+        res.render('user/changePassword')
+    } catch (error) {
+        console.log('error',error)
+    }
+}
+
+const changePassword = async (req, res) => {
+    try {
+        console.log('Changing password');
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+        const storedPassword = req.session.password;
+
+        console.log('storedPassword',storedPassword);
+        
+        if (currentPassword === storedPassword) {
+            const userId = req.session.userId; // Assuming userId is stored in session
+            
+            const userData = await user.findOne({ id: userId });
+            
+            if (userData) {
+                if (newPassword === confirmPassword) {
+                    const hashedPassword = await securepassword(newPassword);
+                    
+                    await user.findOneAndUpdate({ id: userId }, { password: hashedPassword }, { new: true });
+                    console.log('Password updated successfully');
+                    
+                    res.redirect('/Dashboard');
+                } else {
+                    console.log('New password and confirm password do not match');
+                    res.render('user/changePassword', { error: 'New password and confirm password do not match' });
+                }
+            } else {
+                console.log('User data not found');
+                res.render('user/changePassword', { error: 'User data not found' });
+            }
+        } else {
+            console.log('Current password is incorrect');
+            res.render('user/changePassword', { error: 'Current password is incorrect' });
+        }
+    } catch (error) {
+        console.log('Error:', error);
+        res.render('user/changePassword', { error: 'An error occurred while changing the password' });
+    }
+};
+
+const LoadEditProfile=async(req,res)=>{
+    try {
+        console.log('enter the editProfile')
+        const editId=req.session.user_id
+        const loadData=await user.findOne({_id:editId})
+        if(loadData){
+            console.log('enter the loadData')
+            res.render('user/editProfile',{loadData})
+        }else{
+            console.log('loadData are not exist',error)
+        }
+    } catch (error) {
+        console.log('error',error)
+    }
+}
+
+const editProfile=async(req,res)=>{
+    try {
+        console.log('enter the editProfile')
+        userName=req.body.username
+        userPhone=req.body.phone
+        id=req.session.user_id
+        console.log('id',id)
+
+        const editData=await user.findOne({_id:id})
+
+        if(editData){
+            console.log('enter the editData')
+           const Data=await user.findOneAndUpdate({_id:id},{name:userName,mobile:userPhone},{ new: true })
+           req.session.id=Data._id
+           console.log('req.session.id',req.session.id)
+            console.log('enter user ',Data)
+            console.log('enter the username and mobiles are update')
+            res.redirect('/Dashboard')
+        }else{
+            console.log('editData are not exist here')
+        }
+
+
+    } catch (error) {
+        console.log('error',error)
+    }
+}
+
+const LoadAddress=async(req,res)=>{
+    try {
+        // const id=req.session.user_id
+        // const address=await userAddress.findOne({_id:id})
+        console.log('enter the LoadAddress')
+        // const AdData=req.session.Address
+        // const DataAddress=await Address.findOne({})
+        
+            console.log('enter the Address')
+            res.render('user/Address')
+       
+             
+      
+    } catch (error) {
+        console.log('error',error)
+    }
+}
+
+
+
+const verifyAddress = async (req, res) => {
+    try {
+        console.log('Entering verifyAddress');
+        const userId=req.session.user_id
+        
+        // Destructure the request body
+        const { firstName, lastName, country, streetName, town, state, postCode, phone, email} = req.body;
+        
+
+        console.log('Address Data', firstName, lastName, country, streetName, town, state, postCode, phone, email);
+
+        // Validate required fields
+       
+        // Create a new address document
+        const addressData = new userAddress({
+            firstName,
+            lastName,
+            country,
+            streetName,
+            town,
+            state,
+            postCode,
+            phone,
+            email,
+            userId
+        });
+
+        // Save the document to the database
+        await addressData.save();
+
+        console.log('Saved Address Data:', addressData);
+
+        // Redirect to the address page
+        res.redirect('/Dashboard');
+    } catch (error) {
+        console.error('Error saving address data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
 module.exports = {
     loadHome,
     loadShope,
@@ -593,6 +792,16 @@ module.exports = {
     paswordOtp,
     otpPasword,
     updatePass,
-    passUpdate
+    passUpdate,
+    googleFail,
+    filterShope,
+    Dashboard,
+    LoadchangePassword,
+    changePassword,
+    LoadEditProfile,
+    editProfile,
+    LoadAddress,
+    verifyAddress
+   
 
 }

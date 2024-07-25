@@ -48,17 +48,17 @@
                 <p style="margin-left: 131px;color: red;"><%= errorOtp %></p>
                 <input type="hidden" value="<%= email %>" name="email">
                 <div style="margin-left: 86px;" class="form-group d-flex">
-                    <input class="form-control otp-input" type="text" id="otp1" name="otp1" required>
-                    <input class="form-control otp-input" type="text" id="otp2" name="otp2" required>
+                    <input class="form-control otp-input" type="text" id="otp16" name="otp1" style="width: 195px;" required>
+                    <!-- <input class="form-control otp-input" type="text" id="otp2" name="otp2" required>
                     <input class="form-control otp-input" type="text" id="otp3" name="otp3" required>
-                    <input class="form-control otp-input" type="text" id="otp4" name="otp4" required>
+                    <input class="form-control otp-input" type="text" id="otp4" name="otp4" required> -->
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary verify-btn" id="verifyBtn">Verify</button>
                 </div>
             </form>
             <div style="margin-top: 10px;" class="form-group">
-                <span id="timer" style="margin-left: 134px;"></span>
+                <span id="timer" style="margin-left: 128px;"></span>
                 <button onclick="window.location.href='/resend?email=<%= email %>'" id="resendLink" disabled>RESEND OTP</button>
             </div>
         </div>

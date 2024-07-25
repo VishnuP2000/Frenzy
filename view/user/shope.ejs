@@ -77,6 +77,28 @@
 
                                    
                                 </li>
+                                <li>
+                                    <!-- <a href="" class="sf-with" style="margin-left: 612px;">Filter</a> -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" style="margin-left: 627px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                         Filter
+                                        </button>
+                                        <% if(catData.length>0){ %>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <% catData.forEach((res)=>{ %>
+                                                    <a class="dropdown-item" href="/filterShope?id=<%=res._id%>"><%=res.name %></a>
+                                                   
+                                                    <%  }) %>
+                                                  </div>
+
+
+                                     <%   } %>
+                                       
+                                      </div>
+
+                                   
+                                </li>
+              
                               
                                
                             </ul><!-- End .menu -->
@@ -84,100 +106,7 @@
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
-                        <!-- <div class="header-search">
-                            <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
-                                </div>
-                            </form>
-                        </div> -->
-                        <!-- <div class="dropdown compare-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                                <i class="icon-random"></i>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <ul class="compare-products">
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                        <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
-                                    </li>
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                        <h4 class="compare-product-title"><a href="product.html">White Long Skirt</a></h4>
-                                    </li>
-                                </ul>
-
-                                <div class="compare-actions">
-                                    <a href="#" class="action-link">Clear All</a>
-                                    <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <!-- <div class="dropdown cart-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
-                                <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">2</span>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-cart-products">
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Beige knitted elastic runner shoes</a>
-                                            </h4>
-
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $84.00
-                                            </span>
-                                        </div>
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="assets/images/products/cart/product-1.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div>
-
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Blue utility pinafore denim dress</a>
-                                            </h4>
-
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $76.00
-                                            </span>
-                                        </div>
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="assets/images/products/cart/product-2.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div>
-                                </div>
-
-                                <div class="dropdown-cart-total">
-                                    <span>Total</span>
-
-                                    <span class="cart-total-price">$160.00</span>
-                                </div>
-
-                                <div class="dropdown-cart-action">
-                                    <a href="cart.html" class="btn btn-primary">View Cart</a>
-                                    <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                                </div>
-                            </div>
-                        </div> -->
+                 
                     </div><!-- End .header-right -->
                 </div><!-- End .container-fluid -->
             </div><!-- End .header-middle -->
@@ -203,8 +132,8 @@
         			
 
                     <div class="products">
-                        <div class="row">
-                        <% if(producters.length>0){ %>
+                        <div class="row" style="position: relative;">
+                        <% if(producters.length>0){ %>          
                             <% producters.forEach((product)=>{ %>
                                 <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                     <div class="product">
@@ -255,63 +184,16 @@
                         <% } %>
 
                             
-                        <div class="products">
-                            <div class="row">
-                                <% if(producters.length > 0) { %>
-                                    <% producters.forEach((product) => { %>
-                                        <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
-                                            <div class="product">
-                                                <figure class="product-media">
-                                                    <% if(product.quantity <= 0) { %>
-                                                        <span class="product-label label-sale">Out of stock</span>
-                                                    <% } %>
-                                                    <a href="/productDetail?ProductId=<%= product._id %>">
-                                                        <img src="/userImages/<%= product.images[0] %>" alt="Product image" class="product-image">
-                                                    </a>
-                                                    <div class="product-action-vertical">
-                                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                    </div>
-                                                    <div class="product-action action-icon-top">
-                                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                                        <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
-                                                        <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
-                                                    </div>
-                                                </figure>
-                                                <div class="product-body">
-                                                    <div class="product-cat">
-                                                        <a href="#"><%= product.category.name %></a>
-                                                    </div>
-                                                    <h3 class="product-title"><a href="product.html"><%= product.name %></a></h3>
-                                                    <div class="product-price">
-                                                        <%= product.price %>
-                                                    </div>
-                                                    <div class="ratings-container">
-                                                        <div class="ratings">
-                                                            <div class="ratings-val" style="width: 0%;"></div>
-                                                        </div>
-                                                        <span class="ratings-text">( 0 Reviews )</span>
-                                                    </div>
-                                                    <div class="product-nav product-nav-dots">
-                                                        <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
-                                                        <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <% }) %>
-                                <% } else { %>
-                                    <p>No Products</p>
-                                <% } %>
-                            </div>
-                        
-                            <div class="pagination-container text-center">
+                        <!-- <div class="products justify-content-center " style="z-index: 2000;"> -->
+                          
+                            <div class="pagination-container text-center" style="position: absolute;bottom: -40px;">
                                 <nav aria-label="Page navigation">
-                                    <ul class="pagination justify-content-start" style="margin-left: 661px;">
-                                        <% if(que){ %>
+                                    <ul class="pagination justify-content-center">
+                                        <% if (que > 1) { %>
                                             <li class="page-item"><a class="page-link" href="?page=<%= que - 1 %>">&laquo;</a></li>
-                                       <% } %>
-                                        <% for(let i = 1; i <= totalPages; i++) { %>
-                                            <li class="page-item <%= que === i ? 'active' : '' %>"><a class="page-link" href="?page=<%=i %>"><%=i  %></a></li>
+                                        <% } %>
+                                        <% for (let i = 1; i <= totalPages; i++) { %>
+                                            <li class="page-item <%= que === i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
                                         <% } %>
                                         <% if (que < totalPages) { %>
                                             <li class="page-item"><a class="page-link" href="?page=<%= que + 1 %>">&raquo;</a></li>
@@ -319,7 +201,7 @@
                                     </ul>
                                 </nav>
                             </div>
-                        </div>
+                        <!-- </div> -->
                         </div><!-- End .row -->
 
                        
@@ -759,6 +641,40 @@
             });
         });
         </script> -->
+
+
+        <style>
+            .pagination-container {
+    position: fixed;
+    bottom: 20px; /* Adjust this value as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 1000;
+    text-align: center; /* Center the text inside the container */
+}
+
+/* .pagination {
+    display: inline-block;
+} */
+
+.page-item.active .page-link {
+    background-color: #cc9966;
+    border-color: #cc9966;
+    color: white;
+}
+
+.page-link {
+    color: black;
+}
+
+.page-link:hover {
+    color: #0056b3;
+    /* text-decoration: none; */
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+        </style>
     
 </body>
 

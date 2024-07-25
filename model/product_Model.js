@@ -33,7 +33,8 @@ const productSchema=new mongoose.Schema({
   is_blocked:{
     type:Number,
     default:0
-  }
+  },
+  
 })
 const product=mongoose.model('product',productSchema);
 module.exports=product;

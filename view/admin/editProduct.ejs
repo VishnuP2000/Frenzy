@@ -13,17 +13,22 @@
 <body>
   <div class="container mt-5" style="background-color:#d5e6d4">
     <h1 class="mb-4">Edit Product</h1>
-    <form action="/admin/AddProduct" method="POST" enctype="multipart/form-data">
-      <p><%= errmsg %></p>
-        <input type="hidden" name="productId" value="<%editData._id %>">
+    <form action="/admin/editProduct/?productId=<%=editData._id %>" method="POST" enctype="multipart/form-data">
+   
+      <p style="color: red; font-size: 21px;"><%=errmsg %></p>
       <div class="form-group">
         <label for="name">Product Name</label>
         <input type="text" class="form-control" id="name" value="<%=editData.name %>" name="name" placeholder="Enter product name">
       </div>
       <div class="form-group">
-        <label for="category">Category</label>
-        <input type="text" class="form-control" id="category" value="<%=editData.category.name %>" name="category" placeholder="Enter category">
-      </div>
+        <label for="productSelectCategory">Category:</label>
+        <select id="productSelectCategory" name="category" class="form-control">
+            <% cateData.forEach(element => { %>
+                <option value="<%= element._id %>"><%= element.name %></option>
+            <% }); %>
+        </select>
+        <small id="categoryError" class="form-text text-danger"></small>
+    </div>
       <div class="form-group">
         <label for="price">Price</label>
         <input type="number" class="form-control" id="price" value="<%=editData.price %>" name="price" placeholder="Enter price">
@@ -33,12 +38,14 @@
         <input type="number" class="form-control" id="quantity" value="<%=editData.quantity %>" name="quantity" placeholder="Enter quantity">
       </div>
       <div class="form-group">
-        <label for="image">Product Image</label>
-        <input type="file" class="form-control-file" id="image"  name="image">
+        
         <% editData.images.forEach((img)=>{ %>
-            <img src="/userImages/<%=img%>" alt="No Images" style="width: 100px;">
+          <img src="/userImages/<%=img%>" alt="No Images" style="width: 100px;">
+          <input type="file" class="form-control-file" id="images"  name="images">
+  
             <input type="hidden" name="existingImages" value="<%=img %>">
         <% })  %> 
+        
       </div>
       
       
