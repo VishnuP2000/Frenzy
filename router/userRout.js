@@ -8,6 +8,8 @@ router.use(passport.session());
 const userAuth= require("../middleware/userAuth")
 const user_Rout = express()
 const userController = require('../controller/userController')
+const checkoutController=require('../controller/checkoutController')
+const cartController=require('../controller/cartController')
 const flash=require('express-flash')
 
 user_Rout.use(flash())
@@ -70,6 +72,12 @@ user_Rout.post('/Address',userAuth.isLogin, userController.verifyAddress)
 user_Rout.get('/deleteAddress',userAuth.isLogin, userController.deleteAddress)
 user_Rout.get('/editAddress',userAuth.isLogin, userController.LoadEditAddress)
 user_Rout.post('/editAddress',userAuth.isLogin, userController.verifyEditAddress)
+
+user_Rout.get('/cart',userAuth.isLogin, cartController.LoadCart)
+user_Rout.post('/addToCart',userAuth.isLogin, cartController.addToCart)
+user_Rout.post('/ProductQuantity',userAuth.isLogin, cartController.productQuantity)
+
+user_Rout.get('/checkout',userAuth.isLogin, checkoutController.Loadcheckout)
 
 
 

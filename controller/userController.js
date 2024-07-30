@@ -821,6 +821,10 @@ const verifyEditAddress=async(req,res)=>{
 }
 
 
+
+
+
+
 module.exports = {
     loadHome,
     loadShope,
@@ -853,7 +857,9 @@ module.exports = {
     verifyAddress,
     deleteAddress,
     LoadEditAddress,
-    verifyEditAddress
+    verifyEditAddress,
+    
+    
    
 
 }

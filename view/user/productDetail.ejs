@@ -170,14 +170,15 @@
 
                                    
                                     <div class="details-filter-row details-row-size">
+                                        
                                         <label for="qty">Qty:</label>
                                         <div class="product-details-quantity">
-                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                            <input type="number" id="qty"  class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
                                         </div><!-- End .product-details-quantity -->
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                       <button> <a onclick="AddToCart('<%=product._id%>')" class="btn-product btn-cart"><span>add to cart</span></a></button>
 
                                         <div class="details-action-wrapper">
                                             <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
@@ -670,10 +671,37 @@
     <script src="assets/js/bootstrap-input-spinner.js"></script>
     <script src="assets/js/jquery.elevateZoom.min.js"></script>
     <script src="assets/js/bootstrap-input-spinner.js"></script>
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script> 
+    <!-- axios link -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+
+
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 </body>
+<script>
+    function AddToCart(proId){
+
+        let quantity = document.getElementById('qty').value
+        console.log('enter the AddToCart fungtion')
+        axios.post('/addToCart',{
+            proId,
+            quantity
+        })
+        .then((response)=>{
+            if(response.data.success){
+                console.log('success')
+            }else{
+                console.log('error')
+            }
+        })
+        .catch((error)=>{
+            console.log('error',error)
+        })
+    }
+    
+
+</script>
 
 <style>
     .product-image-gallery {

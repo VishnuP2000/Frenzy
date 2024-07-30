@@ -40,7 +40,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+    
 // app.use((req.))
 app.use('/', userRoute);
 app.use('/admin', adminRoute)
