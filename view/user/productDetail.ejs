@@ -683,6 +683,8 @@
     function AddToCart(proId){
 
         let quantity = document.getElementById('qty').value
+        // quantity value set the vallue: 1
+        console.log('quantity',quantity)
         console.log('enter the AddToCart fungtion')
         axios.post('/addToCart',{
             proId,

@@ -15,7 +15,8 @@ const userAddress=require('../model/Address');
 const Loadcheckout=async(req,res)=>{
     try {
         console.log('enter the LoadCheckout')
-        res.render('user/checkout')
+        const showAddress=await userAddress.find({})
+        res.render('user/checkout',{showAddress})
     } catch (error) {
         console.log('errror')
     }

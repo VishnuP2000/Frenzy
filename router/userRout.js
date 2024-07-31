@@ -75,7 +75,8 @@ user_Rout.post('/editAddress',userAuth.isLogin, userController.verifyEditAddress
 
 user_Rout.get('/cart',userAuth.isLogin, cartController.LoadCart)
 user_Rout.post('/addToCart',userAuth.isLogin, cartController.addToCart)
-user_Rout.post('/ProductQuantity',userAuth.isLogin, cartController.productQuantity)
+user_Rout.patch('/ProductQuantity',userAuth.isLogin, cartController.productQuantity)
+user_Rout.post('/removeCart',userAuth.isLogin, cartController.removeCart)
 
 user_Rout.get('/checkout',userAuth.isLogin, checkoutController.Loadcheckout)
 
