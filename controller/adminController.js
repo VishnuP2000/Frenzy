@@ -3,6 +3,7 @@ const sProduct=require('../model/product_Model')
 const bcrypt = require('bcrypt')
 const category=require('../model/categoryModel')
 const product = require('../model/product_Model')
+const order=require('../model/orderModel')
 const path=require('path')
 const multer=require('multer')
 
@@ -33,11 +34,12 @@ const loadDashboard=async(req,res)=>{
         console.log(error)
     }
 }
+
 const loaduserList = async (req, res) => {
     try {
         let page = parseInt(req.query.page) || 1;
         let limit = 7;
-        let usersDetails = await User.find({}).sort({ Date: -1 });
+        let usersDetails = await User.find({}).sort({ date: -1 });
 
         let totalUsers = usersDetails.length;
         let totalPages = Math.ceil(totalUsers / limit);
@@ -302,7 +304,19 @@ const LoadProduct=async (req,res)=>{
 const LoadOrder=async(req,res)=>{
     try {
         console.log('order');
-        res.render('order')
+       
+        const orderDetail=await order.find({}).populate('orderdProducts.product').sort({_id:-1})
+        let page = parseInt(req.query.page) || 1;
+        let limit = 7;
+        const usersDetails=await order.find({}).populate('orderdProducts.product')
+        let totalUsers = usersDetails.length;
+        let totalPages = Math.ceil(totalUsers / limit);
+        
+        let start = (page - 1) * limit;
+        let end = page * limit;
+        let users = usersDetails.slice(start, end);
+
+    res.render('order',{orderDetail, users: users,currentPage: page, totalPages: totalPages, totalUsers: totalUsers})
     } catch (error) {
         console.log(error)
     }
@@ -366,14 +380,19 @@ const ProductEdit=async(req,res)=>{
 
 const updateProduct = async (req, res) => {
     try {
-        console.log('req.body',req.body);
-        prId=req.query.productId;
+        // console.log('req.body',req.body);
+        
+        // proid=req.query.Id
+        // console.log('prid',prId)
+        
 
-      const { name, category, price, quantity } = req.body;
+      const { name, category, price, quantity,description } = req.body;
+      console.log('enter the datas',name,category,price,quantity,description)
     //   console.log('Received data:', { name, category, price, quantity });
     //   console.log('product id',prId);
   
       const exist = await sProduct.findOne({ name });
+      console.log('exist',exist)
     //   console.log('Product check result:', exist);
   
       if (exist && exist._id.toString() !== prId) {
@@ -384,7 +403,7 @@ const updateProduct = async (req, res) => {
   
       let images = [];
     
-      if (req.files && req.files.images.length > 0) {
+      if (req.files && req.files.images && Array.isArray(req.files.images) && req.files.images.length > 0) {
         images = req.files.images.map(file => file.filename);
         console.log('Uploaded images:', images);
       } else {
@@ -404,6 +423,7 @@ const updateProduct = async (req, res) => {
             quantity,
             images,
             category,
+            description,
             is_blocked: false,
           },
         },
@@ -411,9 +431,10 @@ const updateProduct = async (req, res) => {
       );
   
     //   console.log('Edit status:', editStatus);
+    console.log('eddit status',editStatus)
   
       if (editStatus) {
-        // console.log('enter the edit status if');
+        console.log('enter the edit status if',editStatus);
         res.redirect('/admin/product');
       } else {
         console.log('enter the edit status');
@@ -426,6 +447,22 @@ const updateProduct = async (req, res) => {
       res.status(500).json({ error: 'Internal server error', message: 'An error occurred', error });
     }
   };
+
+  const DeleteProduct=async(req,res)=>{
+    try {
+        console.log('enter the DeleteProduct')
+        prId=req.query.Id;
+        console.log('prId',prId)
+        if(prId){
+            const DData=await sProduct.deleteOne({_id:prId})
+            console.log('DData',DData)
+            res.redirect('/admin/product')
+        }
+
+    } catch (error) {
+        
+    }
+  }
   
 
 const deletProduct=async(req,res)=>{
@@ -443,6 +480,20 @@ const deletProduct=async(req,res)=>{
     }
 }
 
+const detailAdmin=async(req,res)=>{
+    try {
+        console.log('enter the detailAdmin page')
+        const orderId=req.query.id
+        console.log('orderId',orderId)
+        const orderDAta=await order.findOne({_id:orderId}).populate('orderdProducts.product')
+        console.log('orderdata',orderDAta)
+        if(orderDAta){
+            res.render('detailUsers',{orderDAta})
+        }
+    } catch (error) {
+        console.log('error detailAdmin')
+    }
+}
 
 module.exports={
     loadDashboard,
@@ -464,8 +515,9 @@ module.exports={
     ProductEdit,
     updateProduct,
     deletProduct,
-    PoductStatus
-  
+    DeleteProduct,
+    PoductStatus,
+    detailAdmin
     
 
 }    

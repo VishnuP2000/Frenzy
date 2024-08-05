@@ -27,8 +27,12 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <!-- axios cdn link -->
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+      <!-- view detail modal -->
     <style>
         .custom-swal-width {
            width: 421px; /* or any other larger value */
@@ -58,7 +62,7 @@
                     <div class="header-left">
                        
 
-                        <a href="index.html" class="logo">
+                        <a href="/" class="logo">
                             <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
                         </a>
 
@@ -98,38 +102,8 @@
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
-                        <div class="header-search">
-                            <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
-                                </div><!-- End .header-search-wrapper -->
-                            </form>
-                        </div><!-- End .header-search -->
-                        <div class="dropdown compare-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                                <i class="icon-random"></i>
-                            </a>
+                     
 
-                            <!-- <div class="dropdown-menu dropdown-menu-right">
-                                <ul class="compare-products">
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                        <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
-                                    </li>
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                        <h4 class="compare-product-title"><a href="product.html">White Long Skirt</a></h4>
-                                    </li>
-                                </ul>
-
-                                <div class="compare-actions">
-                                    <a href="#" class="action-link">Clear All</a>
-                                    <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                                </div>
-                            </div>End .dropdown-menu -->
-                        </div><!-- End .compare-dropdown -->
 
                         <div class="dropdown cart-dropdown">
                             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
@@ -138,58 +112,14 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-cart-products">
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Beige knitted elastic runner shoes</a>
-                                            </h4>
+                                
 
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $84.00
-                                            </span>
-                                        </div><!-- End .product-cart-details -->
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="assets/images/products/cart/product-1.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div><!-- End .product -->
-
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Blue utility pinafore denim dress</a>
-                                            </h4>
-
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $76.00
-                                            </span>
-                                        </div><!-- End .product-cart-details -->
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="assets/images/products/cart/product-2.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div><!-- End .product -->
-                                </div><!-- End .cart-product -->
-
-                                <div class="dropdown-cart-total">
-                                    <span>Total</span>
-
-                                    <span class="cart-total-price">$160.00</span>
-                                </div><!-- End .dropdown-cart-total -->
+                              
 
                                 <div class="dropdown-cart-action">
-                                    <a href="cart.html" class="btn btn-primary">View Cart</a>
-                                    <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                                </div><!-- End .dropdown-cart-total -->
+                                    <a href=/cart class="btn " style="background-color: #cc9966;">View Cart</a>
+                                    <a href=/checkout class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
+                                </div>
                             </div><!-- End .dropdown-menu -->
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
@@ -265,9 +195,122 @@
                                   
 
 								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+								    	<!-- <p>No order has been made yet.</p> -->
+								    	<!-- <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a> -->
+
+                                        <div>
+                                            <style>
+                                                .order-list {
+                                                    margin: 20px;
+                                                }
+                                                .order-item {
+                                                    border: 1px solid #ddd;
+                                                    padding: 15px;
+                                                    margin-bottom: 10px;
+                                                    display: flex;
+                                                    align-items: center;
+                                                }
+                                                .product-image {
+                                                    width: 100px;
+                                                    height: 100px;
+                                                    margin-right: 20px;
+                                                }
+                                                .product-info {
+                                                    flex-grow: 1;
+                                                }
+                                                .order-actions {
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                }
+                                                .order-actions button {
+                                                    margin: 5px 0;
+                                                }
+                                            </style>
+                                            <% if(orders.length>0){%>
+                                                <% orders.forEach((ord,index)=>{%>
+                                        
+                                        
+                                            
+                                          
+                                                <div class="order-list" style="border: 1px solid black;">
+                                                   
+                                                        <% ord.orderdProducts.forEach((product)=>{%>
+                                                    <div class="order-item" id="orderid">
+                                                        <img src="/userImages/<%=product.product.images[0]%>" alt="Product Image" class="product-image">    
+                                                        <div class="product-info">
+                                                            <h5><%=product.product.name%></h5>
+                                                        </div>
+                                                        <div style="margin-right: 209px;">
+
+                                                            <p>status :<%=product.status %></p>
+                                                        </div>
+                                                        <% if(product.status!='cancelled' &&product.status!='delivered'){%>
+
+                                                            <div class="order-actions">
+                                                                <button class="btn btn-danger" onclick="cancel('<%=product._id%>')">Cancel</button>
+                                                            </div>
+                                                    <%    } %>
+                                                    </div>
+                                                    <%   }) %>
+                                                    <button class="btn btn-primary" style="margin-left: 592px;" data-toggle="modal" data-target="#viewOrderDetails<%= index %>">View Detail</button>
+
+                                                    <div class="modal fade" id="viewOrderDetails<%= index %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                        
+                                                        <div class="modal-dialog" role="document">
+                                                          <div class="modal-content">
+                                                            <div class="modal-header">
+                                                              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <%ord.orderdProducts.forEach((ordData)=>{ %>
+
+                                                               
+                                                              <div>
+                                                                <div style="display: flex;" class="product-info">
+                                                                <img style="width: 58px;" src="/userImages/<%=ordData.product.images[0]%>" alt="" >
+                                                                <div style="display: block;">
+
+                                                                    <h5>Name:<%=ordData.product.name%></h5>
+                                                                    
+                                                                    <h5>Price:<%=ordData.product.price%></h5>
+                                                                    <h5>Quantity:<%=ordData.product.quantity%></h5>
+                                                                </div>
+                                                                    <h5 style="margin-left: 59px;">Status:<%=ordData.status%></h5>
+                                                                    
+                                                                </div>
+                                                                    
+                                                                
+                                                              </div>
+                                                              <% })  %>
+                                                            </div>
+                                                            
+                                                          </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <p><%=ord.purchaseData%></p>
+                                                    <!-- Repeat .order-item for each order -->
+                                                </div>
+
+                                           
+                                            <%   }) %>
+                                            <% } %>
+
+
+                                        </div>
+
+                                        <!-- here dashboard data in notpad -->
+                                      
+
+
 								    </div><!-- .End .tab-pane -->
+
+                                   
+
+                               
 
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
@@ -834,7 +877,43 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+<script>
+    function viewDetail(_id){
+        axios.post('/DetailView',{
+            _id
+        })
+        .then((responced)=>{
+            window.location.reload()
+            console.log('enter the view detail frontend')
+        })
+        .catch((error)=>{
+            console.log('error')
+        })
+    }
+</script>
+
+<script>
+    function cancel(cancelId){
+        axios.post('/cancelProducts',{
+            cancelId
+        })
+        .then((response)=>{
+            window.location.reload()
+           console.log('responced')
+        })
+        .catch((error)=>{
+                console.log('enter the error')
+        })
+    }
+
+</script>
 
 <script>
     document.getElementById('logout').addEventListener('click', function() {

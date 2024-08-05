@@ -8,6 +8,8 @@ const product = require('../model/product_Model');
 const Otp = require('../model/otpModel')
 const cat = require('../model/categoryModel')
 const userAddress=require('../model/Address');
+const datass=require('../model/cartModel')
+const Order=require('../model/orderModel')
 
 
 
@@ -111,14 +113,19 @@ const Dashboard=async(req,res)=>{
     try {
         const userId= req.session.user_id
         const userData=await user.findOne({_id:userId})
+        const dataCart=await datass.findOne({_id:userId})
         console.log('userid',userId)
+        const orders = await Order.find({userId}).populate('orderdProducts.product').sort({_id:-1})
+      
        
         const address=await userAddress.find({userId:userId})
-        res.render('user/Dashboard',{userData,address})
+        res.render('user/Dashboard',{userData,address,dataCart,orders})
     } catch (error) {
      console.log('error')   
     }
 }
+
+
 
 const logoutHome = async (req, res) => {
     try {

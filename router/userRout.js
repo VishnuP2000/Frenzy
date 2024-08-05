@@ -10,6 +10,7 @@ const user_Rout = express()
 const userController = require('../controller/userController')
 const checkoutController=require('../controller/checkoutController')
 const cartController=require('../controller/cartController')
+const orderController=require('../controller/orderController')
 const flash=require('express-flash')
 
 user_Rout.use(flash())
@@ -30,34 +31,34 @@ user_Rout.get('/', userController.loadHome)
 user_Rout.get('/shope',userAuth.isLogin ,userController.loadShope)
 user_Rout.get('/filterShope',userAuth.isLogin ,userController.filterShope)
 
-user_Rout.get('/product', userController.loadProduct)
-user_Rout.get('/login', userController.loadLoagin)
+user_Rout.get('/product',userAuth.isLogin, userController.loadProduct)
+user_Rout.get('/login',userAuth.isLogout,userController.loadLoagin)
 // user_Rout.get('/logout', userController.loadLoagin)
-user_Rout.post('/login', userController.creatLoagin)
+user_Rout.post('/login',userAuth.isLogout, userController.creatLoagin)
 user_Rout.get('/homeLogout',userAuth.isLogin, userController.logoutHome)
 
-user_Rout.get('/emailVerification', userController.mailVarify)
-user_Rout.post('/emailVerification', userController.verifyMail)
-user_Rout.get('/paswordOtp', userController.paswordOtp)
-user_Rout.post('/paswordOtp', userController.otpPasword)
+user_Rout.get('/emailVerification',userAuth.isLogin, userController.mailVarify)
+user_Rout.post('/emailVerification',userAuth.isLogin, userController.verifyMail)
+user_Rout.get('/paswordOtp',userAuth.isLogin, userController.paswordOtp)
+user_Rout.post('/paswordOtp',userAuth.isLogin, userController.otpPasword)
 
-user_Rout.get('/updatePassword', userController.updatePass)
-user_Rout.post('/updatePassword', userController.passUpdate)
+user_Rout.get('/updatePassword',userAuth.isLogin, userController.updatePass)
+user_Rout.post('/updatePassword',userAuth.isLogin, userController.passUpdate)
 
 
 
 // user_Rout.get('/userDashboard',userAuth.isLogin, userController.UserDash)
 
-user_Rout.get('/register', userController.findRegister)
-user_Rout.post('/register', userController.loadRegister)
+user_Rout.get('/register',userAuth.isLogout, userController.findRegister)
+user_Rout.post('/register',userAuth.isLogout, userController.loadRegister)
 
 
-user_Rout.get('/otp', userController.loadOtp)
-user_Rout.post('/otp', userController.otpverification)
+user_Rout.get('/otp',userAuth.isLogout, userController.loadOtp)
+user_Rout.post('/otp',userAuth.isLogout, userController.otpverification)
 
 
 // user_Rout.get('/resendOtp',userController.LoadresendOtp)
-user_Rout.get('/resend', userController.verifyresendOtp)
+user_Rout.get('/resend',userAuth.isLogin, userController.verifyresendOtp)
 user_Rout.get('/productDetail',userAuth.isLogin, userController.DetailProduct)
 
 user_Rout.get('/Dashboard',userAuth.isLogin, userController.Dashboard)
@@ -79,6 +80,14 @@ user_Rout.patch('/ProductQuantity',userAuth.isLogin, cartController.productQuant
 user_Rout.post('/removeCart',userAuth.isLogin, cartController.removeCart)
 
 user_Rout.get('/checkout',userAuth.isLogin, checkoutController.Loadcheckout)
+user_Rout.post('/successOrder',userAuth.isLogin, checkoutController.LoadSuccessOrder)
+
+
+user_Rout.get('/OrderPage',userAuth.isLogin, orderController.LoadOrderPage)
+user_Rout.post('/OrderPage',userAuth.isLogin, orderController.verifyOrderPage)
+
+user_Rout.post('/cancelProducts',userAuth.isLogin, orderController.verifyCancelProducts)
+
 
 
 

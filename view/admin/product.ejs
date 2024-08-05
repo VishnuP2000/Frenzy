@@ -34,9 +34,11 @@ width: 421px; /* or any other larger value */
                             <th scope="col">Price</th>
                             <th scope="col">Quantity</th>
                            <div  class="text-center" > <th scope="col">Images</th></div>
+                           <th scope="col">Description</th>
                             <th scope="col">Offer</th>
-                            <th scope="col">Offer Price</th>
-                            <th scope="col">Actions</th>
+                            <div class="d-flex flex-column align-items-center">
+                                <th scope="col">Actions</th>
+                            </div>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,6 +50,7 @@ width: 421px; /* or any other larger value */
                             <td><%= val.category ? val.category.name : 'No Category' %></td>                         
                             <td><%= val.price  %></td>
                             <td><%= val.quantity  %></td>
+                            
 
                             <td>
                                 <% val.images.forEach((image)=>{ %>
@@ -55,9 +58,9 @@ width: 421px; /* or any other larger value */
                                     <img src="/userImages/<%= image %>" class="img-sm img-thumbnail" alt="Item"style="margin-left: -9px" />
                                 <% }) %>
                             </td>
-                                
+                            <td><%= val.description  %></td>
                             <td>No</td>
-                            <td>-</td>
+                            
                           
 
                             <td>
