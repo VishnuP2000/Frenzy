@@ -1,6 +1,6 @@
 
 <%- include('../layouts/adminHead.ejs') %>
-<script defer src="https://cdn.crop.guide/loader/l.js?c=ZVNHWW"></script>
+<script defer src="https://cdn.crop.guide/loader/l.js?c=FLMYXV"></script>
 <body>
     <h1>Add Product</h1>
     <form id="productForm" class="form-group" action="/admin/AddProduct" method="POST" enctype="multipart/form-data">
@@ -31,6 +31,11 @@
             <input type="number" id="productQuantity" name="quantity" class="form-control">
             <small id="quantityError" class="form-text text-danger"></small>
         </div>
+        <div class="form-group">
+            <label for="productDescription">Description:</label>
+            <input type="text" id="Description" name="description" class="form-control">
+            <small id="DescriptionError" class="form-text text-danger"></small>
+        </div>
         
         <div class="form-group">
             <label for="productUploadImage">Images:</label>
@@ -53,12 +58,19 @@
             document.getElementById('priceError').textContent = '';
             document.getElementById('quantityError').textContent = '';
             document.getElementById('imageError').textContent = '';
+            document.getElementById('DescriptionError').textContent = '';
 
             // Validate Product Name
             const productName = document.getElementById('productName').value.trim();
             if (productName === '') {
                 isValid = false;
                 document.getElementById('nameError').textContent = 'Product Name is required.';
+            }
+            // Validate product description 
+            const productDescription=document.getElementById('productDescription').value.trim();
+            if(productDescription===''){
+                isValid = false;
+                document.getElementById('DescriptionError').textContent = 'description is required.';
             }
 
             // Validate Category

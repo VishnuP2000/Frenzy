@@ -3,6 +3,7 @@ const Order = require('../model/orderModel')
 const cartData = require('../model/cartModel')
 const Address = require('../model/Address')
 const prod = require('../model/product_Model')
+const product = require('../model/product_Model')
 
 
 
@@ -52,10 +53,17 @@ const verifyOrderPage = async (req, res) => {
         console.log('enter the verifyOrderPagellllllllllllllllllllllllllllllll')
         const addId = req.body.selectedAddress;
 
+        
+
         console.log('address id', addId)
 
         const userId = req.session.user_id
         const cart = await cartData.findOne({ userId: userId })
+        for(let Producted of cart.products){
+
+            await product.findOneAndUpdate({_id:Producted.product},{$inc:{quantity:-Producted.quantity}})
+        }
+       
         console.log('cart', cart)
 
         const orderedProducts = await Promise.all(cart.products.map(async item => {

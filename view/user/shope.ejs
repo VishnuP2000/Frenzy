@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -75,15 +76,42 @@
                                 <li>
                                     <a href="" class="sf-with">About</a>
 
-                                   
-                                </li>
+                                
+
+                                </li> 
+
+                                
+                                    <li>
+                                        
+                                            <div class="dropdown show" >
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                  sort
+                                                </a>
+                                              
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="/sort?id=High to low">High to low</a>
+                                                    <a class="dropdown-item" href="/sort?id=Low to high">Low to high</a>
+                                                    <a class="dropdown-item" href="/sort?id=aA - zZ">aA - zZ</a>
+                                                    <a class="dropdown-item" href="/sort?id=zZ - aA">zZ - aA</a>
+                                                  </div>
+                                              </div>
+                                       
+                                     </li>
+                              
+                               
+                                    
+                                
+                            
                                 <li>
                                     <!-- <a href="" class="sf-with" style="margin-left: 612px;">Filter</a> -->
+                                   
                                     <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" style="margin-left: 627px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       
+                                        <button class="btn btn-secondary dropdown-toggle" style="margin-left: 30px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                          Filter
                                         </button>
                                         <% if(catData.length>0){ %>
+                                            
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <% catData.forEach((res)=>{ %>
                                                     <a class="dropdown-item" href="/filterShope?id=<%=res._id%>"><%=res.name %></a>
@@ -98,7 +126,19 @@
 
                                    
                                 </li>
-              
+
+                                <li>
+                                    <div class="header-right">
+                                        <form class="search-form" action="/search" method="GET">
+                                            <div class="input-group">
+                                                <input type="text" name="q" class="form-control search-input" placeholder="Search for products...">
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-dark search-button">Search</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </li>
                               
                                
                             </ul><!-- End .menu -->
@@ -133,8 +173,10 @@
 
                     <div class="products">
                         <div class="row" style="position: relative;">
-                        <% if(producters.length>0){ %>          
+                        <% if(producters.length>0){ %>  
+                                  
                             <% producters.forEach((product)=>{ %>
+                                <% console.log('entering the shope ejs',product) %>
                                 <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                     <div class="product">
                                         <figure class="product-media">
@@ -150,7 +192,7 @@
                                             </div><!-- End .product-action -->
     
                                             <div class="product-action action-icon-top">
-                                                <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                <a href="/cart" class="btn-product btn-cart"><span>add to cart</span></a>
                                                 <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
                                                 <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
                                             </div><!-- End .product-action -->
@@ -162,7 +204,7 @@
                                             </div><!-- End .product-cat -->
                                             <h3 class="product-title"><a href="product.html"><%= product.name %></a></h3><!-- End .product-title -->
                                             <div class="product-price">
-                                                <%=product.price  %>
+                                                ₹ <%=product.price  %>
                                             </div><!-- End .product-price -->
                                             <div class="ratings-container">
                                                 <div class="ratings">
@@ -641,6 +683,30 @@
             });
         });
         </script> -->
+        <style>
+            .header-right {
+    margin: 20px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    border-radius: 0;
+    border: 1px solid #ccc;
+}
+
+.search-button {
+    border-radius: 0;
+    margin-left: -1px; /* Removes double border between input and button */
+}
+
+.input-group {
+    width: 100%;
+}
+        </style>
 
 
         <style>

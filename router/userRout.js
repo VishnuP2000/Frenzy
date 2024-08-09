@@ -30,6 +30,7 @@ user_Rout.get('/', userController.loadHome)
 
 user_Rout.get('/shope',userAuth.isLogin ,userController.loadShope)
 user_Rout.get('/filterShope',userAuth.isLogin ,userController.filterShope)
+user_Rout.get('/sort',userAuth.isLogin ,userController.shopeSort)
 
 user_Rout.get('/product',userAuth.isLogin, userController.loadProduct)
 user_Rout.get('/login',userAuth.isLogout,userController.loadLoagin)

@@ -1,4 +1,4 @@
-const Product = require('../model/product_Model')
+
 const nodemailer = require('nodemailer')
 const user = require('../model/userModel')
 const session = require('express-session');
@@ -47,18 +47,19 @@ const loadHome = async (req, res) => {
 
 const loadShope = async (req, res) => {
     try {
-        const products = await Product.find({ is_blocked: false }).populate('category').exec();
+        const products = await product.find({ is_blocked: false }).populate('category').exec();
 
 
         // Filter products that belong to listed categories
         const producters = products.filter(prod => prod.category && prod.category.is_Listed);
         const catData = await cat.find({ is_Listed: true })
         console.log('catData', catData)
+        console.log('producters',producters)
 
-        if (producters.length) {
+        if (producters) {
             const que = parseInt(req.query.page) || 1;
             const limit = 7;
-            const usersDetails = await Product.find({}).sort({ Date: -1 })
+            const usersDetails = await product.find({}).sort({ Date: -1 })
 
             const totalUsers = usersDetails.length;
             const totalPages = Math.ceil(totalUsers / limit);
@@ -87,17 +88,79 @@ const filterShope = async (req, res) => {
         console.log(id, ' it is id of categoryu')
         let cData = await product.find({ category: id }).populate('category')
         console.log('CData', cData);
-        let cgory = cData.filter((value) => {
+        let producters = cData.filter((value) => {
             return value.category.is_Listed == true
 
 
         })
-        console.log('cgory', cgory);
+        console.log('producters', producters);
+        console.log('catData', catData);
+        if(producters){
 
-        res.render('user/filterShop', { cgory,catData })
+       
+        const que = parseInt(req.query.page) || 1;
+        const limit = 7;
+        // const usersDetails = await product.find({}).sort({ Date: -1 })
 
+        const totalUsers = producters.length;
+        const totalPages = Math.ceil(totalUsers / limit);
+
+        const start = (que - 1) * limit;
+        const end = que * limit;
+        // let users = usersDetails.slice(start, end)
+
+        const paginatedProducts = producters.slice(start, end);
+
+        res.render('user/Shope', { catData,producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData })
+    }else{
+        res.render('user/shope', { producters: [], catData: catData });
+
+    }
     } catch (error) {
-        console.log('error')
+        console.log('error',error)
+    }
+}
+
+const shopeSort=async(req,res)=>{
+    try {
+        console.log('enter the varifyHighToLow')
+        let producter
+        const Id=req.query.id
+        if(Id=='High to low'){
+            
+             producter=await product.find({is_blocked: false }).sort({price:-1})
+            }else if(Id=='Low to high'){
+                producter=await product.find({is_blocked: false }).sort({price:1})
+                
+            }else if(Id=='aA - zZ'){
+            producter=await product.find({is_blocked: false }).sort({name:1})
+            
+        }else if(Id=='zZ - aA'){
+            producter=await product.find({is_blocked: false }).sort({name:-1})
+
+        }
+        
+        const catData = await cat.find({ is_Listed: true })
+        console.log('hightolowData')
+        if(producter){
+            const que = parseInt(req.query.page) || 1;
+            const limit = 7;
+            const totalUsers = producter.length;
+        const totalPages = Math.ceil(totalUsers / limit);
+        const start = (que - 1) * limit;
+        const end = que * limit;
+        const paginatedProducts = producter.slice(start, end);
+        console.log('highToLow datas',producter)
+        console.log('stand in near the shop in hightolow')
+
+            res.render('user/shope',{producters:producter, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData})
+        }else{
+            console.log('enter the else case in highToShope')
+            res.render('user/shope', { producters: [], catData: catData });
+        }
+    } catch (error) {
+        console.log('error',error)
+        
     }
 }
 
@@ -451,12 +514,13 @@ const DetailProduct = async (req, res) => {
         console.log('comme baby');
         const proId = req.query.ProductId
         console.log('pro id', proId);
-        const product = await Product.findOne({ _id: proId }).populate('category')
+        const prod = await product.findOne({ _id: proId }).populate('category')
+        console.log('enter the productd',prod)
         const category = await cat.find({ _id: proId }).populate('category')
 
-        if (proId) {
+        if (prod) {
 
-            res.render('user/productDetail', { product, category })
+            res.render('user/productDetail', { prod:prod, category:category })
         }
     } catch (error) {
         console.log('error', error)
@@ -855,6 +919,7 @@ module.exports = {
     passUpdate,
     googleFail,
     filterShope,
+    shopeSort,
     Dashboard,
     LoadchangePassword,
     changePassword,

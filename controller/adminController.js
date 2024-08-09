@@ -47,6 +47,7 @@ const loaduserList = async (req, res) => {
         let start = (page - 1) * limit;
         let end = page * limit;
         let users = usersDetails.slice(start, end);
+        console.log('users',users)
 
         res.render('userList', {
             users: users,
@@ -262,13 +263,13 @@ const Logout=async(req,res)=>{
 const LoadProduct=async (req,res)=>{
     try {
         console.log('enter the loadProduct')
-        let productDetails = await product.find({}).populate('category').exec()
+        let productDetails = await sProduct.find({}).populate('category').sort({ date: -1 });
         console.log('enter the productDetail')
         
         let page = parseInt(req.query.page) || 1;
         console.log('enter the page')
         let limit = 7;
-        let usersDetails = await product.find({}).sort({ Date: -1 });
+        let usersDetails = await sProduct.find({})
         console.log('enter the userDetails')
         if(usersDetails.length){
 
@@ -301,28 +302,35 @@ const LoadProduct=async (req,res)=>{
     }
 }
 
-const LoadOrder=async(req,res)=>{
+const LoadOrder = async (req, res) => {
     try {
         console.log('order');
-       
-        const orderDetail=await order.find({}).populate('orderdProducts.product').sort({_id:-1})
+        
         let page = parseInt(req.query.page) || 1;
         let limit = 7;
-        const usersDetails=await order.find({}).populate('orderdProducts.product')
-        let totalUsers = usersDetails.length;
-        let totalPages = Math.ceil(totalUsers / limit);
         
-        let start = (page - 1) * limit;
-        let end = page * limit;
-        let users = usersDetails.slice(start, end);
+        // Get the total number of orders
+        const totalOrders = await order.countDocuments({});
+        
+        // Calculate total pages
+        let totalPages = Math.ceil(totalOrders / limit);
+        
+        // Fetch the orders for the current page
+        const orderDetail = await order.find({}).populate('orderdProducts.product').sort({ _id: -1 }).skip((page - 1) * limit).limit(limit);
 
-    res.render('order',{orderDetail, users: users,currentPage: page, totalPages: totalPages, totalUsers: totalUsers})
+        res.render('order', {
+            orderDetail,
+            currentPage: page,
+            totalPages: totalPages
+        });
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        res.status(500).send('Internal Server Error');
     }
 }
 const ProductAdd=async(req,res)=>{
     try {
+        console.log('enter the productAdd')
         const categoryData=await category.find({is_Listed:true})
         console.log('categoryData',categoryData);
         res.render('AddProduct',{category:categoryData})
@@ -337,6 +345,7 @@ const ProductAdding=async(req,res)=>{
         console.log('this is product adding ');
         console.log("req.files", req.files);
         const {name,category,price,quantity,description}=req.body
+        console.log('enter the productdata',name,category,price,quantity,description)
         const images = req.files.images.map(file => file.filename);
         console.log('image',images)
         const data=new product({
@@ -345,7 +354,7 @@ const ProductAdding=async(req,res)=>{
             price,
             quantity,
            images:images,
-            description,
+           description,
             
             is_Listed:true
         })
@@ -380,10 +389,10 @@ const ProductEdit=async(req,res)=>{
 
 const updateProduct = async (req, res) => {
     try {
-        // console.log('req.body',req.body);
+        console.log('req.body',req.body);
         
-        // proid=req.query.Id
-        // console.log('prid',prId)
+        proid=req.query.prodId
+        console.log('proid',proid)
         
 
       const { name, category, price, quantity,description } = req.body;
@@ -391,11 +400,11 @@ const updateProduct = async (req, res) => {
     //   console.log('Received data:', { name, category, price, quantity });
     //   console.log('product id',prId);
   
-      const exist = await sProduct.findOne({ name });
+      const exist = await sProduct.findOne({_id:proid});
       console.log('exist',exist)
-    //   console.log('Product check result:', exist);
+      console.log('Product check result:', exist);
   
-      if (exist && exist._id.toString() !== prId) {
+      if (exist && exist._id.toString() !== proid) {
           console.log('Product already exists');
           req.flash('errmsg', 'Sorry, this product already exists!!');
         return res.redirect('/admin/editProduct');
@@ -412,19 +421,20 @@ const updateProduct = async (req, res) => {
         }
         // console.log('Using existing images:', images);
       }
+      console.log('Uploaded images:', images);
   
       
       const editStatus = await sProduct.findOneAndUpdate(
-        {_id:prId}, // Pass the productId directly here
+        {_id:proid}, // Pass the productId directly here
         {
           $set: {
             name,
             price,
             quantity,
-            images,
+            images:images,
             category,
             description,
-            is_blocked: false,
+            
           },
         },
         { new: true }
@@ -446,23 +456,9 @@ const updateProduct = async (req, res) => {
       console.error('Error in updateProduct:', error);
       res.status(500).json({ error: 'Internal server error', message: 'An error occurred', error });
     }
-  };
+ };
 
-  const DeleteProduct=async(req,res)=>{
-    try {
-        console.log('enter the DeleteProduct')
-        prId=req.query.Id;
-        console.log('prId',prId)
-        if(prId){
-            const DData=await sProduct.deleteOne({_id:prId})
-            console.log('DData',DData)
-            res.redirect('/admin/product')
-        }
 
-    } catch (error) {
-        
-    }
-  }
   
 
 const deletProduct=async(req,res)=>{
@@ -495,6 +491,25 @@ const detailAdmin=async(req,res)=>{
     }
 }
 
+const changeStatus=async(req,res)=>{
+    try {
+        console.log('enter the changeStatus')
+        const id=req.body.productid
+        const stat=req.body.status
+        console.log('enter the changeStatus id',id)
+        const changeData=await order.findOneAndUpdate({'orderdProducts._id':id},{$set:{'orderdProducts.$.status':stat}},{new:true})
+        console.log('changeData',changeData)
+        if(changeData){
+
+            res.render('detailUser',{changeData})
+        }
+
+    } catch (error) {
+        console.log('error',error)
+        
+    }
+}
+
 module.exports={
     loadDashboard,
     loaduserList,
@@ -515,9 +530,10 @@ module.exports={
     ProductEdit,
     updateProduct,
     deletProduct,
-    DeleteProduct,
+    
     PoductStatus,
-    detailAdmin
+    detailAdmin,
+    changeStatus
     
 
 }    

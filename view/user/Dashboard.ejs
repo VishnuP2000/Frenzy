@@ -259,7 +259,7 @@
                                                         <div class="modal-dialog" role="document">
                                                           <div class="modal-content">
                                                             <div class="modal-header">
-                                                              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                                              <h5 class="modal-title" id="exampleModalLongTitle">Order Details</h5>
                                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                               </button>
@@ -268,9 +268,9 @@
                                                                 <%ord.orderdProducts.forEach((ordData)=>{ %>
 
                                                                
-                                                              <div>
-                                                                <div style="display: flex;" class="product-info">
-                                                                <img style="width: 58px;" src="/userImages/<%=ordData.product.images[0]%>" alt="" >
+                                                 <div>
+                                                         <div style="display: flex;" class="product-info">
+                                                                <img style="width: 116px;" src="/userImages/<%=ordData.product.images[0]%>" alt="" >
                                                                 <div style="display: block;">
 
                                                                     <h5>Name:<%=ordData.product.name%></h5>
@@ -278,14 +278,58 @@
                                                                     <h5>Price:<%=ordData.product.price%></h5>
                                                                     <h5>Quantity:<%=ordData.product.quantity%></h5>
                                                                 </div>
-                                                                    <h5 style="margin-left: 59px;">Status:<%=ordData.status%></h5>
+                                                                    <div>
+                                                                        <h5 style="margin-left: 59px;">Status:<%=ordData.status%></h5>
+                                                                    <h5 style="margin-left: 59px;">orderId:<%=ord.orderId%></h5>
+                                                                    </div>
                                                                     
-                                                                </div>
-                                                                    
-                                                                
-                                                              </div>
+                                                          </div>
+                                                            
+                                                            
+                                                  </div>
+
+                                                         <div>
+                                                           
+                                                           
+                                                           
+                                                           
+                                                            
+                                                            <br>
+                                                        </div>
+                                                           
+                                                           
+                                                             
                                                               <% })  %>
                                                             </div>
+                                                            <div style="display: flex;" >
+                                                                <h5>FirstName:<%=ord.shipAddress.firstName%></h5>
+                                                                <h5 style="margin-left: 20px;">LastName:<%=ord.shipAddress.lastName%></h5>
+                                                            </div>
+                                                            <br>
+                                                            <div style="display: flex;">
+                                                                <h5>country:<%=ord.shipAddress.country%></h5>
+                                                                <h5 style="margin-left: 20px;">streetName:<%=ord.shipAddress.streetName%></h5>
+                                                            </div>
+                                                            <br>
+                                                            <div style="display: flex;">
+                                                                <h5>town:<%=ord.shipAddress.town%></h5>
+                                                                <h5 style="margin-left: 20px;">state:<%=ord.shipAddress.state%></h5>
+                                                            </div>
+                                                            <br>
+                                                            <div style="display: flex;">
+                                                                <h5>postCode:<%=ord.shipAddress.postCode%></h5>
+                                                                <h5 style="margin-left: 20px;">phone:<%=ord.shipAddress.phone%></h5>
+                                                            </div>
+                                                            <br>
+                                                            <div style="display: flex;">
+                                                                <h5>Email:<%=ord.shipAddress.email%></h5>
+                                                               
+                                                            </div>  
+                                                            <div style="display: flex;">
+                                                                <h5>Date:<%=ord.purchaseData%></h5>
+                                                               
+                                                            </div>
+                                                            
                                                             
                                                           </div>
                                                         </div>

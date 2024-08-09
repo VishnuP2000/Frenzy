@@ -3,29 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Order Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+     <!-- axios cdn link -->
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .order-info h5, .address-info h5, .product-info h5 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .product-info {
+            margin-bottom: 20px;
+        }
+        .product-info img {
+            max-width: 58px;
+            border-radius: 5px;
+        }
+        .product-info div {
+            margin-right: 20px;
+        }
+        .address-info h5 {
+            margin-right: 20px;
+            font-weight: 600;
+        }
+        .address-info {
+            margin-bottom: 10px;
+        }
+        h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <div>
-        
-        <h5>name: <%=orderDAta.name%></h5>
-        
-        
+<div class="container mt-5" style="background-color: gray;width: 800px;">
+    <div class="order-info mb-4">
+        <h5>Order ID: <%= orderDAta.orderId %></h5>
     </div>  
    
-        <% orderDAta.orderdProducts.forEach((data)=>{%>
-        
-        <div style="display: flex;">
-            <img style="width: 58px;"  src="/userImages/<%=data.product.images[0]%>" alt="">
-            <h5>Product Name :<%=data.product.name%></h5>
+    <% orderDAta.orderdProducts.forEach((data) => { %>
+    <div class="product-info d-flex align-items-center">
+        <div>
+            <img class="img-fluid" src="/userImages/<%= data.product.images[0] %>" alt="Product Image">
         </div>
-            
-        <%}) %>
-   
+        <div>
+            <h5>Product Name: <%= data.product.name %></h5>
+            <h5>Product Price: <%= data.product.price %></h5>
+            <h5>Quantity: <%= data.quantity %></h5>
+            <label for="status" style="font-size: 16px; font-weight: 600;">Status</label>
+            <select class="form-control" onchange="changeOrder(event,'<%=data._id%>')" id="status" name="status">
+                <% if(data.status=='placed'){ %>
+
+                    <option value="placed" hidden>placed</option>
+                    <option value="shipped">shipped</option>
+                    <option value="delivered">delivered</option>
+                    <option value="cancelled">cancelled</option>
+
+              <%  }else if(data.status=='shipped'){ %>
+                <option value="shipped" hidden>shipped</option>
+                <option value="placed">placed</option>
+                <option value="delivered">delivered</option>
+                <option value="cancelled">cancelled</option>
         
-       
-</div>
+             <%}else if(data.status=='cancelled'){%>
+                <option value="cancelled" hidden>cancelled</option>
+                <option value="placed">placed</option>
+                <option value="delivered">delivered</option>
+                <option value="cancelled">cancelled</option>
+
+                <% }else if(data.status=='delivered'){%>
+                    <option value="shipped" hidden>delivered</option>
+
+            <% } %>
+                
+               
+            </select>
+        </div>
+    </div>
+    <% }) %>
     
+    <h3>Address</h3>
+    <div class="address-info d-flex">
+        <h5>First Name: <%= orderDAta.shipAddress.firstName %></h5>
+        <h5>Last Name: <%= orderDAta.shipAddress.lastName %></h5>
+    </div>
+    <div class="address-info d-flex">
+        <h5>Country: <%= orderDAta.shipAddress.country %></h5>
+        <h5>Street Name: <%= orderDAta.shipAddress.streetName %></h5>
+    </div>
+    <div class="address-info d-flex">
+        <h5>Town: <%= orderDAta.shipAddress.town %></h5>
+        <h5>State: <%= orderDAta.shipAddress.state %></h5>
+    </div>
+    <div class="address-info d-flex">
+        <h5>Post Code: <%= orderDAta.shipAddress.postCode %></h5>
+        <h5>Phone: <%= orderDAta.shipAddress.phone %></h5>
+    </div>
+    <div class="address-info d-flex">
+        <h5>Email: <%= orderDAta.shipAddress.email %></h5>
+    </div>
+    <div class="address-info d-flex">
+        <h5>Order Date: <%= orderDAta.purchaseData %></h5>
+    </div>
+</div>
+<script>
+    function changeOrder(even,productid){
+        console.log('enter the changeOrder',)
+        axios.post('/admin/productStatus',{
+
+            status:event.target.value,
+            productid
+        })
+        .then((response)=>{
+            console.log('enter the changeOrder response')
+
+        })
+        .catch((error)=>{
+            console.log('enter the error')
+        })
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

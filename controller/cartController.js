@@ -5,6 +5,7 @@ const user=require('../model/userModel')
 const productsData=require('../model/product_Model');
 const { model } = require('mongoose');
 const product = require('../model/product_Model');
+const { log } = require('debug/src/browser');
 
 
 
@@ -47,60 +48,57 @@ const addToCart = async (req, res) => {
         const userId = req.session.user_id;
 
         // Check if the user already has a cart
-        const exist = await cartData.findOne({userId:userId })
-        console.log('exist ',exist)
-        if (!exist) {
-        
+        const exist = await cartData.findOne({userId:userId,'products.product':productId})
+        let cartQ=0
+        if(exist){
+            const cartProduct=exist.products.find(p=>p.product.toString()==productId.toString())
+            cartQ=cartProduct.quantity
 
-            console.log('enter the !exist')
-          
-            const cartUpdate=new cartData({
-                userId,
-                products: [
-                    {
-                        product:productId,
-                        quantity,
-                    }
-                ]
-                
-            })
-            await cartUpdate.save()
-
-            console.log('enter the cartUpdate',cartUpdate)
-            
-              
-           
-        } else {
-           // Cart exists, check if the product is already in the cart
-           console.log('enter the else case cart')
-           const productIndex = exist.products.findIndex(p => p.product.toString() === productId);
-           console.log('enter the else case cart 2')
-           
-           if (productIndex > -1) {
-               console.log('enter the productIndex')
-               exist.products[productIndex].quantity += quantity;
-
-               await exist.save();
-
-                console.log('Product quantity updated');
-            } else {
-               console.log('enter the productIndex else case')
-               // Product does not exist in the cart, add it
-               exist.products.push({ product: productId, quantity: quantity });
-               console.log('Product added to exist',);
-
-               await exist.save();
-
-            }
         }
+        const availability=await product.findOne({_id:productId})
+        if(availability.quantity>cartQ){
+            const cart=await cartData.findOne({userId:userId})
+            if(!cart){
+                console.log("enter the cart");
+                
+                const cartUp=new cartData({
+                    userId,
+                    products: [
+                        {
+                            product:productId,
+                            quantity,
+                        }
+                    ]
+                    
+                })
+                await cartUp.save()
+                res.status(200).json({ success: true,});
+            }else{
+                const prodIndex = cart.products.findIndex(p => p.product.toString() === productId);
 
-       res.status(200).json({ success: true,});
-
-        
-        
-
-        console.log('Processing complete');
-        // res.redirect('/Dashboard');
+                if (prodIndex > -1) {
+                    console.log('enter the productIndex')
+                    cart.products[prodIndex].quantity += quantity;
+     
+                    await cart.save();
+                    res.status(200).json({ success: true,});
+     
+                     console.log('Product quantity updated');
+                 } else {
+                    console.log('enter the prodIndex else case')
+                    // Product does not exist in the cart, add it
+                    cart.products.push({ product: productId, quantity: quantity });
+                    console.log('Product added to cart',);
+                    res.status(200).json({ success: true,});
+     
+                    await cart.save();
+     
+                 }
+            }
+        }else{
+            res.json({success: false,error: 'Out of Stock!!!'})
+        }
+                // res.redirect('/Dashboard');
     } catch (error) {
         console.error('Error in addToCart:', error);
         res.status(500).json({ success: false, message: 'An error occurred' });
@@ -118,7 +116,7 @@ const productQuantity=async(req,res)=>{
             { "products._id": productId },
             { $set: { "products.$.quantity": currentQuantity } })
 
-            const cartDocument = await cartData.findOne({ userId: userId }).populate('userId').populate({
+            const cartDocument = await cartData.findOne({ userId: userId }).populate('products.product').populate({
                 path: 'products',
                 populate: { path: 'products' }
             })

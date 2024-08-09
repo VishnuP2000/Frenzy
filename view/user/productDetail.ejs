@@ -31,6 +31,8 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    <!-- sweetalert link -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -123,11 +125,11 @@
                                     
 
 
-                                        <%console.log(product.images)%>
+                                        
                                     
                                         <figure class="product-main-image">
-                                            <img id="product-zoom" src="/userImages/<%=product.images[0]  %>" data-zoom-image="/userImages/<%=product.images[0]  %>" alt="product image">                                            <% console.log('product images',product) %>
-                                            <% if(product.quantity <= 0){ %>
+                                            <img id="product-zoom" src="/userImages/<%=prod.images[0]%>" data-zoom-image="/userImages/<%=prod.images[0]%>" alt="product image">                                           
+                                            <% if(prod.quantity <= 0){ %>
                                                 <span class="product-label label-sale">Outof stock</span>
                                             <% } %>
 
@@ -141,7 +143,7 @@
                                         
                                         <div id="product-zoom-gallery" class="product-image-gallery">
                                             <div class="image-container">
-                                            <% product.images.forEach((val)=>{ %>
+                                            <% prod.images.forEach((val)=>{ %>
                                             <a class="product-gallery-item " href="#" data-image="/userImages/<%=val%>" data-zoom-image="/userImages/<%=val%>">
                                                 <img src="/userImages/<%=val%>" alt="product side">
                                             </a>
@@ -156,7 +158,7 @@
 
                             <div class="col-md-6">
                                 <div class="product-details">
-                                    <h1 class="product-title"><%=product.name  %></h1><!-- End .product-title -->
+                                    <h1 class="product-title"><%=prod.name  %></h1><!-- End .product-title -->
                                     
                                      
                                     
@@ -169,7 +171,7 @@
                                     </div><!-- End .rating-container -->
 
                                     <div class="product-price">
-                                        <%=product.price  %>
+                                        ₹ <%=prod.price  %>
                                     </div><!-- End .product-price -->
 
                                     
@@ -186,7 +188,7 @@
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                       <button> <a onclick="AddToCart('<%=product._id%>')" href="/cart" class="btn-product btn-cart"><span>add to cart</span></a></button>
+                                       <button onclick="AddToCart('<%=prod._id%>')"  class="btn-product btn-cart"><span>add to cart</span></button>
 
                                         <div class="details-action-wrapper">
                                             <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
@@ -197,7 +199,7 @@
                                     <div class="product-details-footer">
                                         <div class="product-cat">
                                             <span>Category:</span>
-                                            <a href="#"><%=product.category.name %></a>
+                                            <a href="#"><%=prod.category.name %></a>
                                           
                                         </div><!-- End .product-cat -->
 
@@ -229,7 +231,7 @@
                                     <p> </p>
                                    
 
-                                    <p><%=product.description%> </p>
+                                    <p><%=prod.description%> </p>
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
                             <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
@@ -688,10 +690,22 @@
             quantity
         })
         .then((response)=>{
-            if(response.data.success){
+            if(response.data.success==true){
                 console.log('success')
+                Swal.fire({
+  icon: "success",
+  title: "successfully add to cart",
+  text: "",
+  footer: '<a href="#">Why do I have this issue?</a>'
+});
             }else{
                 console.log('error')
+                Swal.fire({
+  icon: "error",
+  title: "Oops...",
+  text: "Outoff stock product!!",
+  footer: '<a href="#">Why do I have this issue?</a>'
+});
             }
         })
         .catch((error)=>{

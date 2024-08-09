@@ -92,13 +92,15 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start" style="margin-left: 419px;">
                             <% if (currentPage > 1) { %>
+                                <%console.log('currentPage',currentPage)  %>
                                 <li class="page-item"><a class="page-link" href="?page=<%= currentPage - 1 %>">&laquo;</a></li>
-                            <% } %>
-                            <% for (let i = 1; i <= totalPages; i++) { %>
-                                <li class="page-item <%= currentPage === i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
-                            <% } %>
-                            <% if (currentPage < totalPages) { %>
-                                <li class="page-item"><a class="page-link" href="?page=<%= currentPage + 1 %>">&raquo;</a></li>
+                                <% } %>
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
+                                    <% } %>
+                                    <% if (currentPage < totalPages) { %>
+                                        <li class="page-item"><a class="page-link" href="?page=<%= currentPage + 1 %>">&raquo;</a></li>
+                                        <%console.log('currentPage  1',currentPage)  %>
                             <% } %>
                         </ul>
                     </nav>
