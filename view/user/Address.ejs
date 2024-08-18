@@ -37,42 +37,66 @@
             <div class="col-md-8">
                 <div class="form-container">
                     <h2 class="form-header">Address Form</h2>
-                    <form id="addressForm" action="/Address" method="post">
+                    <form id="addressForm" action="/addAddress" method="post" >
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="firstName">First Name:</label>
-                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required minlength="2" maxlength="50">
+                                <div class="invalid-feedback">
+                                    Please provide a valid first name (2-50 characters).
+                                </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="lastName">Last Name:</label>
-                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required minlength="2" maxlength="50">
+                                <div class="invalid-feedback">
+                                    Please provide a valid last name (2-50 characters).
+                                </div>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="phone">Phone:</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                                <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid 10-digit phone number.
+                                </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="email">Email:</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid email address.
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="street">Street:</label>
                             <input type="text" class="form-control" id="street" name="streetName" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid street name.
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="town">Town:</label>
                             <input type="text" class="form-control" id="town" name="town" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid town name.
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="state">State/Province:</label>
                             <input type="text" class="form-control" id="state" name="state" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid state or province name.
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="postalCode">Post Code:</label>
-                            <input type="text" class="form-control" id="postalCode" name="postCode" required>
+                            <input type="text" class="form-control" id="postalCode" name="postCode" pattern="[0-9]{5,10}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid post code (5-10 digits).
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="country">Country:</label>
@@ -82,7 +106,7 @@
                                 <option value="CAN">Canada</option>
                                 <option value="UK">United Kingdom</option>
                                 <option value="AUS">Australia</option>
-                                <option value="IND">india</option>
+                                <option value="IND">India</option>
                                 <option value="DEU">Germany</option>
                                 <option value="FRA">France</option>
                                 <option value="ITA">Italy</option>
@@ -95,6 +119,9 @@
                                 <option value="ZAF">South Africa</option>
                                 <!-- Add more countries as needed -->
                             </select>
+                            <div class="invalid-feedback">
+                                Please select a country.
+                            </div>
                         </div>
                         <div class="form-group btn-block">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -106,5 +133,21 @@
         </div>
     </div>
   
+    <script>
+        // Custom JavaScript validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var form = document.getElementById('addressForm');
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            }, false);
+        })();
+    </script>
 </body>
 </html>

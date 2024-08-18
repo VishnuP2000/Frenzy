@@ -32,7 +32,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <!-- axios cdn link -->
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
       <!-- view detail modal -->
+         <!-- sweetalert link -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .custom-swal-width {
            width: 421px; /* or any other larger value */
@@ -40,6 +43,18 @@
              height: 298px;
          }
      </style>
+      <style>
+        .modal-header {
+          background-color:#e5f0fb;
+          color: white;
+        }
+        .modal-body span {
+          font-weight: bold;
+        }
+        .modal-body input, .modal-body select {
+          margin-top: 10px;
+        }
+      </style>
 </head>
 
 <body>
@@ -159,6 +174,9 @@
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-wallet-link" data-toggle="tab" href="#tab-wallet" role="tab" aria-controls="tab-wallet" aria-selected="false">wallet</a>
+								    </li>
 								   
 								    <li class="nav-item">
 								        <!-- <a class="nav-link" href="#">Sign Out</a> -->
@@ -191,6 +209,7 @@
                                         </div>
                                         
 								    </div><!-- .End .tab-pane -->
+                                  
 
                                   
 
@@ -227,6 +246,7 @@
                                                 }
                                             </style>
                                             <% if(orders.length>0){%>
+                                                <p id="OpenId" hidden ><%= OpOrder %></p>
                                                 <% orders.forEach((ord,index)=>{%>
                                         
                                         
@@ -352,17 +372,171 @@
 
 								    </div><!-- .End .tab-pane -->
 
+                                    
+
                                    
 
-                               
-
-								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<p>No downloads available yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
-
+                              
                               
 
+								    <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+                                        
+								    	<!-- <p>balance not available yet.</p> -->
+                                        <div class="card card-dashboard shadow-lg" style="border-radius: 20px;width: 361px; ">
+                                            <div class="card-body">
+                                                <div class="d-flex ">   
+                                                    <strong style="color: #000000; font-size: medium;">Balance: ₹</strong><p style="color: #00b530; font-size: medium;" id="wallet_balance"><%=walletData.balance%></p>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <a href="/addWallet" class="btn btn-outline-primary-2 mx-auto" style="border-radius: 10px;" data-toggle="modal" data-target="#withdrawModalCenter">
+                                                        <span>Withdraw</span>
+                                                        <i class="icon-long-arrow-right"></i>
+                                                    </a>
+                                                    <a href="/addWallet" class="btn btn-outline-primary-2 mx-auto" style="border-radius: 10px;" data-toggle="modal" data-target="#viewModalCenter">
+                                                        <span>View history</span>
+                                                    </a>
+                                                </div>
+                                            </div><!-- End .card-body -->
+                                        </div><!-- End .card-dashboard -->
+								    	<!-- <button href="category.html" class="btn btn-outline-primary-2"><span>ADD AMOUNT</span><i id="#exampleModalCenter" data-toggle="modal" data-target="#exampleModalCenter" class="icon-long-arrow-right"></i></button> -->
+
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                            ADD AMOUNT
+                                          </button>
+                                        
+
+                                          <!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="viewModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Withdraw Money</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <table>
+            <thead>
+          <tr>
+            <th>
+                No.	Amount
+            </th>
+            <th>
+                Date
+            </th>
+           <th>
+            payment Method
+           </th>
+            <th>
+                status
+            </th>
+            
+          </tr>
+            </thead>
+            
+            <tbody>
+                    <%if(walletData && walletData.length>0){%>
+                        <% let history = walletData.reverse() %>
+                        <%history.forEach((data,index)=>{%>
+                    <tr>
+                        <td><%=data.amount%></td>
+                        <td><%=data.date%></td>
+                        <td><%=data.paymentMethod%></td>
+                        <td><%=data.status%></td>
+                      
+                        </tr>
+                        <% })%>
+                        <%  }  %>
+                </tbody>
+         </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+                                         
+                                          
+<!-- Modal -->
+<form id="walletForm" action="" method="post">
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 14px;">
+          <div class="modal-header" style="border-radius: 8px;">
+            <h5 class="modal-title" id="exampleModalLongTitle">DEPOSIT MONEY</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <span>Enter Amount</span>
+            <div>
+              <input type="text" id="wallet_amount" class="form-control" name="amount" placeholder="Enter amount">
+              <span id="wallet_amount_error" class="error-message" style="color: red; font-size: smaller;"></span>
+            </div>
+            <div>
+              <span>Select Payment Method</span>
+              <select class="form-control" name="selectwallet" id="paymentMethod" style="width: 100%;">
+                <option value="">Select</option>
+                <option value="phonePay">PhonePe</option>
+                <option value="gPay">GPay</option>
+                <option value="paytm">Paytm</option>
+              </select>
+              <span id="paymentMethod_error" class="error-message" style="color: red; font-size: smaller;"></span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="wallet_close" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="depositButton">Deposit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form id="walletWithdrawForm" action="" method="post">
+    <div class="modal fade" id="withdrawModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 14px;">
+          <div class="modal-header" style="border-radius: 8px;">
+            <h5 class="modal-title" id="exampleModalLongTitle">WITHDRAW MONEY</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <span>Enter Amount</span>
+            <div>
+              <input type="text" id="wallet_withdraw_amount" class="form-control" name="amount" placeholder="Enter amount">
+              <span id="wallet_amount_withdraw_error" class="error-message" style="color: red; font-size: smaller;"></span>
+            </div>
+            <div>
+              <span>Select Payment Method</span>
+              <select class="form-control" name="selectwallet" id="paymentMethod_withdraw" style="width: 100%;">
+                <option value="">Select</option>
+                <option value="phonePay">PhonePe</option>
+                <option value="gPay">GPay</option>
+                <option value="paytm">Paytm</option>
+              </select>
+              <span id="paymentMethod_error" class="error-message" style="color: red; font-size: smaller;"></span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="wallet_withdraw_close" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="depositButton">withraw</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+                              
+</div>
 								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                                         <div class="container mt-5">
                                             <a href="/Address">
@@ -486,8 +660,8 @@
                                                                 </div>
                                                                 <div class="row actions">
                                                                     <div class="">
-                                                                        <a href="/editAddress/?editId=<%=value._id%>" class="btn btn-primary" style="margin-right: 32px;">Edit</a>
-                                                                        <a href="/deleteAddress/?delId=<%=value._id%>" class="btn btn-danger" style="margin-right: 32px;" >Delete</a>
+                                                                        <a href="/editAddress?editId=<%=value._id%>" class="btn btn-primary" style="margin-right: 32px;">Edit</a>
+                                                                        <a href="/deleteAddress?delId=<%=value._id%>" class="btn btn-danger" style="margin-right: 32px;" >Delete</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -499,49 +673,16 @@
 														
 								    				</div><!-- End .card-body -->
 								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
+								    </div><!-- End .col-lg-6 -->
 
 							
 								    	</div><!-- End .row -->
 								    </div><!-- .End .tab-pane -->
 
-								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
-			                				<div class="row">
-			                					<div class="col-sm-6">
-			                						<label>First Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
-
-			                					<div class="col-sm-6">
-			                						<label>Last Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
-			                				</div><!-- End .row -->
-
-		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
-		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
-
-		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
-
-		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
-
-		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
-
-		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
-
-		                					<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>SAVE CHANGES</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
-			                			</form>
-								    </div><!-- .End .tab-pane -->
+                              
+                                    
 								</div>
+                                
 	                		</div><!-- End .col-lg-9 -->
 	                	</div><!-- End .row -->
 	                </div><!-- End .container -->
@@ -927,7 +1068,135 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
+<script>
+ document.getElementById('walletWithdrawForm').addEventListener('submit',function(event){
+event.preventDefault();
+let wallet_balance=document.getElementById('wallet_balance');
+let wallet_close=document.getElementById('wallet_withdraw_close');
+let amount=document.getElementById('wallet_withdraw_amount');
+let paymentMethod=document.getElementById('paymentMethod_withdraw');
+
+let amount_error=document.getElementById('wallet_amount_withdraw_error');
+if(amount.value==''){
+    amount_error.textContent='please enter an amount';
+    return; 
+}else if(parseFloat(amount.value)<=0){
+    amount_error.textContent='Amount must be greater than 0'
+    return;
+}else if(parseFloat(amount.value)>parseFloat(wallet_balance.textContent)){
+    amount_error.textContent='Amount exceeds wallet balance'
+    return;
+
+}else{
+    amount_error.textContent=''
+}
+console.log('reach the withrowFormWallet')
+axios.post('/withrowFormWallet',{
+    amount:amount.value,
+    paymentMethod
+})
+.then((response)=>{
+if(response.data.success==true){
+    window.location.reload()
+//     Swal.fire({
+//   icon: "success",
+//   title: "successfully withdraw the amount",
+//   text: "",
+//   footer: '<a href="#">Why do I have this issue?</a>'
+// });
+}
+})
+.catch((error)=>{
+console.log('enter the error',error)
+})
+
+})
+</script>
+
+<script>
+    document.getElementById('walletForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      let wallet_balance = document.getElementById('wallet_balance');
+      let wallet_close = document.getElementById('wallet_close');
+      let amount = document.getElementById('wallet_amount');
+      let paymentMethod = document.getElementById('paymentMethod');
+
+      
+      let amount_error = document.getElementById('wallet_amount_error');
+      let paymentMethod_error = document.getElementById('paymentMethod_error');
+  
+      let current_balance = parseFloat(wallet_balance.textContent);
+      let deposit_amount = parseFloat(amount.value);
+  
+      // Reset error messages
+      amount_error.textContent = "";
+      paymentMethod_error.textContent = "";
+  
+      // Validation checks
+      if (isNaN(deposit_amount) || amount.value.trim() === '') {
+        amount_error.textContent = 'Please enter a valid amount';
+        return;
+      } else if (deposit_amount <= 0) {
+        amount_error.textContent = 'Amount must be greater than 0';
+        return;
+      } else if (deposit_amount > 50000) {
+        amount_error.textContent = 'Amount must be less than or equal to 50,000';
+        return;
+      } else if (current_balance + deposit_amount > 50000) {
+        amount_error.textContent = 'Deposit would exceed wallet balance limit of 50,000';
+        return;
+      }
+  
+      if (paymentMethod.value.trim() === '') {
+        paymentMethod_error.textContent = 'Please select a payment method';
+        return;
+      }
+  
+      // Proceed with form submission if all validations pass
+      console.log('reach the wallet')
+      axios.post('/wallet', {
+        amount: deposit_amount,
+        paymentMethod: paymentMethod.value
+    })
+      .then((response) => {
+        if (response.data.success==true) {
+            console.log('Deposit successful');
+            window.location.reload()
+            // Swal.fire({
+            //     icon: "success",
+            //     title: "successfully add to wallet",
+            //     text: "",
+            //     footer: '<a href="#">Why do I have this issue?</a>'
+            // });
+            // Additional actions on success, if needed
+        } else {
+            console.log('Deposit failed');
+            // Handle failure case, if needed
+        }
+    })
+   
+      .catch((error) => {
+        console.log('Error during deposit', error);
+      });
+    });
+  </script>
+
+<script>
+    if(document.getElementById('OpenId').textContent){
+        setTimeout(()=>{
+            document.getElementById('tab-orders-link').click()
+        },500)
+    }
+</script>
+
 <script>
     function viewDetail(_id){
         axios.post('/DetailView',{

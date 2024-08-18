@@ -41,11 +41,13 @@ const LoadCart=async(req,res)=>{
 const addToCart = async (req, res) => {
     try {
         console.log('Enter the addToCart');
+        
         const productId = req.body.proId;
         console.log('productId',productId)
         const quantity = parseInt(req.body.quantity, 10);
         console.log('quantity',quantity)
         const userId = req.session.user_id;
+
 
         // Check if the user already has a cart
         const exist = await cartData.findOne({userId:userId,'products.product':productId})

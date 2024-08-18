@@ -7,9 +7,12 @@ const user_Rout = require('../router/userRout');
 const product = require('../model/product_Model');
 const Otp = require('../model/otpModel')
 const cat = require('../model/categoryModel')
-const userAddress=require('../model/Address');
-const datass=require('../model/cartModel')
-const Order=require('../model/orderModel')
+const userAddress = require('../model/Address');
+const datass = require('../model/cartModel')
+const Order = require('../model/orderModel')
+const flash = require('express-flash');
+const Address = require('../model/Address');
+const wallet=require('../model/walletModel')
 
 
 
@@ -30,16 +33,16 @@ const loadHome = async (req, res) => {
 
     try {
         console.log('enter the load home')
-       
-        
+
+
         const productsData = await product.find({ is_blocked: false }).populate('category');
-        
+
         let products = productsData.filter((pro) => pro.category && pro.category.is_Listed)
-        
-       
-            console.log('enter the products')
-            res.render('user/home', { products})
-        
+
+
+        console.log('enter the products')
+        res.render('user/home', { products })
+
     } catch (error) {
         console.log(error);
     }
@@ -54,7 +57,9 @@ const loadShope = async (req, res) => {
         const producters = products.filter(prod => prod.category && prod.category.is_Listed);
         const catData = await cat.find({ is_Listed: true })
         console.log('catData', catData)
-        console.log('producters',producters)
+        console.log('producters', producters)
+
+
 
         if (producters) {
             const que = parseInt(req.query.page) || 1;
@@ -95,72 +100,132 @@ const filterShope = async (req, res) => {
         })
         console.log('producters', producters);
         console.log('catData', catData);
-        if(producters){
+        if (producters) {
 
-       
-        const que = parseInt(req.query.page) || 1;
-        const limit = 7;
-        // const usersDetails = await product.find({}).sort({ Date: -1 })
 
-        const totalUsers = producters.length;
-        const totalPages = Math.ceil(totalUsers / limit);
+            const que = parseInt(req.query.page) || 1;
+            const limit = 7;
+            // const usersDetails = await product.find({}).sort({ Date: -1 })
 
-        const start = (que - 1) * limit;
-        const end = que * limit;
-        // let users = usersDetails.slice(start, end)
+            const totalUsers = producters.length;
+            const totalPages = Math.ceil(totalUsers / limit);
 
-        const paginatedProducts = producters.slice(start, end);
+            const start = (que - 1) * limit;
+            const end = que * limit;
+            // let users = usersDetails.slice(start, end)
 
-        res.render('user/Shope', { catData,producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData })
-    }else{
-        res.render('user/shope', { producters: [], catData: catData });
+            const paginatedProducts = producters.slice(start, end);
 
-    }
+            res.render('user/Shope', { catData, producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData })
+        } else {
+            res.render('user/shope', { producters: [], catData: catData });
+
+        }
     } catch (error) {
-        console.log('error',error)
+        console.log('error', error)
     }
 }
 
-const shopeSort=async(req,res)=>{
+const shopeSort = async (req, res) => {
     try {
         console.log('enter the varifyHighToLow')
         let producter
-        const Id=req.query.id
-        if(Id=='High to low'){
-            
-             producter=await product.find({is_blocked: false }).sort({price:-1})
-            }else if(Id=='Low to high'){
-                producter=await product.find({is_blocked: false }).sort({price:1})
-                
-            }else if(Id=='aA - zZ'){
-            producter=await product.find({is_blocked: false }).sort({name:1})
-            
-        }else if(Id=='zZ - aA'){
-            producter=await product.find({is_blocked: false }).sort({name:-1})
+        const Id = req.query.id
+        if (Id == 'High to low') {
+
+            producter = await product.find({ is_blocked: false }).sort({ price: -1 })
+        } else if (Id == 'Low to high') {
+            producter = await product.find({ is_blocked: false }).sort({ price: 1 })
+
+        } else if (Id == 'aA - zZ') {
+            producter = await product.find({ is_blocked: false }).sort({ name: 1 })
+
+        } else if (Id == 'zZ - aA') {
+            producter = await product.find({ is_blocked: false }).sort({ name: -1 })
 
         }
-        
+
         const catData = await cat.find({ is_Listed: true })
         console.log('hightolowData')
-        if(producter){
+        if (producter) {
+            console.log('enter product');
+
             const que = parseInt(req.query.page) || 1;
             const limit = 7;
             const totalUsers = producter.length;
-        const totalPages = Math.ceil(totalUsers / limit);
-        const start = (que - 1) * limit;
-        const end = que * limit;
-        const paginatedProducts = producter.slice(start, end);
-        console.log('highToLow datas',producter)
-        console.log('stand in near the shop in hightolow')
+            const totalPages = Math.ceil(totalUsers / limit);
+            const start = (que - 1) * limit;
+            const end = que * limit;
+            const paginatedProducts = producter.slice(start, end);
+            console.log('highToLow datas', producter)
+            console.log('stand in near the shop in hightolow')
 
-            res.render('user/shope',{producters:producter, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData})
-        }else{
+            res.render('user/shope', { producters: paginatedProducts, totalUsers: totalUsers, totalPages: totalPages, catData: catData, que: que })
+        } else {
             console.log('enter the else case in highToShope')
             res.render('user/shope', { producters: [], catData: catData });
         }
     } catch (error) {
-        console.log('error',error)
-        
+        console.log('error', error)
+
+    }
+}
+
+const searchProducts = async (req, res) => {
+    try {
+        console.log('enter the searchProducts ')
+        let page = 0
+        let searchString = req.query.search
+        const catData = await cat.find({ is_Listed: true })
+
+        console.log('enter the searchProcts catData', catData)
+        if (!searchString) {
+            console.log('enter the !searchString ')
+            return res.status(400).json({ error: 'Search string is required' });
+        }
+
+        let searchNumber = parseInt(searchString, 10);
+
+        let searchQuery = {
+            $or: [
+                { name: { $regex: new RegExp(searchString, 'i') } }
+            ]
+        };
+
+        if (!isNaN(searchNumber)) {
+            console.log('enter the searchProducts !isNaN ')
+            searchQuery.$or.push({ price: { $lte: searchNumber } });
+        }
+
+        console.log(searchQuery);
+
+        let products = await product.find(searchQuery).sort({ price: -1 }).populate('category')
+        // console.log(products);
+
+        const producters = products.filter(prod => prod.category && prod.category.is_Listed);
+        console.log(producters);
+
+        if (producters) {
+            const que = parseInt(req.query.page) || 1;
+            const limit = 7;
+            const usersDetails = await product.find({}).sort({ Date: -1 })
+
+            const totalUsers = usersDetails.length;
+            const totalPages = Math.ceil(totalUsers / limit);
+
+            const start = (que - 1) * limit;
+            const end = que * limit;
+            let users = usersDetails.slice(start, end)
+
+            const paginatedProducts = producters.slice(start, end);
+
+            res.render('user/shope', { products, searchString, productCount: products.length, page, catData: catData, totalUsers: totalUsers, que: que, totalPages: totalPages, producters: paginatedProducts })
+        }
+
+    } catch (error) {
+        console.log('enter the catch case');
+        console.log(error.message);
+        res.status(400).send(error.message)
     }
 }
 
@@ -172,19 +237,29 @@ const loadProduct = async (req, res) => {
     }
 }
 
-const Dashboard=async(req,res)=>{
+const Dashboard = async (req, res) => {
     try {
-        const userId= req.session.user_id
-        const userData=await user.findOne({_id:userId})
-        const dataCart=await datass.findOne({_id:userId})
-        console.log('userid',userId)
-        const orders = await Order.find({userId}).populate('orderdProducts.product').sort({_id:-1})
-      
+        if (req.query.orderOpen) {
+            req.flash('OpenOrder', 'Open')
+            return res.redirect('/Dashboard')
+        }
+
+        const OpOrder = req.flash('OpenOrder')
+
+        const userId = req.session.user_id
        
-        const address=await userAddress.find({userId:userId})
-        res.render('user/Dashboard',{userData,address,dataCart,orders})
+        const walletData=await wallet.findOne({userId:userId})
+      
+        const userData = await user.findOne({ _id: userId })
+        const dataCart = await datass.findOne({ _id: userId })
+        console.log('userid', userId)
+        const orders = await Order.find({ userId }).populate('orderdProducts.product').sort({ _id: -1 })
+
+
+        const address = await userAddress.find({ userId: userId })
+        res.render('user/Dashboard', { userData, address, dataCart, orders, OpOrder,walletData })
     } catch (error) {
-     console.log('error')   
+        console.log('error',error)
     }
 }
 
@@ -203,7 +278,7 @@ const logoutHome = async (req, res) => {
 
 const loadLoagin = async (req, res) => {
     try {
-      
+
         const block = req.flash('block')
         const login_id = req.session.user_id
         console.log('entering the load login', login_id)
@@ -232,12 +307,12 @@ const creatLoagin = async (req, res) => {
         console.log(password)
         console.log('checking data is exist or not')
         const data = await user.findOne({ email: email })
-        
-        console.log("data",email)
+
+        console.log("data", email)
         if (data) {
             console.log(data)
-            req.session.loginData=data
-            
+            req.session.loginData = data
+
             const passwordMatch = await bcrypt.compare(password, data.password)
 
             if (passwordMatch) {
@@ -245,7 +320,7 @@ const creatLoagin = async (req, res) => {
                 if (data.is_blocked == false) {
                     console.log("it is not bloked ");
                     req.session.user_id = data._id;
-                    req.session.password=password
+                    req.session.password = password
                     console.log('it is session storage', req.session.user_id)
                     res.redirect('/')
                 } else {
@@ -259,7 +334,7 @@ const creatLoagin = async (req, res) => {
             }
         } else {
             req.flash('block', 'user is not exist')
-            return res.render('/login')
+            return res.redirect('/login')
         }
     } catch (error) {
         res.send('not working')
@@ -305,7 +380,7 @@ const loadRegister = async (req, res) => {
         console.log("here1")
         console.log(secuPasssword)
         if (dataUser) {
-            req.flash('regMesg', 'users already exist') 
+            req.flash('regMesg', 'users already exist')
             return res.redirect('/register')
 
         } else {
@@ -320,7 +395,7 @@ const loadRegister = async (req, res) => {
             console.log(name, email, password, mobile)
             const save = await dBase.save()
             console.log('save', save)
-            
+
             //    const{otp,email}=req.body
             const genOtp = generateOTP()
             req.session.regen = generateOTP()
@@ -341,7 +416,7 @@ const loadRegister = async (req, res) => {
 
             console.log("get the otp");
             req.session.email = email
-            req.session.id=dbsOtp
+            req.session.id = dbsOtp
             res.redirect(`/otp?email=${email}`)
         }
 
@@ -515,12 +590,12 @@ const DetailProduct = async (req, res) => {
         const proId = req.query.ProductId
         console.log('pro id', proId);
         const prod = await product.findOne({ _id: proId }).populate('category')
-        console.log('enter the productd',prod)
+        console.log('enter the productd', prod)
         const category = await cat.find({ _id: proId }).populate('category')
 
         if (prod) {
 
-            res.render('user/productDetail', { prod:prod, category:category })
+            res.render('user/productDetail', { prod: prod, category: category })
         }
     } catch (error) {
         console.log('error', error)
@@ -690,12 +765,13 @@ const passUpdate = async (req, res) => {
 
 
 
-const LoadchangePassword=async(req,res)=>{
+const LoadchangePassword = async (req, res) => {
     try {
         console.log('enter the change password')
-        res.render('user/changePassword')
+        const notMatch=req.flash('notMatch')
+        res.render('user/changePassword',{notMatch})
     } catch (error) {
-        console.log('error',error)
+        console.log('error', error)
     }
 }
 
@@ -705,98 +781,104 @@ const changePassword = async (req, res) => {
         const { currentPassword, newPassword, confirmPassword } = req.body;
         const storedPassword = req.session.password;
 
-        console.log('storedPassword',storedPassword);
-        
+        console.log('storedPassword', storedPassword);
+
         if (currentPassword === storedPassword) {
             const userId = req.session.userId; // Assuming userId is stored in session
-            
+
             const userData = await user.findOne({ id: userId });
+            console.log('enter the userData',userData)
             
             if (userData) {
+                console.log('enter the userData if')
                 if (newPassword === confirmPassword) {
+                    console.log('enter the userData if==')
                     const hashedPassword = await securepassword(newPassword);
-                    
+                    req.session.cpassword=confirmPassword
+
                     await user.findOneAndUpdate({ id: userId }, { password: hashedPassword }, { new: true });
                     console.log('Password updated successfully');
-                    
-                    res.redirect('/Dashboard');
+
+                     res.redirect('/Dashboard');
                 } else {
+                    req.flash('notMatch','New password and confirm password do not match')
                     console.log('New password and confirm password do not match');
-                    res.render('user/changePassword', { error: 'New password and confirm password do not match' });
+                   return res.redirect('/changePassword');
                 }
             } else {
                 console.log('User data not found');
-                res.render('user/changePassword', { error: 'User data not found' });
+                res.render('user/changePassword');
             }
         } else {
             console.log('Current password is incorrect');
-            res.render('user/changePassword', { error: 'Current password is incorrect' });
+            req.flash('notMatch','Current password is incorrect')
+           return res.redirect('/changePassword');
         }
     } catch (error) {
         console.log('Error:', error);
-        res.render('user/changePassword', { error: 'An error occurred while changing the password' });
+        
     }
 };
 
-const LoadEditProfile=async(req,res)=>{
+const LoadEditProfile = async (req, res) => {
     try {
         console.log('enter the editProfile')
-        const editId=req.session.user_id
-        const loadData=await user.findOne({_id:editId})
-        if(loadData){
+        const editId = req.session.user_id
+        const loadData = await user.findOne({ _id: editId })
+        if (loadData) {
             console.log('enter the loadData')
-            res.render('user/editProfile',{loadData})
-        }else{
-            console.log('loadData are not exist',error)
+            res.render('user/editProfile', { loadData })
+        } else {
+            console.log('loadData are not exist', error)
         }
     } catch (error) {
-        console.log('error',error)
+        console.log('error', error)
     }
 }
 
-const editProfile=async(req,res)=>{
+const editProfile = async (req, res) => {
     try {
         console.log('enter the editProfile')
-        userName=req.body.username
-        userPhone=req.body.phone
-        id=req.session.user_id
-        console.log('id',id)
+        userName = req.body.username
+        userPhone = req.body.phone
+        id = req.session.user_id
+        console.log('id', id)
 
-        const editData=await user.findOne({_id:id})
+        const editData = await user.findOne({ _id: id })
 
-        if(editData){
+        if (editData) {
             console.log('enter the editData')
-           const Data=await user.findOneAndUpdate({_id:id},{name:userName,mobile:userPhone},{ new: true })
-           req.session.id=Data._id
-           console.log('req.session.id',req.session.id)
-            console.log('enter user ',Data)
+            const Data = await user.findOneAndUpdate({ _id: id }, { name: userName, mobile: userPhone }, { new: true })
+            req.session.id = Data._id
+            console.log('req.session.id', req.session.id)
+            console.log('enter user ', Data)
             console.log('enter the username and mobiles are update')
             res.redirect('/Dashboard')
-        }else{
+        } else {
             console.log('editData are not exist here')
         }
 
 
     } catch (error) {
-        console.log('error',error)
+        console.log('error', error)
     }
 }
 
-const LoadAddress=async(req,res)=>{
+const LoadAddress = async (req, res) => {
     try {
         // const id=req.session.user_id
         // const address=await userAddress.findOne({_id:id})
         console.log('enter the LoadAddress')
         // const AdData=req.session.Address
         // const DataAddress=await Address.findOne({})
-        
-            console.log('enter the Address')
-            res.render('user/Address')
-       
-             
-      
+
+        console.log('enter the Address')
+        res.render('user/Address')
+
+
+
     } catch (error) {
-        console.log('error',error)
+        console.log('error', error)
     }
 }
 
@@ -805,16 +887,16 @@ const LoadAddress=async(req,res)=>{
 const verifyAddress = async (req, res) => {
     try {
         console.log('Entering verifyAddress');
-        const userId=req.session.user_id
-        
+        const userId = req.session.user_id
+
         // Destructure the request body
-        const { firstName, lastName, country, streetName, town, state, postCode, phone, email} = req.body;
-        
+        const { firstName, lastName, country, streetName, town, state, postCode, phone, email } = req.body;
+
 
         console.log('Address Data', firstName, lastName, country, streetName, town, state, postCode, phone, email);
 
         // Validate required fields
-       
+
         // Create a new address document
         const addressData = new userAddress({
             firstName,
@@ -842,52 +924,85 @@ const verifyAddress = async (req, res) => {
     }
 };
 
-const deleteAddress=async(req,res)=>{
+const deleteAddress = async (req, res) => {
     try {
         console.log('entet the deleteAddress')
-        const del=req.query.delId
-        console.log('del',del)
-        if(del){
-            
-            console.log('entet the del',del)
-           await userAddress.deleteMany({_id:del}) 
+        const del = req.query.delId
+        console.log('del', del)
+        if (del) {
+
+            console.log('entet the del', del)
+            await userAddress.deleteMany({ _id: del })
             res.redirect('/Dashboard')
         }
-       
+
     } catch (error) {
-        
+
     }
 }
 
-const LoadEditAddress=async(req,res)=>{
+const LoadEditAddress = async (req, res) => {
     try {
         console.log('enter the LoadEditAddress')
-        const editid=req.query.editId
-        console.log('editid',editid)
-        const addresData=await userAddress.find({_id:editid})
-        if(addresData){
 
-            console.log('enter the addresData',addresData)
-            res.render('user/editAddress',{addresData})
+        console.log('enter load', req.query)
+        const editid = req.query.editId
+        console.log('editid', editid)
+        const addresData = await userAddress.find({ _id: editid })
+        if (addresData) {
+
+            // console.log('enter the addresData',addresData)
+            res.render('user/editAddress', { addresData, editid })
         }
     } catch (error) {
         console.log('error')
     }
 }
 
-const verifyEditAddress=async(req,res)=>{
+const verifyEditAddress = async (req, res) => {
     try {
         console.log('enter the verifyEditAddress')
-        const editid=req.query.editId
-        const { firstName, lastName, country, streetName, town, state, postCode, phone, email} = req.body;
-        const verify=await userAddress.find({_id:editid})
-        if(verify){
+        console.log("body : ", req.body);
+        const editid = req.body.id
+        console.log('enter ', req.body)
+        console.log('ente ', editid)
+        const { firstName, lastName, country, streetName, town, state, postCode, phone, email } = req.body;
+        const verify = await userAddress.findOne({ _id: editid })
+        console.log('enter the verify', verify)
+        if (verify) {
             console.log('enter the verify')
-            const changeAddress=await userAddress.findOneAndUpdate({firstName, lastName, country, streetName, town, state, postCode, phone, email})
+            const changeAddress = await userAddress.findOneAndUpdate({ _id: editid },{ firstName, lastName, country, streetName, town, state, postCode, phone, email })
+            console.log('enter the changeAddres',changeAddress)
             res.redirect('/Dashboard')
         }
     } catch (error) {
-        
+        console.log('enter the catch verifyeditaddress', error)
+
+    }
+}
+const addAddress = async (req, res) => {
+    try {
+        const data = req.body;
+        const userId=req.session.user_id;
+        console.log("data : ", data);
+        const newAddress = new Address({...data,userId});
+        await newAddress.save();
+        // console.log('enter the verifyEditAddress')
+        // console.log("body : ",req.body);
+        // const editid=req.body.id
+        // console.log('enter ',req.body)
+        // console.log('ente ',editid)
+        // const { firstName, lastName, country, streetName, town, state, postCode, phone, email} = req.body;
+        // const verify=await userAddress.findOne({_id:editid})
+        // console.log('enter the verify',verify)
+        // if(verify){
+        //     console.log('enter the verify')
+        //     const changeAddress=await userAddress.findOneAndUpdate({firstName, lastName, country, streetName, town, state, postCode, phone, email})
+        res.redirect('/Dashboard')
+
+    } catch (error) {
+        console.log('enter the catch verifyeditaddress', error)
+
     }
 }
 
@@ -920,6 +1035,7 @@ module.exports = {
     googleFail,
     filterShope,
     shopeSort,
+    searchProducts,
     Dashboard,
     LoadchangePassword,
     changePassword,
@@ -930,8 +1046,8 @@ module.exports = {
     deleteAddress,
     LoadEditAddress,
     verifyEditAddress,
-    
-    
-   
+    addAddress
+
+
 
 }

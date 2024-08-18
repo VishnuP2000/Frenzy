@@ -1,9 +1,19 @@
-const isLogin = async (req, res, next) => {
+const usersmodel=require('../model/userModel')
 
+const isLogin = async (req, res, next) => {
+    const use=await usersmodel.findOne({_id:req.session.user_id})
     try {
+        
         console.log("userAuth......");
         if (req.session.user_id) {
-            next();
+
+            if(use.is_blocked==false){
+                next()
+            }else{
+                req.session.user_id=null;
+               res.redirect('/login')
+            }
+            
         }
         else {
             return res.redirect('/login');

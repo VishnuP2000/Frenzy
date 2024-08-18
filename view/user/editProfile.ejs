@@ -12,14 +12,20 @@
 <body>
   <div class="container mt-5">
     <h1 class="text-center mb-4">Edit Profile</h1>
-    <form id="editProfileForm" action="/editProfile" method="POST">
+    <form id="editProfileForm" action="/editProfile" method="POST" novalidate>
       <div class="form-group">
         <label for="username">Username:</label>
-        <input type="text" class="form-control" id="username" value="<%=loadData.name %>" name="username" required>
+        <input type="text" class="form-control" id="username" value="<%=loadData.name %>" name="username" required minlength="3" maxlength="20">
+        <div class="invalid-feedback">
+          Please provide a valid username (3-20 characters).
+        </div>
       </div>
       <div class="form-group">
         <label for="phone">Phone Number:</label>
         <input type="tel" class="form-control" id="phone" value="<%=loadData.mobile%>" name="phone" pattern="[0-9]{10}" required>
+        <div class="invalid-feedback">
+          Please provide a valid 10-digit phone number.
+        </div>
       </div>
       <button type="submit" class="btn btn-primary">Update Profile</button>
     </form>
@@ -29,6 +35,22 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Custom JavaScript validation
+    (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+        var form = document.getElementById('editProfileForm');
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      }, false);
+    })();
+  </script>
 
   <style>
     /* styles.css */

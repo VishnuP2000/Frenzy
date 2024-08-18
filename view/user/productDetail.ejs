@@ -191,7 +191,7 @@
                                        <button onclick="AddToCart('<%=prod._id%>')"  class="btn-product btn-cart"><span>add to cart</span></button>
 
                                         <div class="details-action-wrapper">
-                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                            <a  onclick="wish('<%=prod._id%>')" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
                                             <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to Compare</span></a>
                                         </div><!-- End .details-action-wrapper -->
                                     </div><!-- End .product-details-action -->
@@ -678,6 +678,40 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 </body>
+<script>
+    function wish(pId){
+        console.log('enter the wish')
+        axios.post('/verifyWishlist',{
+            pId
+        })
+        .then((response)=>{
+            console.log('enter the respose');
+            if(response.data.success==true){
+                Swal.fire({
+                     icon: "success",
+                     title: "successfully add to wishList",
+                     text: "",
+                     footer: '<a href="#">Why do I have this issue?</a>'
+                });
+            }else{
+                console.log('enter the respose else case');
+
+                Swal.fire({
+                     icon: "error",
+                     title: "successfully add to wishList",
+                     text: "",
+                     footer: '<a href="#">Why do I have this issue?</a>'
+                });
+            }
+            
+        })
+        .catch((error)=>{
+            console.log('eneter the catch error',error);
+            
+        })
+        
+    }
+</script>
 <script>
     function AddToCart(proId){
 
