@@ -13,6 +13,8 @@ const Order = require('../model/orderModel')
 const flash = require('express-flash');
 const Address = require('../model/Address');
 const wallet=require('../model/walletModel')
+const productOffer=require('../model/productOfferModel')
+const categoryOffer=require('../model/categoryOfferModel')
 
 
 
@@ -55,10 +57,37 @@ const loadShope = async (req, res) => {
 
         // Filter products that belong to listed categories
         const producters = products.filter(prod => prod.category && prod.category.is_Listed);
+        
+
+        for(let produ of products){
+            let finalPrice=produ.price
+        let offer=0
+
+             const proOffer=await productOffer.findOne({product:produ._id, is_activated:true})
+             const cateOffer=await categoryOffer.findOne({category:produ.category,is_activated:true})
+
+             if(proOffer){
+
+                 finalPrice=produ.price*((100-proOffer.discount)/100)
+                 offer=proOffer.discount
+             }
+             
+           if(cateOffer&&offer<cateOffer.discount){
+            finalPrice=produ.price*((100-cateOffer.discount)/100)
+            offer=cateOffer.discount
+           }
+
+
+         const offerData=await product.findByIdAndUpdate({_id:produ._id},{$set:{finalPrice,offer}},{new:true})
+        }
+
         const catData = await cat.find({ is_Listed: true })
         console.log('catData', catData)
         console.log('producters', producters)
+        
+        
 
+        
 
 
         if (producters) {

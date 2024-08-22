@@ -117,6 +117,8 @@
 
             <div class="page-content">
             	<div class="container">
+                    <% if(wish&&wish.products.length > 0){%>
+                        <%wish.products.forEach((datas)=>{%>
 					<table class="table table-wishlist table-mobile">
 						<thead>
 							<tr>
@@ -128,8 +130,6 @@
 							</tr>
 						</thead>
 
-                        <% if(wish&&wish.products.length > 0){%>
-                            <%wish.products.forEach((datas)=>{%>
 						<tbody>
 
 							
@@ -172,12 +172,12 @@
                             
 							
 						</tbody>
-                        <%   }) %>
-
-                        <%  }else{%>
-                            NO PRODUCTS
-                      <%  } %>
 					</table><!-- End .table table-wishlist -->
+                    <%   }) %>
+
+                    <%  }else{%>
+                        <p>NO PRODUCTS</p>
+                  <%  } %>
 	            	<div class="wishlist-share">
 	            		<div class="social-icons social-icons-sm mb-2">
 	            			<label class="social-label">Share on:</label>

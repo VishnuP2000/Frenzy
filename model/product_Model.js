@@ -34,6 +34,14 @@ const productSchema=new mongoose.Schema({
     type:Number,
     default:0
   },
+  offer:{
+    type:Number,
+    require:true
+  },
+  finalPrice:{
+    type:Number,
+    require:true
+  }
   
 })
 const product=mongoose.model('product',productSchema);

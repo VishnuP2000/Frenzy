@@ -71,7 +71,7 @@ const verifyOrderPage = async (req, res) => {
             if (!product) {
                 throw new Error(`Product with ID ${item.product} not found`);
             }
-            const price = product.price;
+            const price = product.finalPrice;
             if (typeof price !== 'number') {
                 throw new Error(`Invalid price for product ID ${item.product}`);
             }

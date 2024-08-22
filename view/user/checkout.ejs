@@ -251,7 +251,7 @@
                                                     <% if(data&&data.length>0){%>
                                                         <% totalResult=0 %>
                                                         <% data.forEach(item => { %>
-                                                            <% total=parseInt(item.product.price) * parseInt(item.quantity) %>
+                                                            <% total=parseInt(item.product.finalPrice) * parseInt(item.quantity) %>
                                                             <% totalResult=totalResult+total %>
                                                         <% }) %>
                                                     <% }else{%>

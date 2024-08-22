@@ -20,12 +20,12 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <form action="/admin/addCategory" method="post"
-                                            onsubmit="return validateForm(event)">
+                                        <form id="addingForm" action="/admin/addCategory" method="post">
                                             <div class="mb-4">
                                                 <label for="product_name" class="form-label">Name</label>
                                                 <input type="text" name="name" placeholder="Type here"
-                                                    class="form-control" id="product_name" />
+                                                class="form-control" id="product_name" />
+                                                <span id="name_error" class="error-message" style="color: red; font-size: smaller;"></span>
                                             </div>
                                             <div class="mb-4">
                                                 <label class="form-label">Description</label>
@@ -162,30 +162,28 @@
                 }
             </script>
             <script>
-                form.addEventListener('submit', function (event) {
-                    let name = document.getElementById('product_name').value.trim()
-                    let discription = document.getElementById('form-control').value.trim()
+                addingForm.addEventListener('submit', function (event) {
+                    // event.preventDefault()
+                    const name = document.getElementById('product_name').value.replace(/\s+/g, ' ')
+                    const description = document.getElementsByName('discription').value
+                    // const nameError=document.getElementById('name_error')
+                    console.log('enter the nameError')
+                    // nameError.textContent=''
 
-                    let nameError = document.getElementById('nameError')
-                    if (name === '') {
-                        nameError.textContent = 'Please enter a name';
+                    if (name === '' || description === '') {
                         event.preventDefault();
-                        return;
-                    } else {
-                        nameError.textContent = ''
-                    }
-
-                    let discError = document.getElementById('discError');
-                    if (discription === '') {
-                        discError.textContent = 'Please give a disciption'
-                        event.preventDefault();
-                        return;
-                    } else {
-                        discError.textContent = ''
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                            footer: '<a href="#">Why do I have this issue?</a>'
+                        });
+                        // return false;
+                        console.log('enter the validateForm')
                     }
                 });
             </script>
-            <script>
+            <!-- <script>
                 function validateForm() {
                     const name = document.getElementById('product_name').value.trim();
                     const description = document.querySelector('textarea[name="discription"]').value.trim();
@@ -200,12 +198,15 @@
                     }
                     return true;
                 }
-            </script>
+            </script> -->
 
-            <script>
+            <!-- <script>
                 function validateForm(event) {
-                    const name = document.getElementById('product_name').value.trim();
+                    const name = document.getElementById('product_name').value;
                     const description = document.getElementsByName('discription')[0].value.trim();
+                    const nameError=document.getElementById('name_error')
+                    console.log('enter the nameError')
+                    nameError.textContent=''
 
                     if (name === '' || description === '') {
                         Swal.fire({
@@ -216,9 +217,13 @@
                         });
                         event.preventDefault();
                         return false;
+                        console.log('enter the validateForm')
+                    }else if(name.value.trim().replace(/\s+/g, ' ')==''){
+                        nameError.textContent='please enter the name without space'
+                        event.preventDefault();
+                        return true;
                     }
-                    return true;
                 }
-            </script>
+            </script> -->
 
             <%- include('../layouts/footer.ejs') %>

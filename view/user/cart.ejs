@@ -118,80 +118,75 @@
 	                <div class="container">
 	                	<div class="row">
 	                		<div class="col-lg-9">
-	                			<table class="table table-cart table-mobile">
-									<thead>
-										<tr>
-											<th>Product</th>
-											<th>Price</th>
-											<th>Quantity</th>
-											<th>Total</th>
-											<th></th>
-										</tr>
-									</thead>
-                                    <% total=0 %>
-                                    <% totalResult=0 %>
-                                    
-                                   
-                                    <% if(dataCart && dataCart.products.length > 0){ %>
+                                <% totalResult=0 %>
+                                <% if (dataCart && dataCart.products && dataCart.products.length > 0) { %>
 
-                                        <% dataCart.products.forEach((cartItem,index) => { %>
-
-                                           
-
-                                     
-
-									<tbody >
+                                    <table class="table table-cart table-mobile">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <% total=0 %>
+                                       
+                                        
+                                        
+                            
+                                        
+                                        <tbody >
+                                        <% dataCart.products.forEach((cartItem, index) => { %>
 										<tr id="tableId">
 											<td class="product-col">
 												<div class="product">
 													<figure class="product-media">
 														<a href="#">
-															<img src="/userImages/<%=cartItem.product.images[0]%>" alt="">
+                                                            <img src="/userImages/<%= (cartItem.product && cartItem.product.images && cartItem.product.images.length > 0) ? cartItem.product.images[0] : 'default.jpg' %>" alt="">
 														</a>
 													</figure>
 
 													<h3 class="product-title">
-														<a href="#"><%=cartItem.product.name %> </a>
+                                                        <a href="#"><%= (cartItem.product && cartItem.product.name) ? cartItem.product.name : 'Product Name' %></a>
 													</h3><!-- End .product-title -->
 												</div><!-- End .product -->
 											</td>
-											<td class="price-col" id="price-<%= index %>"><%=cartItem.product.price%></td>
+                                           <% console.log( 'ejs errors', cartItem.product.price) %>
+											<td class="price-col" id="price-<%= index %>"><%=cartItem.product.finalPrice%></td>
 											<td class="quantity-col">
                                                 <div class="cart-product-quantity">
-
-
-                                                    <input type="number" id="inc-<%=index%>"
-                                                        onchange="quantity('<%= index %>','<%=cartItem._id %>','<%=cartItem.product.quantity %>')"
-                                                        class="form-control" value="<%=cartItem.quantity %>"
-                                                        min="1" max="<%=cartItem.product.quantity %>" step="1"
-                                                        console.log(<%'productquantity', cartItem.quantity %>)
-                                                        console.log(<%'productquantity 2', cartItem.product.quantity %>)
-                                                        data-decimals="0" required>
-                                                </div><!-- End .cart-product-quantity -->
+                                                    <input type="number" id="inc-<%= index %>"
+                                                        onchange="quantity('<%= index %>', '<%= cartItem._id %>', '<%= (cartItem.product && cartItem.product.quantity) ? cartItem.product.quantity : 1 %>')"
+                                                        class="form-control" value="<%= cartItem.quantity %>"
+                                                        min="1" max="<%= (cartItem.product && cartItem.product.quantity) ? cartItem.product.quantity : 1 %>" step="1">
+                                                </div>
                                             </td>
                                            
                                             
-                                                <% total=parseInt(cartItem.product.price) * parseInt(cartItem.quantity) %>
+                                                <% total=parseInt(cartItem.product.finalPrice) * parseInt(cartItem.quantity) %>
 
                                                <% totalResult=totalResult+total %>
                                              
 
-											<td id="totalPrice-<%=index%>" class="totalPrice total-col"><%=parseInt(cartItem.product.price) * parseInt(cartItem.quantity)%></td>
+											<td id="totalPrice-<%=index%>" class="totalPrice total-col"><%=parseInt(cartItem.product.finalPrice) * parseInt(cartItem.quantity)%></td>
 											<td  class="totalPrice remove-col"><button class="btn-remove" onclick="removebotton('<%=cartItem.product._id%>')" ><i id="<%  %>" class="icon-close"></i></button></td>
 										</tr>
                                         
+                                        <%   }) %>
 									</tbody>
 
-                                    <%   }) %>
-
-                                  <%  }else{ %>
-                                    <tr>
-                                        <td><p>no product</p></td>
-                                    </tr>
-                                  
-                                <%}%>
                               
 								</table><!-- End .table table-wishlist -->
+                                
+
+                                <%  }else{ %>
+                                  <tr>
+                                      <td><p>no product</p></td>
+                                  </tr>
+                                
+                              <%}%>
 
 	                			<div class="cart-bottom">
 			            			<div class="cart-discount">

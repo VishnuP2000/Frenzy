@@ -132,6 +132,9 @@
                                             <% if(prod.quantity <= 0){ %>
                                                 <span class="product-label label-sale">Outof stock</span>
                                             <% } %>
+                                            <% if(prod.offer >0&&prod.quantity > 0){ %>
+                                                <span class="product-label label-sale"><%=prod.offer%>%</span>
+                                            <% } %>
 
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                 <i class="icon-arrows"></i>
@@ -170,8 +173,20 @@
                                         <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
                                     </div><!-- End .rating-container -->
 
-                                    <div class="product-price">
-                                        ₹ <%=prod.price  %>
+                                    <div class="price-section">
+                                        <% if(prod.offer > 0&&prod.quantity > 0){ %>
+                                            <div class="old-price text-muted">
+                                                <del>₹ <%=prod.price %></del>
+                                            </div><!-- End .old-price -->
+                                            <div class="new-price  fw-bold">
+                                                ₹ <%=prod.finalPrice %>
+                                            </div><!-- End .new-price -->
+                                        <% } else { %>
+                                            <div class="price">
+                                                ₹ <%=prod.price %>
+                                            </div><!-- End .price -->
+                                        <% } %>
+                                    </div><!-- End .price-section -->
                                     </div><!-- End .product-price -->
 
                                     
@@ -749,6 +764,33 @@
     
 
 </script>
+
+<style>
+    .price-section {
+    margin-top: 10px;
+}
+
+.old-price {
+    font-size: 14px;
+    color: #999;
+}
+
+.new-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c96;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c96;
+}
+
+.old-price del {
+    text-decoration: line-through;
+}
+</style>
 
 <style>
     .product-image-gallery {

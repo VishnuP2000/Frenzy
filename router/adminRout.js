@@ -17,6 +17,8 @@ admin_rount.set('views','view/admin')
 admin_rount.use(express.json())
 admin_rount.use(express.urlencoded({extended:true}))
 const adminController=require('../controller/adminController')
+const productOfferController=require('../controller/productOfferController')
+const categoryOfferController=require('../controller/categoryOfferController')
 const adminAuth=require('../middleware/adminAuth')
 // const adminController = r
 
@@ -57,6 +59,20 @@ admin_rount.post('/productStatus',adminAuth.isLogin,adminController.changeStatus
 
 
 admin_rount.get('/deletProduct',adminAuth.isLogin,adminController.upload,adminController.deletProduct)
+
+admin_rount.get('/productOffer',adminAuth.isLogin,productOfferController.productOffer)
+admin_rount.post('/productOffer',adminAuth.isLogin,productOfferController.verifyProductOffer)
+admin_rount.get('/offerActive',adminAuth.isLogin,productOfferController.offerActive)
+admin_rount.post('/delId',adminAuth.isLogin,productOfferController.offerDelId)
+admin_rount.get('/editData',adminAuth.isLogin,productOfferController.offerEdit)
+admin_rount.post('/editData',adminAuth.isLogin,productOfferController.VerifyOfferEdit)
+
+admin_rount.get('/categoryOffer',adminAuth.isLogin,categoryOfferController.LoadCategoryOffer)
+admin_rount.post('/categoryOffer',adminAuth.isLogin,categoryOfferController.verifyCategoryOffer)
+admin_rount.post('/delCatId',adminAuth.isLogin,categoryOfferController.categoryDelete)
+admin_rount.get('/cateofferActive',adminAuth.isLogin,categoryOfferController.cateofferActive)
+admin_rount.get('/catEditData',adminAuth.isLogin,categoryOfferController.cateofferEdit)
+admin_rount.post('/catEditData',adminAuth.isLogin,categoryOfferController.verifycateofferEdit)
 // admin_rount.get('/deletProduct',adminAuth.isLogin, adminController.deletProduct)
 
 

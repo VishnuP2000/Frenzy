@@ -1,0 +1,120 @@
+<%- include('../layouts/adminHead.ejs') %>
+
+<body>
+    <div class="screen-overlay"></div>
+    <%- include('../layouts/aside.ejs') %>
+   
+    <main class="main-wrap">
+        <%- include('../layouts/adminHeader.ejs') %>
+       
+        <section class="content-main">
+            
+            
+            <form action="/admin/catEditData?id=<%=ofId%>" method="post"  class="p-4 shadow-sm bg-light rounded">
+             
+                
+                    
+
+               <div>
+                <div class="mb-4">
+                    <h2 class="content-title card-title text-center">Edit category</h2>
+                </div>
+               
+                <div class="form-group mb-3">
+                    <%  console.log('product id',offData.product)  %>
+                    <label for="productOffer" class="form-label">Product Name</label>
+                    <select class="form-control select2" id="productOffer" name="offer" required>
+                        
+                        
+                        <% if(producters.length>0){%>
+                            <% producters.forEach((data)=>{%>
+                                <% if(offData.product==data._id.toString()){%>
+
+                                    <option  value="<%=data._id%>" selected><%=data.name %></option>
+                                    
+                                    
+                                    <% }else{%>
+                                        <option  value="<%=data._id%>"><%=data.name %></option>
+                            
+                                
+
+                       <% } %>
+                      
+                        <%  }) %>
+    
+                        <%  }else{%>
+                            <p>NO DATAS</p>
+                       <% } %>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="discount" class="form-label">Discount (%)</label>
+                    <input value="<%=offData.discount%>" type="number" class="form-control" id="discount" name="discount" min="0" max="100" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="expiryDate" class="form-label">Expiry Date</label>
+                    <input value="<%=offData.expireDate%>" type="date" class="form-control" id="expiryDate" name="expiryDate" required>
+                    <input value="<%=offData.expireDate%>" type="hidden"  class="form-control" id="Date" required>
+                </div>
+               </div>
+               
+              
+
+             
+               
+                <button type="submit" class="btn btn-primary w-100">Save</button>
+            </form>
+        </section>
+
+        <footer class="main-footer font-xs mt-5">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; Nest - HTML Ecommerce Template.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">All rights reserved</div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    
+    <script>
+        const dateString = document.getElementById('Date').value
+
+var date = new Date(dateString);
+
+// Extract the year, month, and day
+var year = date.getFullYear();
+var month = String(date.getMonth() + 1).padStart(2, '0');
+var day = String(date.getDate()).padStart(2, '0');
+
+// Format the date as YYYY-MM-DD
+var formattedDate = `${year}-${month}-${day}`;
+
+document.getElementById('expiryDate').value = formattedDate
+    </script>
+
+    <style>
+        .content-main {
+            max-width: 600px;
+            margin: auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</body>
+</html>

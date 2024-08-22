@@ -1,0 +1,317 @@
+<%- include('../layouts/adminHead.ejs') %>
+
+
+    <body>
+        <div class="screen-overlay"></div>
+        <%- include('../layouts/aside.ejs') %>
+       
+        <main class="main-wrap">
+            <%- include('../layouts/adminHeader.ejs') %>
+         
+            
+
+
+           
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">PRODUCT OFFERS</h2>
+                        
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input type="text" placeholder="Search..." class="form-control" />
+                            </div>
+                            
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <a id="" data-target="#exampleModal" data-toggle="modal" class="btn btn-primary" >ADD OFFER</a>
+                            </div>
+                        
+                              
+                       
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            
+                            
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>NO</th>
+                                        <th scope="col">PRODUCT NAME</th>
+                                        <th scope="col">DISCOUNT</th>
+                                        <th scope="col">EXPIRY</th>
+                                        <th scope="col">ACTIONS</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <% if(productOffer.length>0){%>
+                                    <% productOffer.forEach((prdata,index)=>{%>
+                                <tbody>
+                                    <tr>
+                                        <td><%=++index%></td>
+                                        <td><b><%=prdata.product.name%></b></td>
+                                        <td><%=prdata.discount%>%</td>
+                                        <td><%=prdata.expireDate.toLocaleDateString('en-US')%></td>
+                                        
+                                            <td>
+                                               
+                                                <a href="#" onclick="deleted('<%=prdata._id%>')" class="btn btn-md rounded font-sm">Delete</a>
+                                                <a href="/admin/editData?id=<%=prdata._id%>"  class="btn btn-md rounded font-sm">Edit</a>
+                                                <% if(prdata.is_activated){%>
+
+                                                    <a href="#"  class="btn btn-md rounded font-sm" id="offer_id<%=prdata._id%>" onclick="isActivated('<%=prdata._id%>')" >Deactivate</a>
+                                                    <%  }else{%>
+                                                        
+                                                        <a href="#"   class="btn btn-md rounded font-sm" id="offer_id<%=prdata._id%>" onclick="isActivated('<%=prdata._id%>')" >Activate</a>
+                                            <%  } %>
+                                            </td>
+                                       
+                                           
+                                        
+                                        <td class="text-end">
+                                        
+                                         
+                                            <!-- dropdown //end -->
+                                        </td>
+                                    </tr>
+                                   
+                                   
+                                    <% }) %>
+            
+                                    <%   } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+                <!-- card end// -->
+               
+            </section>
+            <!-- content-main end// -->
+            <footer class="main-footer font-xs">
+                <div class="row pb-30 pt-15">
+                    <div class="col-sm-6">
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        &copy; Nest - HTML Ecommerce Template .
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end">All rights reserved</div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ 
+
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+
+
+       <!-- Modal -->
+       <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Offer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="offerForm" action="/admin/productOffer" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="productOffer">Product Name</label>
+                            <select class="form-control" id="productOffer" name="offer" required>
+                                <option value="">Select a product</option>
+                                <% if(productData.length>0){%>
+                                    <% productData.forEach((pdata,index)=>{%>
+
+                                        <option value="<%=pdata._id %>"><%=pdata.name %></option>
+                                
+                                <%  }) %>
+                                <%  } %>
+                            </select>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="discount">Discount (%)</label>
+                            <input type="number" class="form-control" id="discount" name="discount" min="0" max="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="date" class="form-control" id="expiryDate" name="expiryDate" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <style>
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        .modal-header {
+            background-color: #f7f7f7;
+        }
+        .modal-title {
+            font-weight: bold;
+        }
+        .modal-footer {
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
+    <!-- <script>
+        function eddit(edit_id){
+            axios.post('/admin/editData',{
+                edit_id
+            })
+            .then((response)=>{
+                if(response.data.success==true){
+                    console.log('enter the response')
+                }else{
+                    console.log('enter the response else case')
+                }
+            })
+            .catch((error)=>{
+                console.log('enter the error',error)
+            })
+        }
+    </script> -->
+
+    <script>
+        function deleted(del_id){
+            axios.post('/admin/delId',{
+                del_id
+            })
+            .then((response)=>{
+                if(response.data.success==true){
+
+                    console.log('enter the response')
+                }else{
+                    console.log('enter the responce else case')
+                }
+            })
+            .catch((error)=>{
+                console.log('enter the error',error)
+            })
+            window.location.reload()
+        }
+
+    </script>
+
+
+<script>
+    function isActivated(offerId){
+        const isActiveBtn=document.getElementById(`offer_id${offerId}`);
+        Swal.fire({
+            title: `Are you sure you want to ${isActiveBtn.innerText.toLowerCase()} this user?`,
+            text: `This user will be ${isActiveBtn.innerText.toLowerCase()}ed.`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: `Yes, ${isActiveBtn.innerText.toLowerCase()}!`,
+            customClass: {
+                popup: 'custom-swal-width'
+            }
+        })
+        .then((result)=>{
+            console.log('enter the result')
+            if(result.isConfirmed){
+                fetch(`/admin/offerActive?id=${offerId}`,{
+                    method : 'GET'
+                })
+                .then(response => {
+                    console.log('enter then  response')
+                    if (!response.ok) {
+                        console.log('enter the !response')
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('enter the data')
+                    if (data.is_activated) {
+                        isActiveBtn.innerText = 'Deactivate';
+                        isActiveBtn.className = 'btn btn-sm btn-danger rounded font-sm mt-15';
+                    } else {
+                        console.log('enter the data else')
+                        isActiveBtn.innerText = 'Activate';
+                        isActiveBtn.className = 'btn btn-sm btn-brand rounded font-sm mt-15';
+                    }
+                  window.location.reload()
+                   
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+            }
+        })
+    }
+
+</script>
+
+
+
+<script>
+    document.getElementById('offerForm').addEventListener('submit', function(event) {
+        var productOffer = document.getElementById('productOffer').value;
+        var discount = document.getElementById('discount').value;
+        var expiryDate = document.getElementById('expiryDate').value;
+    
+        // Custom validation
+        if (productOffer === '') {
+            alert('Please select a product.');
+            event.preventDefault();
+            return;
+        }
+    
+        if (discount === '' || discount < 0 || discount > 100) {
+            alert('Please enter a valid discount between 0 and 100.');
+            event.preventDefault();
+            return;
+        }
+    
+        if (expiryDate === '') {
+            alert('Please select an expiry date.');
+            event.preventDefault();
+            return;
+        }
+    
+        // If all validations pass, the form will be submitted
+    });
+    </script>
+
+
+
+
+    </body>
+</html>

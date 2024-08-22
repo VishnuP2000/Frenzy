@@ -185,6 +185,9 @@
                                             <% if(product.quantity <= 0){ %>
                                                 <span class="product-label label-sale">Outof stock</span>
                                             <% } %>
+                                            <% if(product.offer >0&&product.quantity > 0){ %>
+                                                <span class="product-label label-sale"><%=product.offer%>%</span>
+                                            <% } %>
                                             <a href="/productDetail?ProductId=<%= product._id  %>">
                                                 <img src="/userImages/<%=product.images[0]  %>" alt="Product image" class="product-image" >
                                             </a>
@@ -205,9 +208,19 @@
                                                 <a href="#"><%=product.category.name %></a>
                                             </div><!-- End .product-cat -->
                                             <h3 class="product-title"><a href="product.html"><%= product.name %></a></h3><!-- End .product-title -->
-                                            <div class="product-price">
+                                            <% if(product.offer >0){%>
+                                            <div class="old-price">
                                                 ₹ <%=product.price  %>
+                                                
+                                                
                                             </div><!-- End .product-price -->
+                                            <div class="new-price">
+                                                ₹ <%=product.finalPrice  %>
+                                            </div>
+                                            <%  }else{%>
+                                                ₹ <%=product.price  %>
+
+                                               <% } %>
                                             <div class="ratings-container">
                                                 <div class="ratings">
                                                     <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->

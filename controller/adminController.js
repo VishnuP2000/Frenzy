@@ -101,7 +101,7 @@ const userBlock = async(req,res)=>{
     try {
         console.log('userBlock');
         const userList_id = req.query.id;
-        const data = await User.findOne({_id: userList_id});
+        const data = await User.findOne({_id: userList_id});    
         // if(userList_id){
             if(data.is_blocked==true){
                 const result = await  User.findOneAndUpdate({_id: userList_id},{$set:{is_blocked:false}})
@@ -120,7 +120,10 @@ const userBlock = async(req,res)=>{
 
 const categoryAdd = async (req, res) => {
     try {
-        const dataName = req.body.name;
+        const discription=req.body.discription
+        
+        const dataName = req.body.name.trim().toUpperCase().replace(/\s+/g, ' ')
+        console.log('req.body', discription,dataName);
         const catdata = await category.findOne({ name: dataName }); // Corrected to find by name
         console.log('catdata', catdata);
         
@@ -131,11 +134,11 @@ const categoryAdd = async (req, res) => {
            req.flash('errMsg','category already existing')
            return res.redirect('/admin/category')
         } else {
-            const { name, discription } = req.body;
-            console.log('name',name)
 
+            
+            console.log('enter the catdata')
             const data = new category({
-                name,
+                name:dataName,
                 discription,
                 is_Listed: true
             });
