@@ -66,15 +66,15 @@
                                         
                                             <td>
                                                
-                                                <a href="#" onclick="deleted('<%=catData._id%>')" class="btn btn-md rounded font-sm">Delete</a>
-                                                <a href="/admin/catEditData?id=<%=catData._id%>"  class="btn btn-md rounded font-sm">Edit</a>
+                                                <a href="#" onclick="deleted('<%=catData._id%>')" class="btn btn-md rounded font-sm" style="background-color: red;color: black;">Delete</a>
+                                                <a href="/admin/catEditData?id=<%=catData._id%>"  class="btn btn-md rounded font-sm" style="background-color: yellow;color: black;">Edit</a>
                      
                                                 <% if(catData.is_activated){%>
 
                                                     <a href="#"  class="btn btn-md rounded font-sm" id="offer_id<%=catData._id%>" onclick="isActivated('<%=catData._id%>')" >Deactivate</a>
                                                     <%  }else{%>
                                                         
-                                                        <a href="#"   class="btn btn-md rounded font-sm" id="offer_id<%=catData._id%>" onclick="isActivated('<%=catData._id%>')" >Activate</a>
+                                                        <a href="#"   class="btn btn-md rounded font-sm" style="background-color: red;" id="offer_id<%=catData._id%>" onclick="isActivated('<%=catData._id%>')" >Activate</a>
                                             <%  } %>
                                             </td>
                                        
@@ -272,6 +272,7 @@
 
 
 <script>
+     const curentDate=new Date;
     document.getElementById('offerForm').addEventListener('submit', function(event) {
         var productOffer = document.getElementById('productOffer').value;
         var discount = document.getElementById('discount').value;
@@ -292,6 +293,12 @@
     
         if (expiryDate === '') {
             alert('Please select an expiry date.');
+            event.preventDefault();
+            return;
+        }
+        console.log('enter the curentDate')
+        if(curentDate<expiryDate){
+            alert('Expiry date cannot be in the past.')
             event.preventDefault();
             return;
         }

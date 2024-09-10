@@ -10,51 +10,40 @@
         <section class="content-main">
             
             
-            <form action="/admin/catEditData?id=<%=ofId%>" method="post"  class="p-4 shadow-sm bg-light rounded">
+            <form action="/admin/couponEdit?id=<%=coupid%>" method="post"  class="p-4 shadow-sm bg-light rounded">
              
                 
                     
 
                <div>
                 <div class="mb-4">
-                    <h2 class="content-title card-title text-center">Edit category</h2>
+                    <h2 class="content-title card-title text-center">Edit coupon</h2>
                 </div>
                
-                <div class="form-group mb-3">
-                    <%  console.log('product id',offData.product)  %>
-                    <label for="productOffer" class="form-label">category Name</label>
-                    <select class="form-control select2" id="productOffer" name="offer" required>
+                <div class="form-group">
+                    <label for="productOffer">COUPON CODE</label>
+                  <div style="display: flex;">
+                    <div style="border: 1px solid black; width: 169px;"  ><%=coupondata.couponCode%></div>
+                    <input id="couponCode_field" type="text" name="couponName" hidden>
+                
+                  </div>
                         
                         
-                        <% if(producters.length>0){%>
-                            <% producters.forEach((data)=>{%>
-                                <% if(offData.product==data._id.toString()){%>
-
-                                    <option  value="<%=data._id%>" selected><%=data.name %></option>
-                                    
-                                    
-                                    <% }else{%>
-                                        <option  value="<%=data._id%>"><%=data.name %></option>
-                            
-                                
-
-                       <% } %>
-                      
-                        <%  }) %>
-    
-                        <%  }else{%>
-                            <p>NO DATAS</p>
-                       <% } %>
                     </select>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="discount" class="form-label">Discount (%)</label>
-                    <input value="<%=offData.discount%>" type="number" class="form-control" id="discount" name="discount" min="0" max="100" required>
+                <div class="form-group">
+                    <label for="discount">Discount (%)</label>
+                    <input value="<%=coupondata.discount%>" type="number" class="form-control" id="discount" name="discount" min="0" max="100" placeholder="Discount" >
                 </div>
-                <div class="form-group mb-4">
-                    <label for="expiryDate" class="form-label">Expiry Date</label>
-                    <input value="<%=offData.expireDate%>" type="date" class="form-control" id="expiryDate" name="expiryDate" required>
-                    <input value="<%=offData.expireDate%>" type="hidden"  class="form-control" id="Date" required>
+                <div class="form-group">
+                    <label for="discount">Cryteria Amount </label>
+                    <input value="<%=coupondata.criteriaAmount%>" type="number" class="form-control" id="discount" name="Amount" placeholder="Amount">
+                </div>
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date</label>
+                    
+                    <input value="<%=coupondata.expireDate%>" type="date" class="form-control" id="expiryDate" name="expiryDate" required>
+                    <input value="<%=coupondata.expireDate%>" type="hidden"  class="form-control" id="Date" required>
                 </div>
                </div>
                

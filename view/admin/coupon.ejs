@@ -15,8 +15,8 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">PRODUCT OFFERS</h2>
-                        <p style="color: red; font-size: 21px;"><%=err%></p>
+                        <h2 class="content-title card-title">COUPON LIST</h2>
+                        
                     </div>
                     <div>
                         <input type="text" placeholder="Search order ID" class="form-control bg-white" />
@@ -30,7 +30,7 @@
                             </div>
                             
                             <div class="col-lg-2 col-6 col-md-3">
-                                <a id="" data-target="#exampleModal" data-toggle="modal" class="btn btn-primary" >ADD OFFER</a>
+                                <a id="" data-target="#exampleModal" data-toggle="modal" class="btn btn-primary" >ADD COUP</a>
                             </div>
                         
                               
@@ -42,37 +42,43 @@
                         <div class="table-responsive">
                             
                             
+                            <% if(coupData.length>0){%>
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>NO</th>
-                                        <th scope="col">PRODUCT NAME</th>
+                                        <th scope="col">COUPON CODE</th>
                                         <th scope="col">DISCOUNT</th>
+                                        <th scope="col">CRYTERIA AMOUNT</th>
                                         <th scope="col">EXPIRY</th>
                                         <th scope="col">ACTIONS</th>
                                         
                                     </tr>
                                 </thead>
-                                <% if(productOffer.length>0){%>
-                                    <% productOffer.forEach((prdata,index)=>{%>
+                                <% coupData.forEach((coupon,index)=>{%>
+
                                 <tbody>
                                     <tr>
                                         <td><%=++index%></td>
-                                        <td><b><%=prdata.product.name%></b></td>
-                                        <td><%=prdata.discount%>%</td>
-                                        <td><%=prdata.expireDate.toLocaleDateString('en-US')%></td>
+                                        <td><%=coupon.couponCode%></td>
+                                        <td><%=coupon.discount%></td>
+                                        <td><%=coupon.criteriaAmount%></td> 
+                                        <td><%=coupon.expireDate.toLocaleDateString('en-US')%></td>
+                                       
+                                        
                                         
                                             <td>
                                                
-                                                <a href="#" onclick="deleted('<%=prdata._id%>')" class="btn btn-md rounded font-sm" style="background-color: red;color: black;">Delete</a>
-                                                <a href="/admin/editData?id=<%=prdata._id%>"  class="btn btn-md rounded font-sm" style="background-color:yellow; color: black;">Edit</a>
-                                                <% if(prdata.is_activated){%>
-
-                                                    <a href="#"  class="btn btn-md rounded font-sm" id="offer_id<%=prdata._id%>" onclick="isActivated('<%=prdata._id%>')" >Deactivate</a>
-                                                    <%  }else{%>
-                                                        
-                                                        <a href="#"   class="btn btn-md rounded font-sm" style="background-color: red;" id="offer_id<%=prdata._id%>" onclick="isActivated('<%=prdata._id%>')" >Activate</a>
-                                            <%  } %>
+                                                <a href="#" onclick="deleted('<%=coupon._id%>')" class="btn btn-md rounded font-sm" style="background-color: red;color: black;">Delete</a>
+                                                <a href="/admin/couponEdit?id=<%=coupon._id%>"  class="btn btn-md rounded font-sm" style="background-color: yellow;color: black;" >Edit</a>
+                                              
+                                                <% if(coupon.is_activated){%>
+                                                <a href="#"  class="btn btn-md rounded font-sm" id="offer_id<%=coupon._id%>" onclick="isActivated('<%=coupon._id%>')" >Deactivate</a>
+                                                <%  }else{%>
+                                                    
+                                                    <a href="#"   class="btn btn-md rounded font-sm" style="background-color: red;" id="offer_id<%=coupon._id%>" onclick="isActivated('<%=coupon._id%>')" >Activate</a>
+                                        <%  } %>
+                                           
                                             </td>
                                        
                                            
@@ -80,16 +86,20 @@
                                         <td class="text-end">
                                         
                                          
-                                            <!-- dropdown //end -->
+                                          
+                             <%   }) %>
+
                                         </td>
                                     </tr>
                                    
                                    
-                                    <% }) %>
-            
-                                    <%   } %>
+                                  <!-- if and foreach end -->
                                 </tbody>
                             </table>
+                             <% }else{%>
+                                <p>NO COUPONS</p>
+
+                            <% } %>
                         </div>
                         <!-- table-responsive //end -->
                     </div>
@@ -132,35 +142,36 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add New Offer</h5>
-                   
+                    <h5 class="modal-title" id="exampleModalLabel">Add New COUPON</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="offerForm" action="/admin/productOffer" method="post">
+                <form id="couponForm" action="/admin/addcoupon" method="post">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="productOffer">Product Name</label>
-                            <select class="form-control" id="productOffer" name="offer" >
-                                <option value="">Select a product</option>
-                                <% if(productData.length>0){%>
-                                    <% productData.forEach((pdata,index)=>{%>
-
-                                        <option value="<%=pdata._id %>"><%=pdata.name %></option>
+                            <label for="productOffer">COUPON CODE</label>
+                          <div style="display: flex;">
+                            <div style="border: 1px solid black; width: 169px;" ><p id="couponCode"></p></div>
+                            <input id="couponCode_field" type="text" name="couponName" hidden>
+                            <button type="button" class="btn btn-secondary" onclick="genarate()">Genarate Code</button> 
+                          </div>
                                 
-                                <%  }) %>
-                                <%  } %>
+                                
                             </select>
                         </div>
                     
                         <div class="form-group">
                             <label for="discount">Discount (%)</label>
-                            <input type="number" class="form-control" id="discount" name="discount" min="0" max="100" >
+                            <input type="number" class="form-control" id="discount" name="discount" min="0" max="100" placeholder="Discount" >
+                        </div>
+                        <div class="form-group">
+                            <label for="discount">Cryteria Amount </label>
+                            <input type="number" class="form-control" id="discount" name="Amount" placeholder="Amount">
                         </div>
                         <div class="form-group">
                             <label for="expiryDate">Expiry Date</label>
-                            <input type="date" class="form-control" id="expiryDate" name="expiryDate" >
+                            <input type="date" class="form-control" id="expiryDate" name="expiryDate">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -189,27 +200,12 @@
             border-top: 1px solid #e9ecef;
         }
     </style>
-    <!-- <script>
-        function eddit(edit_id){
-            axios.post('/admin/editData',{
-                edit_id
-            })
-            .then((response)=>{
-                if(response.data.success==true){
-                    console.log('enter the response')
-                }else{
-                    console.log('enter the response else case')
-                }
-            })
-            .catch((error)=>{
-                console.log('enter the error',error)
-            })
-        }
-    </script> -->
+    
+
 
     <script>
         function deleted(del_id){
-            axios.post('/admin/delId',{
+            axios.post('/admin/Deletcoupon',{
                 del_id
             })
             .then((response)=>{
@@ -232,6 +228,7 @@
 <script>
     function isActivated(offerId){
         const isActiveBtn=document.getElementById(`offer_id${offerId}`);
+        
         Swal.fire({
             title: `Are you sure you want to ${isActiveBtn.innerText.toLowerCase()} this user?`,
             text: `This user will be ${isActiveBtn.innerText.toLowerCase()}ed.`,
@@ -247,7 +244,7 @@
         .then((result)=>{
             console.log('enter the result')
             if(result.isConfirmed){
-                fetch(`/admin/offerActive?id=${offerId}`,{
+                fetch(`/admin/couponActieve?id=${offerId}`,{
                     method : 'GET'
                 })
                 .then(response => {
@@ -280,12 +277,24 @@
 
 </script>
 
+<script>
+    function genarate(){
+      let abc = 'QWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+      let string = ''
+      for(let i=0;i<=8;i++){
+        let index = Math.floor(Math.random()*abc.length)
+        string += abc[index]
+      }
+      document.getElementById('couponCode').textContent = string
+      document.getElementById('couponCode_field').value = string
+    }
+  </script>
+
 
 
 <script>
-    const curentDate=new Date;
-    document.getElementById('offerForm').addEventListener('submit', function(event) {
-        var productOffer = document.getElementById('productOffer').value;
+    document.getElementById('couponForm').addEventListener('submit', function(event) {
+        var productOffer = document.getElementById('couponCode_field').value;
         var discount = document.getElementById('discount').value;
         var expiryDate = document.getElementById('expiryDate').value;
     
@@ -296,7 +305,7 @@
             return;
         }
     
-        if (discount === '' || discount < 0 || discount > 100) {
+        if (discount === '' || discount < 0) {
             alert('Please enter a valid discount between 0 and 100.');
             event.preventDefault();
             return;

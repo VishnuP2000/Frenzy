@@ -277,7 +277,8 @@ const Dashboard = async (req, res) => {
 
         const userId = req.session.user_id
        
-        const walletData=await wallet.findOne({userId:userId})
+        const walletData=await wallet.findOne({userId:userId}).lean();
+        console.log('enter the walletData',walletData)
       
         const userData = await user.findOne({ _id: userId })
         const dataCart = await datass.findOne({ _id: userId })
@@ -286,7 +287,7 @@ const Dashboard = async (req, res) => {
 
 
         const address = await userAddress.find({ userId: userId })
-        res.render('user/Dashboard', { userData, address, dataCart, orders, OpOrder,walletData })
+        res.render('user/Dashboard', { userData, address, dataCart, orders, OpOrder,walletData:walletData })
     } catch (error) {
         console.log('error',error)
     }

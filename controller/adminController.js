@@ -28,10 +28,102 @@ const upload = multer({storage: storage }).fields([
 const loadDashboard=async(req,res)=>{
     try {
         console.log('it is okkkk')
-        // res.redirect('/dashboard')
-        res.render('dashboard')
+        const userCount = await User.find({is_admin:false}).countDocuments();
+        const productCount = await product.find({}).countDocuments();
+        const categoryCount = await category.find({}).countDocuments()
+        console.log('usercount',userCount)
+        console.log('productCount',productCount)
+        console.log('categoryCount',categoryCount)
+        let totalEarning = 0;
+        const result = await order.aggregate([{
+            $group:{
+                _id: null,
+                totalPrice: {$sum: '$subTotal'}
+            }
+        }]);
+        if(result.length>0){
+            totalEarning = result[0].totalPrice
+        }else{
+            totalEarning = 0
+        }
+
+        const bestProduct = await order.aggregate([
+            { $unwind: '$orderdProducts' },
+            {
+                $group: {
+                    _id: '$orderdProducts.product',
+                    totalCount: { $sum: '$orderdProducts.quantity' } // Sum the quantities ordered
+                }
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'product'
+                }
+            },
+            { $unwind: '$product' },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'product.category',
+                    foreignField: '_id',
+                    as: 'category'
+                }
+            },
+            { $unwind: '$category' },
+            {
+                $project: {
+                    _id: 1,
+                    totalCount: 1,
+                    'product.name': 1,
+                    'category.name': 1,
+                    'product.images': 1,
+                    'product.quantity': 1
+                }
+            },
+            { $sort: { totalCount: -1 } },
+            { $limit: 5 }
+        ]);
+        console.log('bestProduct',bestProduct)
+
+        let bestCategory = await order.aggregate([
+            { $unwind: '$orderdProducts' },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'orderdProducts.product', // Correct field
+                    foreignField: '_id',
+                    as: 'product'
+                }
+            },
+            { $unwind: '$product' },
+            {
+                $group: {
+                    _id: '$product.category', // Correctly reference the product category
+                    totalCategoryCount: { $sum: 1 } // Summing the quantities
+                }
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: '_id', // Correct field
+                    foreignField: '_id',
+                    as: 'category'
+                }
+            },
+            { $unwind: '$category' },
+            {$project:{_id:1,'category.name':1,totalCategoryCount:1}},
+            { $sort: { totalCategoryCount: -1 } }, // Correct field
+            { $limit: 5 }
+        ])
+        console.log('bestCategory',bestCategory);
+        
+
+        res.render('dashboard',{userCount,productCount,categoryCount,totalEarning,bestProduct,bestCategory})
     } catch (error) {
-        console.log(error)
+        console.log('enter the loadDashboard error',error)
     }
 }
 
@@ -512,6 +604,7 @@ const changeStatus=async(req,res)=>{
         
     }
 }
+
 
 module.exports={
     loadDashboard,

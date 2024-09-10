@@ -27,7 +27,8 @@ const verifyProductOffer=async(req,res)=>{
 
         if(proOffer){
             console.log(' proOffer is already exists')
-        return req.flash('errmsg','product is already exist')
+         req.flash('errmsg','product is already exist')
+         return res.redirect('productOffer')
         }else{
             console.log('enter the proOffer ')
             const offerData=new prodOffer({

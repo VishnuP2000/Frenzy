@@ -76,12 +76,16 @@ const orderSchema= new mongoose.Schema({
             status:{
                 type:String,
                 required:true,
-                default:'pending'
+                default:'placed'
             }
         }
     ],
     purchaseData:{
         type:String,
+        require:true
+    },
+    purchaseTime:{
+        type:Date,
         require:true
     },
     paymentMethode:{

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #333;
+        }
+
+        .invoice-header {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .billing-info p, .order-details p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .table {
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .download-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .download-button button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-button button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="invoiceId">
+        <h1>Invoice</h1>
+        <% console.log(' invoice head') %>
+        <%if(invoiceData.length>0){%>
+           <% console.log('reach the invoice',invoiceData) %>
+           <% invoiceData.forEach((DataInvoice)=>{%>
+
+         
+            <% console.log('reach the DataInvoice',DataInvoice) %>
+            
+            
+        <div class="row invoice-header">
+            <!-- Billing Information -->
+            <div class="col-md-6 billing-info">
+                <h2>Billing Information</h2>
+                <p><strong>Name:</strong><%=DataInvoice.shipAddress.firstName%></p>
+                <p><strong>Address:</strong><%=DataInvoice.shipAddress.streetName,DataInvoice.shipAddress.town,DataInvoice.shipAddress.state,DataInvoice.shipAddress.country,DataInvoice.shipAddress.postCode%></p>
+                <p><strong>Phone:</strong><%=DataInvoice.shipAddress.phone%></p>
+                <p><strong>Email:</strong><%=DataInvoice.shipAddress.email%></p>
+            </div>
+
+            <!-- Order Details -->
+            <div class="col-md-6 order-details">
+                <h2>Order Details</h2>
+                <p><strong>Order ID:</strong><%=DataInvoice.orderId%></p>
+                <p><strong>Order Date:</strong><%=DataInvoice.purchaseData%></p>
+                <p><strong>Payment Method:</strong><%=DataInvoice.paymentMethode%></p>
+                <p><strong>Payment Status:</strong><%=DataInvoice.orderdProducts[0].status%></p>
+            </div>
+        </div>
+      
+       
+        <!-- Products Table -->
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <% console.log('first if the invoiceData') %>
+                    <% if (DataInvoice && DataInvoice.orderdProducts && DataInvoice.orderdProducts.length > 0) { %>
+                        <% console.log('if the invoiceData',invoiceData) %>
+                        
+                        <% DataInvoice.orderdProducts.forEach((invoiceProduct)=>{ %>
+                            <tr>
+                                <td><%= invoiceProduct.product.name %></td>
+                                <td><%= invoiceProduct.quantity %></td>
+                                <td>₹<%= invoiceProduct.price %></td>
+                                <td>₹<%= DataInvoice.subTotal %></td>
+                            </tr>
+                            <% }); %>
+                            <% } else { %>
+                                <tr>
+                            <td colspan="4" class="text-center">No product data available.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            
+        </div>
+
+        <!-- Download Button -->
+        <div class="download-button">
+            <button class="btn btn-success" id="invoiceDownload">Download as PDF</button>
+        </div>
+        <%  }) %>
+        <% }else{%>
+            NO INVOICE DATA
+        <%}  %>
+    </div>
+
+    <!-- Bootstrap JS (Optional for Bootstrap components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- <script>
+        function downloadInvoice() {
+            // Logic to download the invoice as PDF
+            alert('Invoice downloaded as PDF');
+        }
+    </script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
+    <script>
+        
+
+            document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('invoiceDownload').addEventListener('click', function () {
+        const invoiceElement = document.getElementById('invoiceId');
+
+        html2pdf(invoiceElement, {
+    margin: [0.5, 0.5, 0.5, 0.5], // Smaller margins to fit more content
+    filename: 'Sales Report.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 1.5 }, // Scale down a bit
+    jsPDF: {
+        unit: 'in',
+        format: 'a4',
+        orientation: 'portrait' // Adjust if necessary to landscape
+    },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+});
+
+    });
+});
+      
+
+    </script>
+</body>
+</html>

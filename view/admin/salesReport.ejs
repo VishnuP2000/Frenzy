@@ -1,0 +1,269 @@
+<%- include('../layouts/adminHead.ejs') %>
+
+
+
+    <body>
+        <div class="screen-overlay"></div>
+        <%- include('../layouts/aside.ejs') %>
+            <main class="main-wrap">
+
+                <section class="content-main">
+
+
+
+                    <div class="card mb-4">
+                        <header class="card-header">
+                            <h4 class="card-title">Latest orders</h4>
+                            <div class="row align-items-center">
+                                <div class="row">
+                                    <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" id="pdf">
+                                        <div class="custom_select">
+                                            <button class="btn btn-success" style="margin-left: 400px;">Download as
+                                                PDF</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" id="excel">
+                                        <div class="custom_select">
+                                            <button class="btn btn-success" style="margin-left: 0px;">Download as
+                                                Excel</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-md-2 col-6">
+                                    <input type="date" value="02.05.2021" class="form-control" />
+                                </div> -->
+                                <ul>
+
+
+                                    <li>
+
+                                        <form action="" method="get">
+                                            <div class="dropdown show">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                                    id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    sort
+                                                </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <!-- <a class="dropdown-item" href="/sortReport?id=day">SELECT</a> -->
+                                                    <a class="dropdown-item"
+                                                        href="/admin/sortReport?selectMenu=day">DAY</a>
+                                                    <a class="dropdown-item"
+                                                        href="/admin/sortReport?selectMenu=month">MONTH</a>
+                                                    <a class="dropdown-item"
+                                                        href="/admin/sortReport?selectMenu=year">YEAR</a>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </header>
+                        <div class="card-body" id="salesReoport">
+                            <div class="table-responsive">
+                                <div class="table-responsive">
+                                    <% if(result.length>0){%>
+
+
+                                        <table class="table align-middle table-nowrap m-0" id="tableData">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col" class="text-center">
+                                                        <div class="form-check align-middle">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="transactionCheck01" />
+                                                            <label class="form-check-label"
+                                                                for="transactionCheck01"></label>
+                                                        </div>
+                                                    </th>
+                                                    <th class="align-middle" scope="col">NO:</th>
+                                                    <th class="align-middle" scope="col">ORDER ID</th>
+                                                    <th class="align-middle" scope="col">USER Name</th>
+                                                    <th class="align-middle" scope="col">PRODUCT</th>
+                                                    <th class="align-middle" scope="col">OFFER</th>
+                                                    <th class="align-middle" scope="col">PRICE</th>
+                                                    <th class="align-middle" scope="col">Date</th>
+                                                    <th class="align-middle" scope="col">FINAL PRICE</th>
+                                                </tr>
+                                            </thead>
+                                            <% result.forEach((ord,index)=>{%>
+
+
+                                                <tbody>
+
+
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="transactionCheck07" />
+                                                                <label class="form-check-label"
+                                                                    for="transactionCheck07"></label>
+                                                            </div>
+                                                        </td>
+                                                        <td><a href="#" class="fw-bold">
+                                                                <%=++index%>
+                                                            </a></td>
+                                                        <td><a href="#" class="fw-bold">
+                                                                <%=ord.orderId%>
+                                                            </a></td>
+                                                        <td>
+                                                            <%=ord.name %>
+                                                        </td>
+                                                        <%ord.orderdProducts.forEach((orderPrd)=>{%>
+
+                                                            <td>
+                                                                <%=orderPrd.product.name%>
+                                                            </td>
+                                                            <td>₹<%=orderPrd.price%>
+                                                            </td>
+                                                            <td>
+                                                                <%=orderPrd.totalPrice %>
+                                                            </td>
+                                                            <% }) %>
+                                                                <td>
+                                                                    <%=ord.purchaseData%>
+                                                                </td>
+
+
+                                                                <!-- <td>Paypal</td> -->
+                                                                <td>₹<%=ord.subTotal%>
+                                                                </td>
+
+                                                    </tr>
+                                                </tbody>
+                                                <% }) %>
+                                        </table>
+                                        <% }else{%>
+                                            <p>NO ORDERS</p>
+                                            <% } %>
+                                </div>
+                            </div>
+                            <!-- table-responsive end// -->
+                        </div>
+                    </div>
+                    <div class="pagination-area mt-30 mb-50">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-start">
+                                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </section>
+                <!-- content-main end// -->
+                <footer class="main-footer font-xs">
+                    <div class="row pb-30 pt-15">
+                        <div class="col-sm-6">
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            &copy; Nest - HTML Ecommerce Template .
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end">All rights reserved</div>
+                        </div>
+                    </div>
+                </footer>
+            </main>
+            <%- include('../layouts/footer.ejs') %>
+                <style>
+                    .green-button {
+                        background-color: #3bb77e;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 10px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        /* Optional: to give the button rounded corners */
+                    }
+
+                    .green-button:hover {
+                        background-color: darkgreen;
+                        /* Optional: change the color on hover */
+                    }
+                </style>
+                <style>
+                    .custom_select button {
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        border-radius: 5px;
+                    }
+                </style>
+
+
+                <!-- <script>
+  const selectData = document.getElementById('selectDate');
+selectData.addEventListener('change', function() {
+    const route = selectData.value;
+    if (route) {
+        window.location.href = "/admin/sortReport";
+    }
+});
+    </script> -->
+
+                <!-- 
+                <script>
+                    document.getElementById('selectDate').addEventListener('change', function () {
+                        console.log('here is reached ')
+                        const selectedValue = this.value;
+                        if (selectedValue) {
+                            window.location.href = selectedValue;
+                        }
+                    });
+
+
+
+                </script> -->
+                <!-- pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+        <!-- exel -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
+                <script>
+                     document.addEventListener('DOMContentLoaded', function () {
+                        document.getElementById('pdf').addEventListener('click', function () {
+                            const invoiceElement = document.getElementById('salesReoport');
+
+                            html2pdf(invoiceElement, {
+                                margin: [0.5, 0.5, 0.5, 0.5], // Smaller margins to fit more content
+                                filename: 'Sales Report.pdf',
+                                image: { type: 'jpeg', quality: 0.98 },
+                                html2canvas: { scale: 1.5 }, // Scale down a bit
+                                jsPDF: {
+                                    unit: 'in',
+                                    format: 'a4',
+                                    orientation: 'portrait' // Adjust if necessary to landscape
+                                },
+                                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                            });
+                        });
+                    });
+
+                    document.getElementById('excel').addEventListener('click', function () {
+                        let tableData = document.getElementById('tableData');
+                        const wb = XLSX.utils.table_to_book(tableData);
+                        // Save workbook as XLSX file
+                        XLSX.writeFile(wb, 'sales-report-excel.xlsx');
+                    });
+
+                   
+
+                </script>
+    </body>
+
+    </html>

@@ -16,10 +16,10 @@ const verifyWallet=async(req,res)=>{
     try {
         console.log('enter the verifyWallet')
         const userId=req.session.user_id
-        console.log('enter the userId',userId)
+        // console.log('enter the userId',userId)
         const {amount,paymentMethod}=req.body
-        console.log('req.body',amount,paymentMethod)
-        console.log('type',typeof paymentMethod)
+        // console.log('req.body',amount,paymentMethod)
+        // console.log('type',typeof paymentMethod)
         const date=format(new Date(),'dd/MM/yy, hh:mm a');
         console.log('date',date)
         
@@ -98,8 +98,87 @@ const withdrowFormWallet=async(req,res)=>{
     }
 }
 
+const paymentWallet=async(subTotal,userId)=>{
+    try {
+        console.log('enter the paymentWallet')
+        console.log('enter the subTotal,userid',subTotal,userId)
+        const wallets=await wallet.findOne({userId:userId})
+        console.log('wallets',Number(wallets.balance))
+        if(Number(wallets.balance)>subTotal){
+
+         
+
+
+            
+               console.log('enter the userId',userId)
+            //    const {amount,paymentMethod}=req.body
+            //    console.log('req.body',amount,paymentMethod)
+            //    console.log('type',typeof paymentMethod)
+               const date=format(new Date(),'dd/MM/yy, hh:mm a');
+               console.log('date',date)
+
+               const userExist=await wallet.findOne({userId:userId})
+               console.log('userExist',userExist)
+              
+              
+               if(!userExist){
+                   const userWallet=new wallet({
+                       userId:userId,
+                       balance:-subTotal,
+                       transactionHistory:{
+                           amount:subTotal,
+                           date:date,
+                           paymentMethod:'wallet',
+                           status:'credit'
+                       }
+                   })
+                  await userWallet.save()
+                   
+                 return ({success:true})
+               }else{
+                   console.log('enter the userExist else case')
+                   const Wallets=await wallet.findOneAndUpdate( 
+                       {userId:userId},
+                       {
+                           $inc: { balance:-subTotal },  
+                            $addToSet: {
+                       transactionHistory: {
+                        amount:subTotal,
+                           date,
+                           paymentMethod:'wallet',
+                           status: 'credit'
+                       },
+                       
+                   }
+               },
+               { new: true }
+               );
+               console.log('enter the Wallets',Wallets)
+              
+             
+               
+               return {success:true}
+            }
+            
+
+
+
+            
+        }else{
+            console.log('subtotal is less than wallet balance')
+            return {success:false}
+        }
+         
+
+        
+    } catch (error) {
+        console.log('enter the error',error)
+        
+    }
+}
 module.exports={
     loadWallet,
     verifyWallet,
-    withdrowFormWallet
+    withdrowFormWallet,
+    paymentWallet
 }

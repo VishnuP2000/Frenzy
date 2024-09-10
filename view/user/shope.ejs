@@ -95,7 +95,7 @@
                                                     <a class="dropdown-item" href="/sort?id=aA - zZ">aA - zZ</a>
                                                     <a class="dropdown-item" href="/sort?id=zZ - aA">zZ - aA</a>
                                                   </div>
-                                              </div>
+                                              </div>    
                                            </form>
                                        
                                      </li>
@@ -186,7 +186,7 @@
                                                 <span class="product-label label-sale">Outof stock</span>
                                             <% } %>
                                             <% if(product.offer >0&&product.quantity > 0){ %>
-                                                <span class="product-label label-sale"><%=product.offer%>%</span>
+                                                <span class="product-label label-sale" style="border-radius: 25px;"><%=product.offer%>%</span>
                                             <% } %>
                                             <a href="/productDetail?ProductId=<%= product._id  %>">
                                                 <img src="/userImages/<%=product.images[0]  %>" alt="Product image" class="product-image" >
@@ -203,35 +203,35 @@
                                             </div><!-- End .product-action -->
                                         </figure><!-- End .product-media -->
     
-                                        <div class="product-body">
+                                        <div class="product-body" style="font-size: 18px;">
                                             <div class="product-cat">
                                                 <a href="#"><%=product.category.name %></a>
                                             </div><!-- End .product-cat -->
                                             <h3 class="product-title"><a href="product.html"><%= product.name %></a></h3><!-- End .product-title -->
                                             <% if(product.offer >0){%>
-                                            <div class="old-price">
+                                            <div class="old-price" style="font-size: 18px;">
                                                 ₹ <%=product.price  %>
                                                 
                                                 
                                             </div><!-- End .product-price -->
-                                            <div class="new-price">
+                                            <div class="new-price" style="font-size: 20px;">
                                                 ₹ <%=product.finalPrice  %>
                                             </div>
                                             <%  }else{%>
                                                 ₹ <%=product.price  %>
 
                                                <% } %>
-                                            <div class="ratings-container">
+                                            <!-- <div class="ratings-container">
                                                 <div class="ratings">
-                                                    <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                                </div><!-- End .ratings -->
+                                                    <div class="ratings-val" style="width: 0%;"></div>
+                                                </div>
                                                 <span class="ratings-text">( 0 Reviews )</span>
-                                            </div><!-- End .rating-container -->
+                                            </div> -->
     
-                                            <div class="product-nav product-nav-dots">
+                                            <!-- <div class="product-nav product-nav-dots">
                                                 <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
                                                 <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
-                                            </div><!-- End .product-nav -->
+                                            </div> -->
                                         </div><!-- End .product-body -->
                                     </div><!-- End .product -->
                                 </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->

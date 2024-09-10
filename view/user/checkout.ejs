@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="assets/css/style.css">
             <!-- sweetalert link -->
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+             <!-- axios cdn link -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -123,15 +125,17 @@
             	<div class="checkout">
 	                <div class="container">
             			<div class="checkout-discount">
-            				<form action="#">
-        						<input type="text" class="form-control" required id="checkout-discount-input">
-            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-            				</form>
+                        
+                                    <button  type="button" class="btn btn-primary"  data-toggle="modal"  data-target="#exampleModal"  > 
+                                        view coupon
+                                      </button>
+            			
             			</div><!-- End .checkout-discount -->
                         <div class="container mt-5">
                             <a href="/Address">
                                 <button class="btn btn-primary edit-profile-btn" style="margin-left: 423px;margin-top: -167px;" >Add Address</button>
                             </a>
+                           
                         </div>
             			<form action="/OrderPage" method="POST" id="orderForm">
                             <div class="row">
@@ -179,7 +183,10 @@
                                             </style>
                                             <br>
                                             <div class="user-info w-50" style="font-size: 11px;" onclick="selectAddress(this, '<%= value._id %>')">
-                                                <input type="radio" name="selectedAddress" value="<%= value._id %>" id="address<%= index %>" style="display:none;">
+                              
+                                                        <input type="radio" name="selectedAddress" value="<%= value._id %>" id="address<%= index %>" style="display:none;">
+
+                                           
                                                 <div class="row">
                                                     <div class="cal col-md-6">First Name:</div>
                                                     <div class="cal col-md-6"><%= value.firstName %></div>
@@ -245,37 +252,59 @@
                                                 </tr> -->
                                                 <tr>
                                                     <td>Shipping:</td>
-                                                    <td>Free shipping</td>
+                                                    <td>₹ 50</td>
                                                 </tr>
                                                 <tr class="summary-total">
+                                                  
                                                     <% if(data&&data.length>0){%>
+
+                                                       
                                                         <% totalResult=0 %>
                                                         <% data.forEach(item => { %>
                                                             <% total=parseInt(item.product.finalPrice) * parseInt(item.quantity) %>
+                                                           
                                                             <% totalResult=totalResult+total %>
                                                         <% }) %>
-                                                    <% }else{%>
+                                                        <% } %>
+                                                        <td>Total: ₹</td>
+                                                        <td id="totalResult"><%=totalResult+50%></td>
+                                                        <td hidden id="ResultTotal"><%=totalResult+50%></td>
+                                                     
                                                         
-                                                      <!-- <div class="alert"id="alertMessage">
-                                                        NO DATA AVAILABLE
-                                                      </div> -->
-                                                 <%   } %>
-                                                    <td>Total:</td>
-                                                    <td>$<%=totalResult+50%></td>
+                                                      
+                                                    <% console.log('enter the totalresult',totalResult) %>
                                                 </tr><!-- End .summary-total -->
                                             </tbody>
                                         </table><!-- End .table table-summary -->
                                         <div class="accordion-summary" id="accordion-payment">
                                             <div class="card">
+                                               
+
+                                              
                                                 <div class="card-header" id="heading-3">
                                                     <h2 class="card-title">
                                                         <div class="d-flex">
-                                                            <input type="radio" name="paymentMethod" value="cash" id="payment-cash"checked>
+                                                            <input type="radio" name="paymentMethod" value="cash" id="payment-cash">
                                                             <label for="payment-cash" id="cash">Cash on delivery</label>
+                                                        </div>
+                                                    </h2>
+                                                    <h2 class="card-title">
+                                                        <% if(data){%>
+                                                        <div class="d-flex">
+                                                            <input type="radio" name="paymentMethod" value="online" id="payment-cash">
+                                                            <label for="payment-cash" onclick="razor('<%=data.finalPrice,data._id%>')" id="payStatus">online Payment</label>
+                                                        </div>
+                                                        <%  } %>
+                                                    </h2>
+                                                    <h2 class="card-title">
+                                                        <div class="d-flex">
+                                                            <input type="radio" name="paymentMethod" value="wallet" id="payment-cash">
+                                                            <label for="payment-cash"  id="cash">wallet</label>
                                                         </div>
                                                     </h2>
                                                 </div><!-- End .card-header -->
                                             </div>
+                                         
                                         </div><!-- End .accordion -->
                                         <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
                                             <span class="btn-text">Place Order</span>
@@ -286,6 +315,64 @@
                                 </aside><!-- End .col-lg-3 -->
                             </div><!-- End .row -->
                         </form>
+                      
+
+                        <!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">COUPONS</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <% if(coupons.length>0){%>
+                
+
+         
+          <table>
+           <thead>
+            <tr>
+                <th>coupon code</th>
+
+
+                <th>discount</th>
+                
+
+                <th>action</th>
+            </tr>
+           </thead>
+           
+           
+           <tbody>
+               <% coupons.forEach((cdata)=>{%>
+            <tr>
+                <td><%=cdata.couponCode %></td>
+
+                <td><%=cdata.discount%></td>
+                <!-- <td><button style="background-color: green; border-radius: 30px;">apply</button></td> -->
+                <td><button style="background-color: green; border-radius: 30px;" onclick="couponButton('<%=cdata.couponCode%>','<%=cdata.discount%>','<%=cdata._id%>')" >apply</button></td>
+                <input type="hidden" id="hiddenId" value="no">
+            </tr>
+            <%}) %>
+           </tbody>
+          </table>
+          <% }else{%>
+            <p>NO COUPONS</p>
+         <% } %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 10px;">Close</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
                         
 	                </div><!-- End .container -->
                 </div><!-- End .checkout -->
@@ -664,6 +751,92 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+    <script>
+        function couponButton(coupon,discount,id){
+            console.log('coupon','discount',coupon,discount)
+            const Result=document.getElementById('ResultTotal').textContent
+            console.log('inputId',typeof id)
+            const res=parseInt(Result)
+            console.log('Result', Result)
+            
+            const final=Result*(100-discount)/100
+            console.log('final',final)
+            const finalResult=document.getElementById('totalResult').innerHTML=final
+            const inputId=document.getElementById('hiddenId').value=id
+            console.log('inputId',inputId)
+        
+            
+          
+        }
+
+
+
+    </script>
+
+    <script>
+
+                    function razor(amount, userId) {
+                        console.log('enter th razor',amount, userId)
+                    const paymentStutus = document.getElementById('payStatus')
+                    fetch('/razor', {
+                        method: 'POST',
+                        headers: { 'Content-type': 'application/json' },
+                        body: JSON.stringify({ amount, userId })
+                    }).then(res => res.json()).then(data => {
+                        if (data.succes) {
+
+                            let options = {
+                                "key": `${data.key_id}`,
+                                "amount": `${data.amount}`,
+                                "currency": "INR",
+                                "name": "slayFIt",
+                                "handler": function (response) {
+                                    paymentStutus.value = "Paid"
+                                    form.submit();
+                                },
+                                "profile": {
+                                    "name":` ${data.name}`,
+                                    "email":` ${data.email}`
+                                }
+                            }
+
+                            let razorpayObject = new Razorpay(options);
+                            razorpayObject.on('payment.failed', (response) => {
+                                alert('payment failed');
+                                paymentStutus.value = "Pending"
+                                form.submit();
+                            });
+                            razorpayObject.open();
+                        } else if (data.fail) {
+                            const Toast = Swal.mixin({
+
+                                toast: true,
+                                position: "bottom",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+
+                                didOpen: (toast) => {
+
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+
+                            });
+
+                            Toast.fire({
+
+                                icon: "warning",
+                                title: "No address",
+                                background: "31363F"
+
+                            })
+                        }
+                    })
+                }
+    </script>
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
         function selectAddress(element, addressId) {
@@ -671,10 +844,10 @@
             document.querySelectorAll('.user-info').forEach(el => {
                 el.classList.remove('selected');
             });
-    
+
             // Add 'selected' class to the clicked address element
             element.classList.add('selected');
-    
+
             // Update the selected address radio button
             document.querySelectorAll('input[name="selectedAddress"]').forEach(input => {
                 if (input.value === addressId) {
@@ -684,52 +857,432 @@
                 }
             });
         }
-    
-        document.getElementById('orderForm').addEventListener('submit', function(event) {
+
+        document.getElementById('orderForm').addEventListener('submit', function (event) {
             console.log('Form submission attempt');
-    
+
+            event.preventDefault()
+
+
+
             // Get the selected address
-            const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
-            const selectCash=document.getElementById('cash') 
-            console.log(selectedAddress,'cashon')
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')
+            const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked')
+                const totalAmount=document.getElementById('ResultTotal').textContent
             
-            // If no address is selected
-            // if (!selectedAddress) {
-                //     // Prevent form submission
-                //     event.preventDefault();
-                
-                //     // Show the error message
-                //     document.getElementById('error-message').textContent = 'please select an address';
-                // } else if(!selectCash.checked) {
-                    //     // Hide the error message
-                    //     event.preventDefault();
-                    //     document.getElementById('error-message').textContent = 'please select an delivery type.';
-                    // }else{
-                        //     document.getElementById('error-message').textContent = '';
-                        // }
-                        if(selectedAddress){
-                            
-                            // event.preventDefault()
-                            console.log('enter the if case');
-                            
-                            
-                        }else{
-                            event.preventDefault()
-                            console.log('enter the else');
-                            Swal.fire({
+            const subAmount=parseInt(totalAmount)
+            console.log('enter the subAmount', subAmount)
+            
+            const couponId = document.getElementById('hiddenId')
+           
+            console.log('enter the couponId', couponId)
+            // const selectCash=document.getElementById('cash') 
+            console.log('paymentMethod', paymentMethod.value)
+            
+            console.log('selectedAddress', selectedAddress)
+             
+            if(paymentMethod.value=='cash'&&subAmount<=1000){
+                console.log('if case')
+           
+            if (paymentMethod) {
+                if (selectedAddress) {
+
+
+
+                    console.log('enter the if case');
+                    axios.post('/OrderPage', {
+                        paymentMethod: paymentMethod.value,
+                        selectedAddress: selectedAddress.value,
+                        couponId: couponId.value
+                    })
+                        .then((respons) => {
+
+
+
+
+                            console.log('response is coming')
+                            if (respons.data.success == true) {
+                                console.log('enter the response true.....')
+                                
+                               window.location.href='/successOrder'
+
+                            } else if (respons.data.success == false) {
+
+                                console.log('enter the response false.....')
+
+
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: respons.data.error,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                })
+
+                            } else if (respons.data.razorPay) {
+
+                                let result = respons.data.razorPay
+
+                                console.log('enter the razorpay respons')
+
+                                const options = {
+                                    key: "rzp_test_NlKpT8z0NsaS7K",
+                                    amount: result.amount,
+                                    currency: "INR",
+                                    name: "Frenzy",
+                                    description: "Test Transaction",
+                                    image: "https://example.com/your_logo",
+                                    order_id: null,
+                                    handler: function (response) {
+                                        // alert('payment success')
+                                        axios.post('/verifyPayment', {
+                                            orderId: result.receipt
+                                        })
+                                            .then(response => {
+                                                console.log('payment verification response', response.data.status);
+                                                if (response.data.status == true) {
+                                                    console.log('enter the response data for razorepay')
+
+                                                    window.location.href = '/successOrder'
+                                                } else {
+                                                    alert('payment failed')
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.log(error);
+                                                alert('There was a problem while payment')
+                                            })
+                                    },
+                                    prefill: {
+                                        name: "Customer Name",
+                                        email: "customer@example.com",
+                                        contact: "1234567890"
+                                    },
+                                    notes: {
+                                        address: "Customer Address"
+                                    },
+                                    theme: {
+                                        color: "#eea287"
+                                    }
+                                };
+
+                                var rzp1 = new Razorpay(options);
+                                rzp1.on('payment.failed', function (response) {
+                                    console.error('Payment failed:', response.error);
+                                    alert('Payment failed. Please try again.');
+
+                                    window.location.href = `/paymentFailed?orderId=${result.receipt}`
+                                });
+                                rzp1.open();
+
+                            }
+                        })
+                        .catch((error) => {
+                            console.log('enter the error', error)
+                        })
+
+
+
+
+
+
+                } else {
+
+                    console.log('enter the else');
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'sellect address',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
+
+                }
+
+            } else {
+                console.log('enter the paymentmethode')
+                Swal.fire({
                     title: 'Error',
-                    text: 'sellect address',
+                    text: 'sellect payment method',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 })
-                            
-                        }
-                        
-                        
-                    });
+
+            }
+        }else if(paymentMethod.value=='wallet'){
+            console.log('else if case')
+            if (paymentMethod) {
+                if (selectedAddress) {
+
+
+
+                    console.log('enter the if case');
+                    axios.post('/OrderPage', {
+                        paymentMethod: paymentMethod.value,
+                        selectedAddress: selectedAddress.value,
+                        couponId: couponId.value
+                    })
+                        .then((respons) => {
+
+
+
+
+                            console.log('response is coming')
+                            if (respons.data.success == true) {
+                                console.log('enter the response true.....')
+                                
+                               window.location.href='/successOrder'
+
+                            } else if (respons.data.success == false) {
+
+                                console.log('enter the response false.....')
+
+
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: respons.data.error,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                })
+
+                            } else if (respons.data.razorPay) {
+
+                                let result = respons.data.razorPay
+
+                                console.log('enter the razorpay respons')
+
+                                const options = {
+                                    key: "rzp_test_NlKpT8z0NsaS7K",
+                                    amount: result.amount,
+                                    currency: "INR",
+                                    name: "Frenzy",
+                                    description: "Test Transaction",
+                                    image: "https://example.com/your_logo",
+                                    order_id: null,
+                                    handler: function (response) {
+                                        // alert('payment success')
+                                        axios.post('/verifyPayment', {
+                                            orderId: result.receipt
+                                        })
+                                            .then(response => {
+                                                console.log('payment verification response', response.data.status);
+                                                if (response.data.status == true) {
+                                                    console.log('enter the response data for razorepay')
+
+                                                    window.location.href = '/successOrder'
+                                                } else {
+                                                    alert('payment failed')
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.log(error);
+                                                alert('There was a problem while payment')
+                                            })
+                                    },
+                                    prefill: {
+                                        name: "Customer Name",
+                                        email: "customer@example.com",
+                                        contact: "1234567890"
+                                    },
+                                    notes: {
+                                        address: "Customer Address"
+                                    },
+                                    theme: {
+                                        color: "#eea287"
+                                    }
+                                };
+
+                                var rzp1 = new Razorpay(options);
+                                rzp1.on('payment.failed', function (response) {
+                                    console.error('Payment failed:', response.error);
+                                    alert('Payment failed. Please try again.');
+
+                                    window.location.href = `/paymentFailed?orderId=${result.receipt}`
+                                });
+                                rzp1.open();
+
+                            }
+                        })
+                        .catch((error) => {
+                            console.log('enter the error', error)
+                        })
+
+
+
+
+
+
+                } else {
+
+                    console.log('enter the else');
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'sellect address',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
+
+                }
+
+            } else {
+                console.log('enter the paymentmethode')
+                Swal.fire({
+                    title: 'Error',
+                    text: 'sellect payment method',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+
+            }
+        }else if(paymentMethod.value=='online'){
+
+            console.log('else if case')
+            if (paymentMethod) {
+                if (selectedAddress) {
+
+
+
+                    console.log('enter the if case');
+                    axios.post('/OrderPage', {
+                        paymentMethod: paymentMethod.value,
+                        selectedAddress: selectedAddress.value,
+                        couponId: couponId.value
+                    })
+                        .then((respons) => {
+
+
+
+
+                            console.log('response is coming')
+                            if (respons.data.success == true) {
+                                console.log('enter the response true.....')
+                                
+                               window.location.href='/successOrder'
+
+                            } else if (respons.data.success == false) {
+
+                                console.log('enter the response false.....')
+
+
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: respons.data.error,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                })
+
+                            } else if (respons.data.razorPay) {
+
+                                let result = respons.data.razorPay
+
+                                console.log('enter the razorpay respons')
+
+                                const options = {
+                                    key: "rzp_test_NlKpT8z0NsaS7K",
+                                    amount: result.amount,
+                                    currency: "INR",
+                                    name: "Frenzy",
+                                    description: "Test Transaction",
+                                    image: "https://example.com/your_logo",
+                                    order_id: null,
+                                    handler: function (response) {
+                                        // alert('payment success')
+                                        axios.post('/verifyPayment', {
+                                            orderId: result.receipt
+                                        })
+                                            .then(response => {
+                                                console.log('payment verification response', response.data.status);
+                                                if (response.data.status == true) {
+                                                    console.log('enter the response data for razorepay')
+
+                                                    window.location.href = '/successOrder'
+                                                } else {
+                                                    alert('payment failed')
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.log(error);
+                                                alert('There was a problem while payment')
+                                            })
+                                    },
+                                    prefill: {
+                                        name: "Customer Name",
+                                        email: "customer@example.com",
+                                        contact: "1234567890"
+                                    },
+                                    notes: {
+                                        address: "Customer Address"
+                                    },
+                                    theme: {
+                                        color: "#eea287"
+                                    }
+                                };
+
+                                var rzp1 = new Razorpay(options);
+                                rzp1.on('payment.failed', function (response) {
+                                    console.error('Payment failed:', response.error);
+                                    alert('Payment failed. Please try again.');
+
+                                    window.location.href = `/paymentFailed?orderId=${result.receipt}`
+                                });
+                                rzp1.open();
+
+                            }
+                        })
+                        .catch((error) => {
+                            console.log('enter the error', error)
+                        })
+
+
+
+
+
+
+                } else {
+
+                    console.log('enter the else');
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'sellect address',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
+
+                }
+
+            } else {
+                console.log('enter the paymentmethode')
+                Swal.fire({
+                    title: 'Error',
+                    text: 'sellect payment method',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+
+            }
+        }else{
+            console.log('else  case')
+            console.log('enter the paymentmethode')
+                Swal.fire({
+                    title: 'Error',
+                    text: 'you canot buy greaterthan ₹ 1000 ',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+
+        }
+
+
+
+
+        })
+
+
+
+
 
 
     </script>
+
+    
 
 <!-- <script>
     document.addEventListener('DOMContentLoaded', function() {

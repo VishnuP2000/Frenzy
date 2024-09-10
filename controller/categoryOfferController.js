@@ -116,11 +116,15 @@ const verifycateofferEdit=async(req,res)=>{
         
     }
 }
+
+
+ 
 module.exports={
     LoadCategoryOffer,
     verifyCategoryOffer,
     categoryDelete,
     cateofferActive,
     cateofferEdit,
-    verifycateofferEdit
+    verifycateofferEdit,
+    
 }

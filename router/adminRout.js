@@ -19,7 +19,10 @@ admin_rount.use(express.urlencoded({extended:true}))
 const adminController=require('../controller/adminController')
 const productOfferController=require('../controller/productOfferController')
 const categoryOfferController=require('../controller/categoryOfferController')
+const couponController=require('../controller/couponController')
 const adminAuth=require('../middleware/adminAuth')
+const salerpt=require('../controller/salesReportController')
+const chartController=require('../controller/chartController')
 // const adminController = r
 
 
@@ -28,6 +31,10 @@ console.log(" it is reached at admin page")
 admin_rount.post('/adminLogin',adminAuth.isLogout,adminController.verifyloagin)
 
 admin_rount.get('/dashboard',adminAuth.isLogin,adminController.loadDashboard)
+admin_rount.get('/weeklySales',adminAuth.isLogin,chartController.weeklySales)
+admin_rount.get('/monthlySales',adminAuth.isLogin,chartController.monthlySales)
+admin_rount.get('/yearlySales',adminAuth.isLogin,chartController.yearlySales)
+
 
 admin_rount.get('/userList',adminAuth.isLogin,adminController.loaduserList)
 admin_rount.get('/',adminAuth.isLogout,adminController.loadloagin)
@@ -73,6 +80,17 @@ admin_rount.post('/delCatId',adminAuth.isLogin,categoryOfferController.categoryD
 admin_rount.get('/cateofferActive',adminAuth.isLogin,categoryOfferController.cateofferActive)
 admin_rount.get('/catEditData',adminAuth.isLogin,categoryOfferController.cateofferEdit)
 admin_rount.post('/catEditData',adminAuth.isLogin,categoryOfferController.verifycateofferEdit)
+
+admin_rount.get('/coupon',adminAuth.isLogin,couponController.LoadCoupon)
+admin_rount.post('/addcoupon',adminAuth.isLogin,couponController.verifyCoupon)
+admin_rount.post('/Deletcoupon',adminAuth.isLogin,couponController.couponDelete)
+admin_rount.get('/couponActieve',adminAuth.isLogin,couponController.couponActieve)
+admin_rount.get('/couponEdit',adminAuth.isLogin,couponController.couponEdit)
+admin_rount.post('/couponEdit',adminAuth.isLogin,couponController.varifyCouponEdit)
+
+admin_rount.get('/salesReport',adminAuth.isLogin,salerpt.salesReport)
+admin_rount.get('/sortReport',adminAuth.isLogin,salerpt.sortReport)
+
 // admin_rount.get('/deletProduct',adminAuth.isLogin, adminController.deletProduct)
 
 

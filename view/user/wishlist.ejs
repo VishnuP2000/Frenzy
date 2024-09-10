@@ -118,8 +118,8 @@
             <div class="page-content">
             	<div class="container">
                     <% if(wish&&wish.products.length > 0){%>
-                        <%wish.products.forEach((datas)=>{%>
-					<table class="table table-wishlist table-mobile">
+                        <table class="table table-wishlist table-mobile">
+                      
 						<thead>
 							<tr>
 								<th>Product</th>
@@ -129,8 +129,8 @@
 								<th></th>
 							</tr>
 						</thead>
-
 						<tbody>
+                            <%wish.products.forEach((datas)=>{%>
 
 							
 							<tr id="wishId">
@@ -170,10 +170,10 @@
 								<td class="remove-col"><button onclick="remove('<%=datas.product._id%>')" class="btn-remove"><i class="icon-close"></i></button></td>
 							</tr>
                             
-							
+                            <%   }) %>
 						</tbody>
+                    
 					</table><!-- End .table table-wishlist -->
-                    <%   }) %>
 
                     <%  }else{%>
                         <p>NO PRODUCTS</p>
