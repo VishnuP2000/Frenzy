@@ -9,7 +9,7 @@ app.use(nocache())
 require('dotenv').config()
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/eCommerce")
+mongoose.connect("mongodb+srv://vishnujithu60:hg2jsMnKcQoQtxsS@cluster0.x8ad2.mongodb.net/eCommerce?retryWrites=true&w=majority&appName=Cluster0")
 const session = require('express-session')
 const userRoute = require('./router/userRout')
 const adminRoute = require('./router/adminRout');
@@ -48,6 +48,6 @@ app.use('/admin', adminRoute)
 
 
 app.listen(3000, () => {
-    console.log('server starting')
+    console.log('server started')
 })
 

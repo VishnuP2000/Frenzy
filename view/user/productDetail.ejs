@@ -177,9 +177,11 @@
                                         <% if(prod.offer > 0&&prod.quantity > 0){ %>
                                             <div class="old-price text-muted">
                                                 <del>₹ <%=prod.price %></del>
+                                                
                                             </div><!-- End .old-price -->
                                             <div class="new-price  fw-bold">
-                                                ₹ <%=prod.finalPrice %>
+                                               
+                                                ₹<%=Math.floor(prod.finalPrice )  %>
                                             </div><!-- End .new-price -->
                                         <% } else { %>
                                             <div class="price">

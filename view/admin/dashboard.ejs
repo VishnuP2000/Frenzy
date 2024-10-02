@@ -72,7 +72,7 @@
                 </div>
                 <div class="d-flex flex-column align-items-center" style="width: 100%;">
                     <!-- Buttons -->
-                    <div class="d-flex justify-content-center mb-3">
+                    <div class="d-flex justify-content-center mb-3" style="gap: 10px;">
                         <button class="green-button" onclick="weeklySales()">Weekly Sales</button>
                         <button class="green-button" onclick="monthlySales()">Monthly Sales</button>
                         <button class="green-button" onclick="yearlySales()">Yearly Sales</button>
@@ -95,7 +95,7 @@
                                     <th scope="col" style="color: #000;">PRODUCT NAME</th>
                                     <th scope="col" style="color: #000;">IMAGE</th>
                                     <th scope="col" style="color: #000;">CATEGORY</th>
-                                    <th scope="col" style="color: #000;">STOCK</th>
+                                    <th scope="col" style="color: #000;">SOLD</th>
                                 </tr>
                             </thead>
                             <tbody style="border: 1px solid #b8b8b8;">
@@ -159,7 +159,7 @@
                                 <tr>
                                     <th scope="col" style="color: #000;">No.</th>
                                     <th scope="col" style="color: #000;">CATEGORY NAME</th>
-                                    <th scope="col" style="color: #000;">STOCK</th>
+                                    <th scope="col" style="color: #000;">SOLD</th>
                                 </tr>
                             </thead>
                             <tbody style="border: 1px solid #b8b8b8;">
@@ -380,9 +380,9 @@ console.log(error);
 
 
 }
-// window.onload = function () {
-//                 weeklySales();
-//             };
+window.onload = function () {
+                weeklySales();
+            };
 </script>
 
 

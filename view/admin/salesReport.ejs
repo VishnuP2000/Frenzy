@@ -15,7 +15,9 @@
                         <header class="card-header">
                             <h4 class="card-title">Latest orders</h4>
                             <div class="row align-items-center">
-                                <div class="row">
+                                
+                                   
+                                <div class="row" style="width: min-content;">
                                     <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" id="pdf">
                                         <div class="custom_select">
                                             <button class="btn btn-success" style="margin-left: 400px;">Download as
@@ -33,6 +35,8 @@
                                 <!-- <div class="col-md-2 col-6">
                                     <input type="date" value="02.05.2021" class="form-control" />
                                 </div> -->
+
+                                    
                                 <ul>
 
 
@@ -59,13 +63,24 @@
                                         </form>
 
                                     </li>
+                                    <li>
+                                        
+                                        <form action="/admin/searchWithDate" method="post" class="searchform">
+                                            <div class="input-group pt-15 ml-15" style="width: 100%;">
+                                                <input type="date" class="form-control" id="search" name="searchDate">
+                                                <input class="btn btn-light bg" type="submit" style="border-radius: 0px 10px 10px 0px;">
+                                            </div>
+                                        </form>
+                                        
+                                    </li>
                                 </ul>
+                              
                             </div>
                         </header>
                         <div class="card-body" id="salesReoport">
                             <div class="table-responsive">
                                 <div class="table-responsive">
-                                    <% if(result.length>0){%>
+                                    <% if(result.length>0){ %>
 
 
                                         <table class="table align-middle table-nowrap m-0" id="tableData">
@@ -82,9 +97,9 @@
                                                     <th class="align-middle" scope="col">NO:</th>
                                                     <th class="align-middle" scope="col">ORDER ID</th>
                                                     <th class="align-middle" scope="col">USER Name</th>
-                                                    <th class="align-middle" scope="col">PRODUCT</th>
-                                                    <th class="align-middle" scope="col">OFFER</th>
-                                                    <th class="align-middle" scope="col">PRICE</th>
+                                                    <!-- <th class="align-middle" scope="col">PRODUCT</th> -->
+                                                    <!-- <th class="align-middle" scope="col">OFFER</th> -->
+                                                    <!-- <th class="align-middle" scope="col">PRICE</th> -->
                                                     <th class="align-middle" scope="col">Date</th>
                                                     <th class="align-middle" scope="col">FINAL PRICE</th>
                                                 </tr>
@@ -115,14 +130,17 @@
                                                         </td>
                                                         <%ord.orderdProducts.forEach((orderPrd)=>{%>
 
-                                                            <td>
+                                                            <!-- <td>
                                                                 <%=orderPrd.product.name%>
-                                                            </td>
-                                                            <td>₹<%=orderPrd.price%>
-                                                            </td>
-                                                            <td>
-                                                                <%=orderPrd.totalPrice %>
-                                                            </td>
+                                                            </td> -->
+                                                            <!-- <td>
+                                                                ₹<%= Math.floor(orderPrd.price) %>
+                                                            </td> -->
+                                                            
+                                                            <!-- <td>
+                                                                
+                                                                ₹<%= Math.floor(orderPrd.totalPrice) %>
+                                                            </td> -->
                                                             <% }) %>
                                                                 <td>
                                                                     <%=ord.purchaseData%>
@@ -130,50 +148,60 @@
 
 
                                                                 <!-- <td>Paypal</td> -->
-                                                                <td>₹<%=ord.subTotal%>
-                                                                </td>
+                                                                <td>₹<%= Math.floor(ord.subTotal) %> </td>
 
                                                     </tr>
                                                 </tbody>
                                                 <% }) %>
+                                                <% }else{%>
+                                                    <p>NO ORDERS</p>
+                                                    <% } %>
                                         </table>
-                                        <% }else{%>
-                                            <p>NO ORDERS</p>
-                                            <% } %>
                                 </div>
                             </div>
                             <!-- table-responsive end// -->
                         </div>
                     </div>
-                    <div class="pagination-area mt-30 mb-50">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-start">
-                                <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                                <li class="page-item"><a class="page-link" href="#">02</a></li>
-                                <li class="page-item"><a class="page-link" href="#">03</a></li>
-                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    
+                    
+                    <div class="pagination-container text-center"  >
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-start" style="margin-left: 419px;">
+                            <% if (currentPage > 1) { %>
                                 <li class="page-item">
-                                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                                    <a class="page-link" href="?page=<%=currentPage - 1 %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>">&laquo;</a>
                                 </li>
-                            </ul>
-                        </nav>
-                    </div>
+                            <% } %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<%=currentPage + 1 %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>">&raquo;</a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+              
+                
+
+               
                 </section>
-                <!-- content-main end// -->
-                <footer class="main-footer font-xs">
-                    <div class="row pb-30 pt-15">
+               
+                <!-- <footer class="main-footer font-xs">
+                    <div class="row pb-30 pt-15" style="margin-left: 38px;">
                         <div class="col-sm-6">
                             <script>
                                 document.write(new Date().getFullYear());
                             </script>
-                            &copy; Nest - HTML Ecommerce Template .
+                            &copy; 
                         </div>
-                        <div class="col-sm-6">
-                            <div class="text-sm-end">All rights reserved</div>
-                        </div>
+                        
                     </div>
-                </footer>
+                </footer> -->
             </main>
             <%- include('../layouts/footer.ejs') %>
                 <style>
@@ -201,6 +229,14 @@
                         padding: 10px 20px;
                         font-size: 16px;
                         border-radius: 5px;
+                    }
+                </style>
+                <style>
+                    #sales{
+                        display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    width: 150vh; /* Full height of viewport */
                     }
                 </style>
 

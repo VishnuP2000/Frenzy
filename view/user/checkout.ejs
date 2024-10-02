@@ -133,10 +133,14 @@
             			</div><!-- End .checkout-discount -->
                         <div class="container mt-5">
                             <a href="/Address">
-                                <button class="btn btn-primary edit-profile-btn" style="margin-left: 423px;margin-top: -167px;" >Add Address</button>
+                                <button class="btn btn-primary edit-profile-btn" style="margin-left: 423px;margin-top: -167px;"   >Add Address</button>
                             </a>
                            
                         </div>
+                        <% if(!data){%>
+                            <p style="color: red ;font-size: 39px;margin-left: 244px;">cart is empty</p>
+
+                      <%  } %>
             			<form action="/OrderPage" method="POST" id="orderForm">
                             <div class="row">
                                 <div class="col-lg-9">
@@ -238,36 +242,28 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <!-- <tr>
-                                                    <td><a href="#">Beige knitted elastic runner shoes</a></td>
-                                                    <td>$84.00</td>
-                                                </tr> -->
-                                                <!-- <tr>
-                                                    <td><a href="#">Blue utility pinafore denim dress</a></td>
-                                                    <td>$76.00</td>
-                                                </tr> -->
-                                                <!-- <tr class="summary-subtotal">
-                                                    <td>Subtotal:</td>
-                                                    <td>$160.00</td>
-                                                </tr> -->
+                                              
                                                 <tr>
                                                     <td>Shipping:</td>
                                                     <td>₹ 50</td>
                                                 </tr>
                                                 <tr class="summary-total">
-                                                  
-                                                    <% if(data&&data.length>0){%>
+                                                    <% if(data&&data.products.length>0){%>
 
                                                        
                                                         <% totalResult=0 %>
-                                                        <% data.forEach(item => { %>
+                                                        <% data.products.forEach(item => { %>
                                                             <% total=parseInt(item.product.finalPrice) * parseInt(item.quantity) %>
                                                            
                                                             <% totalResult=totalResult+total %>
+                                                            
                                                         <% }) %>
-                                                        <% } %>
-                                                        <td>Total: ₹</td>
-                                                        <td id="totalResult"><%=totalResult+50%></td>
+                                                    <% } %>
+
+                                                       <tr>
+                                                        <td>Total:</td>
+                                                        <td id="totalResult">₹<%=data&&data.products.length>0?totalResult+50:0%></td>
+                                                       </tr>
                                                         <td hidden id="ResultTotal"><%=totalResult+50%></td>
                                                      
                                                         
@@ -357,17 +353,17 @@
                 <td><%=cdata.discount%></td>
                 <!-- <td><button style="background-color: green; border-radius: 30px;">apply</button></td> -->
                 <td><button style="background-color: green; border-radius: 30px;" onclick="couponButton('<%=cdata.couponCode%>','<%=cdata.discount%>','<%=cdata._id%>')" >apply</button></td>
-                <input type="hidden" id="hiddenId" value="no">
             </tr>
             <%}) %>
-           </tbody>
-          </table>
-          <% }else{%>
-            <p>NO COUPONS</p>
-         <% } %>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 10px;">Close</button>
+        </tbody>
+    </table>
+    <% }else{%>
+        <p>NO COUPONS</p>
+        <% } %>
+        <input type="hidden" id="hiddenId" value="no">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 10px;">Close</button>
          
         </div>
       </div>
@@ -753,7 +749,7 @@
     <script src="assets/js/main.js"></script>
     <script>
         function couponButton(coupon,discount,id){
-            console.log('coupon','discount',coupon,discount)
+            console.log('coupon',coupon,'discount',discount,'id',id)
             const Result=document.getElementById('ResultTotal').textContent
             console.log('inputId',typeof id)
             const res=parseInt(Result)
@@ -889,7 +885,7 @@
 
 
 
-                    console.log('enter the if case');
+                    console.log('enter the cash');
                     axios.post('/OrderPage', {
                         paymentMethod: paymentMethod.value,
                         selectedAddress: selectedAddress.value,
@@ -1008,13 +1004,14 @@
 
             }
         }else if(paymentMethod.value=='wallet'){
+            
             console.log('else if case')
             if (paymentMethod) {
                 if (selectedAddress) {
 
 
 
-                    console.log('enter the if case');
+                    console.log('enter the wallet');
                     axios.post('/OrderPage', {
                         paymentMethod: paymentMethod.value,
                         selectedAddress: selectedAddress.value,
@@ -1140,7 +1137,7 @@
 
 
 
-                    console.log('enter the if case');
+                    console.log('enter the online');
                     axios.post('/OrderPage', {
                         paymentMethod: paymentMethod.value,
                         selectedAddress: selectedAddress.value,

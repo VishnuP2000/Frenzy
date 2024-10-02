@@ -27,7 +27,7 @@ const LoadCoupon=async(req,res)=>{
         const couponData=new coupon({
             couponCode:couponName,
             discount:discount,
-            criteriaAmount:Amount,
+            criteriaAmount:Amount,  
             expireDate:expiryDate,
             is_claimed:false
         })

@@ -3,6 +3,7 @@
 
 
 <!-- molla/cart.html  22 Nov 2019 09:55:06 GMT -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,15 +30,15 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- axios cdn link -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <!-- sweetalert link -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- sweetalert link -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <div class="page-wrapper">
         <header class="header">
             <div class="header-top">
-              
+
             </div><!-- End .header-top -->
 
             <div class="header-middle sticky-header">
@@ -62,35 +63,36 @@
                                 <li>
                                     <a href="/shope" class="sf-with">Shop</a>
 
-                                    
+
                                 </li>
                                 <li>
                                     <a href="" class="sf-with">contact</a>
 
-                                  
+
                                 </li>
                                 <li>
                                     <a href="" class="sf-with">Pages</a>
 
-                                    
+
                                 </li>
-                               
-                               
+
+
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
-                       
-                        
+
+
 
                         <div class="dropdown cart-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" data-display="static">
                                 <i class="icon-shopping-cart"></i>
                                 <span class="cart-count">2</span>
                             </a>
 
-                           
+
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->
@@ -98,11 +100,11 @@
         </header><!-- End .header -->
 
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">Shopping Cart<span>Shop</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
+            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+                <div class="container">
+                    <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+                </div><!-- End .container -->
+            </div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
@@ -114,216 +116,257 @@
             </nav><!-- End .breadcrumb-nav -->
 
             <div class="page-content">
-            	<div class="cart">
-	                <div class="container">
-	                	<div class="row">
-	                		<div class="col-lg-9">
+                <div class="cart">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-9">
                                 <% totalResult=0 %>
-                                <% if (dataCart && dataCart.products && dataCart.products.length > 0) { %>
+                                    <% if (dataCart && dataCart.products && dataCart.products.length> 0) { %>
 
-                                    <table class="table table-cart table-mobile">
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th>Total</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <% total=0 %>
-                                       
-                                        
-                                        
-                            
-                                        
-                                        <tbody >
-                                        <% dataCart.products.forEach((cartItem, index) => { %>
-										<tr id="tableId">
-											<td class="product-col">
-												<div class="product">
-													<figure class="product-media">
-														<a href="#">
-                                                            <img src="/userImages/<%= (cartItem.product && cartItem.product.images && cartItem.product.images.length > 0) ? cartItem.product.images[0] : 'default.jpg' %>" alt="">
-														</a>
-													</figure>
-
-													<h3 class="product-title">
-                                                        <a href="#"><%= (cartItem.product && cartItem.product.name) ? cartItem.product.name : 'Product Name' %></a>
-													</h3><!-- End .product-title -->
-												</div><!-- End .product -->
-											</td>
-                                           <% console.log( 'ejs errors', cartItem.product.price) %>
-											<td class="price-col" id="price-<%= index %>"><%=cartItem.product.finalPrice%></td>
-											<td class="quantity-col">
-                                                <div class="cart-product-quantity">
-                                                    <input type="number" id="inc-<%= index %>"
-                                                        onchange="quantity('<%= index %>', '<%= cartItem._id %>', '<%= (cartItem.product && cartItem.product.quantity) ? cartItem.product.quantity : 1 %>')"
-                                                        class="form-control" value="<%= cartItem.quantity %>"
-                                                        min="1" max="<%= (cartItem.product && cartItem.product.quantity) ? cartItem.product.quantity : 1 %>" step="1">
-                                                </div>
-                                            </td>
-                                           
-                                            
-                                                <% total=parseInt(cartItem.product.finalPrice) * parseInt(cartItem.quantity) %>
-
-                                               <% totalResult=totalResult+total %>
-                                             
-
-											<td id="totalPrice-<%=index%>" class="totalPrice total-col"><%=parseInt(cartItem.product.finalPrice) * parseInt(cartItem.quantity)%></td>
-											<td  class="totalPrice remove-col"><button class="btn-remove" onclick="removebotton('<%=cartItem.product._id%>')" ><i id="<%  %>" class="icon-close"></i></button></td>
-										</tr>
-                                        
-                                        <%   }) %>
-									</tbody>
-
-                              
-								</table><!-- End .table table-wishlist -->
-                                
-
-                                <%  }else{ %>
-                                  <tr>
-                                      <td><p>no product</p></td>
-                                  </tr>
-                                
-                              <%}%>
-
-	                			<div class="cart-bottom">
-			            			<div class="cart-discount">
-			            				<form action="#">
-			            					<div class="input-group">
-				        						<input type="text" class="form-control" required placeholder="coupon code">
-				        						<div class="input-group-append">
-													<button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-												</div><!-- .End .input-group-append -->
-			        						</div><!-- End .input-group -->
-			            				</form>
-			            			</div><!-- End .cart-discount -->
-
-			            			<a href="" onclick="window.location.reload()" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
-		            			</div><!-- End .cart-bottom -->
-	                		</div><!-- End .col-lg-9 -->
-	                		<aside class="col-lg-3">
-	                			<div class="summary summary-cart">
-	                				<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
-
-	                				<table class="table table-summary">
-	                					<tbody>
-	                						
-                                               <tr class="summary-subtotal">
-                                                <td>Subtotal:</td>
-                                               <td id="subTotal">₹ <%=totalResult%></td>
+                                        <table class="table table-cart table-mobile">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Total</th>
+                                                    <th></th>
                                                 </tr>
+                                            </thead>
+                                            <% total=0 %>
 
-	                						<tr class="summary-shipping">
-	                							<td>Shipping:</td>
-	                							<td>&nbsp;</td>
-	                						</tr>
 
-	                						<tr class="summary-shipping-row">
-	                							<td>
-													<div class="custom-control custom-radio">
-														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="free-shipping">Shipping charge</label>
-													</div>
-	                							</td>
-	                							<td>₹ 50.00</td>
-	                						</tr>
 
-                                            <tr class="summary-total">
-                                                <td>Total:</td>
-                                                
-                                                <td id="summaryTotal">₹ <%=totalResult + 50%>   
+
+
+                                                <tbody>
+                                                    <% dataCart.products.forEach((cartItem, index)=> { %>
+                                                        <tr id="tableId">
+                                                            <td class="product-col">
+                                                                <div class="product">
+                                                                    <figure class="product-media">
+                                                                        <a href="#">
+                                                                            <img src="/userImages/<%= (cartItem.product && cartItem.product.images && cartItem.product.images.length > 0) ? cartItem.product.images[0] : 'default.jpg' %>"
+                                                                                alt="">
+                                                                        </a>
+                                                                    </figure>
+
+                                                                    <h3 class="product-title">
+                                                                        <a href="#">
+                                                                            <%= (cartItem.product &&
+                                                                                cartItem.product.name) ?
+                                                                                cartItem.product.name : 'Product Name'
+                                                                                %>
+                                                                        </a>
+                                                                    </h3><!-- End .product-title -->
+                                                                </div><!-- End .product -->
+                                                            </td>
+                                                            <% console.log( 'ejs errors' , cartItem.product.price) %>
+                                                                <td class="price-col" id="price-<%= index %>">
+                                                                    <%=Math.floor(cartItem.product.finalPrice ) %>
+                                                                </td>
+
+                                                                <td class="quantity-col">
+                                                                    <div class="cart-product-quantity">
+
+                                                                        <input type="number" id="inc-<%= index %>"
+                                                                            onchange="quantity('<%= index %>', '<%= cartItem._id %>', '<%= (cartItem.product && cartItem.product.quantity) ? cartItem.product.quantity : 1 %>')"
+                                                                            class="form-control"
+                                                                            value="<%= cartItem.quantity %>" min="1"
+                                                                            step="1">
+                                                                    </div>
+                                                                </td>
+
+
+                                                                <% total=parseInt(cartItem.product.finalPrice) *
+                                                                    parseInt(cartItem.quantity) %>
+
+                                                                    <% totalResult=totalResult+total %>
+
+
+                                                                        <td id="totalPrice-<%=index%>"
+                                                                            class="totalPrice total-col">
+                                                                            <%=parseInt(cartItem.product.finalPrice) *
+                                                                                parseInt(cartItem.quantity)%>
+                                                                        </td>
+                                                                        <td class="totalPrice remove-col"><button
+                                                                                class="btn-remove"
+                                                                                onclick="removebotton('<%=cartItem.product._id%>')"><i
+                                                                                    id="<%  %>"
+                                                                                    class="icon-close"></i></button>
+                                                                        </td>
+                                                        </tr>
+
+                                                        <% }) %>
+                                                </tbody>
+
+
+                                        </table><!-- End .table table-wishlist -->
+
+
+                                        <% }else{ %>
+                                            <tr>
+                                                <td>
+                                                    <p>no product</p>
                                                 </td>
                                             </tr>
 
-	                					</tbody>
-	                				</table><!-- End .table table-summary -->
+                                            <%}%>
 
-	                				<a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
-	                			</div><!-- End .summary -->
+                                                <div class="cart-bottom">
+                                                    <div class="cart-discount">
+                                                        <form action="#">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" required
+                                                                    placeholder="coupon code">
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary-2"
+                                                                        type="submit"><i
+                                                                            class="icon-long-arrow-right"></i></button>
+                                                                </div><!-- .End .input-group-append -->
+                                                            </div><!-- End .input-group -->
+                                                        </form>
+                                                    </div><!-- End .cart-discount -->
 
-		            			<a href="/shope" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
-	                		</aside><!-- End .col-lg-3 -->
-	                	</div><!-- End .row -->
-	                </div><!-- End .container -->
+                                                    <a href="" onclick="window.location.reload()"
+                                                        class="btn btn-outline-dark-2"><span>UPDATE CART</span><i
+                                                            class="icon-refresh"></i></a>
+                                                </div><!-- End .cart-bottom -->
+                            </div><!-- End .col-lg-9 -->
+                            <aside class="col-lg-3">
+                                <div class="summary summary-cart">
+                                    <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+
+                                    <table class="table table-summary">
+                                        <tbody>
+
+                                            <tr class="summary-subtotal">
+                                                <td>Subtotal:</td>
+                                                <td id="subTotal">₹ <%=totalResult%>
+                                                </td>
+                                            </tr>
+
+                                            <tr class="summary-shipping">
+                                                <td>Shipping:</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+
+                                            <tr class="summary-shipping-row">
+                                                <td>
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="free-shipping" name="shipping"
+                                                            class="custom-control-input">
+                                                        <label class="custom-control-label" for="free-shipping">Shipping
+                                                            charge</label>
+                                                    </div>
+                                                </td>
+                                                <td>₹ 50.00</td>
+                                            </tr>
+
+                                            <tr class="summary-total">
+                                                <td>Total:</td>
+
+                                                <td id="summaryTotal">₹ <%=totalResult + 50%>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table><!-- End .table table-summary -->
+
+                                    <a onclick="procedeToCheckout('<%=totalResult%>')" class="btn btn-outline-primary-2 btn-order btn-block" id="cartId">PROCEED TO
+                                        CHECKOUT</a>
+                                </div><!-- End .summary -->
+
+                                <a href="/shope" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE
+                                        SHOPPING</span><i class="icon-refresh"></i></a>
+                            </aside><!-- End .col-lg-3 -->
+                        </div><!-- End .row -->
+                    </div><!-- End .container -->
                 </div><!-- End .cart -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
 
         <footer class="footer">
-        	<div class="footer-middle">
-	            <div class="container">
-	            	<div class="row">
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget widget-about">
-	            				<img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
-	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+            <div class="footer-middle">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget widget-about">
+                                <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
+                                    height="25">
+                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
+                                    magna eros eu erat. </p>
 
-	            				<div class="social-icons">
-	            					<a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Pinterest"><i class="icon-pinterest"></i></a>
-	            				</div><!-- End .soial-icons -->
-	            			</div><!-- End .widget about-widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
+                                <div class="social-icons">
+                                    <a href="#" class="social-icon" target="_blank" title="Facebook"><i
+                                            class="icon-facebook-f"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Twitter"><i
+                                            class="icon-twitter"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Instagram"><i
+                                            class="icon-instagram"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Youtube"><i
+                                            class="icon-youtube"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                            class="icon-pinterest"></i></a>
+                                </div><!-- End .soial-icons -->
+                            </div><!-- End .widget about-widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget">
-	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
 
-	            				<ul class="widget-list">
-	            					<li><a href="about.html">About Molla</a></li>
-	            					<li><a href="#">How to shop on Molla</a></li>
-	            					<li><a href="#">FAQ</a></li>
-	            					<li><a href="contact.html">Contact us</a></li>
-	            					<li><a href="login.html">Log in</a></li>
-	            				</ul><!-- End .widget-list -->
-	            			</div><!-- End .widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
+                                <ul class="widget-list">
+                                    <li><a href="about.html">About Molla</a></li>
+                                    <li><a href="#">How to shop on Molla</a></li>
+                                    <li><a href="#">FAQ</a></li>
+                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="login.html">Log in</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget">
-	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
 
-	            				<ul class="widget-list">
-	            					<li><a href="#">Payment Methods</a></li>
-	            					<li><a href="#">Money-back guarantee!</a></li>
-	            					<li><a href="#">Returns</a></li>
-	            					<li><a href="#">Shipping</a></li>
-	            					<li><a href="#">Terms and conditions</a></li>
-	            					<li><a href="#">Privacy Policy</a></li>
-	            				</ul><!-- End .widget-list -->
-	            			</div><!-- End .widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
+                                <ul class="widget-list">
+                                    <li><a href="#">Payment Methods</a></li>
+                                    <li><a href="#">Money-back guarantee!</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Shipping</a></li>
+                                    <li><a href="#">Terms and conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget">
-	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
 
-	            				<ul class="widget-list">
-	            					<li><a href="#">Sign In</a></li>
-	            					<li><a href="cart.html">View Cart</a></li>
-	            					<li><a href="#">My Wishlist</a></li>
-	            					<li><a href="#">Track My Order</a></li>
-	            					<li><a href="#">Help</a></li>
-	            				</ul><!-- End .widget-list -->
-	            			</div><!-- End .widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
-	            	</div><!-- End .row -->
-	            </div><!-- End .container -->
-	        </div><!-- End .footer-middle -->
+                                <ul class="widget-list">
+                                    <li><a href="#">Sign In</a></li>
+                                    <li><a href="cart.html">View Cart</a></li>
+                                    <li><a href="#">My Wishlist</a></li>
+                                    <li><a href="#">Track My Order</a></li>
+                                    <li><a href="#">Help</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-middle -->
 
-	        <div class="footer-bottom">
-	        	<div class="container">
-	        		<p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
-	        		<figure class="footer-payments">
-	        			<img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
-	        		</figure><!-- End .footer-payments -->
-	        	</div><!-- End .container -->
-	        </div><!-- End .footer-bottom -->
+            <div class="footer-bottom">
+                <div class="container">
+                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
+                    <!-- End .footer-copyright -->
+                    <figure class="footer-payments">
+                        <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
+                    </figure><!-- End .footer-payments -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-bottom -->
         </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
@@ -337,10 +380,11 @@
 
             <form action="#" method="get" class="mobile-search">
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search"
+                    placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
-            
+
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
                     <li class="active">
@@ -380,10 +424,12 @@
                             <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
                             <li><a href="category.html">Shop Grid 3 Columns</a></li>
                             <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
-                            <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span class="tip tip-hot">Hot</span></span></a></li>
+                            <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span
+                                            class="tip tip-hot">Hot</span></span></a></li>
                             <li><a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a></li>
                             <li><a href="product-category-boxed.html">Product Category Boxed</a></li>
-                            <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span
+                                            class="tip tip-new">New</span></span></a></li>
                             <li><a href="cart.html">Cart</a></li>
                             <li><a href="checkout.html">Checkout</a></li>
                             <li><a href="wishlist.html">Wishlist</a></li>
@@ -395,7 +441,8 @@
                         <ul>
                             <li><a href="product.html">Default</a></li>
                             <li><a href="product-centered.html">Centered</a></li>
-                            <li><a href="product-extended.html"><span>Extended Info<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="product-extended.html"><span>Extended Info<span
+                                            class="tip tip-new">New</span></span></a></li>
                             <li><a href="product-gallery.html">Gallery</a></li>
                             <li><a href="product-sticky.html">Sticky Info</a></li>
                             <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
@@ -513,23 +560,28 @@
                         <div class="form-tab">
                             <ul class="nav nav-pills nav-fill" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
+                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin"
+                                        role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
+                                        aria-controls="register" aria-selected="false">Register</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="tab-content-5">
-                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+                                <div class="tab-pane fade show active" id="signin" role="tabpanel"
+                                    aria-labelledby="signin-tab">
                                     <form action="#">
                                         <div class="form-group">
                                             <label for="singin-email">Username or email address *</label>
-                                            <input type="text" class="form-control" id="singin-email" name="singin-email" required>
+                                            <input type="text" class="form-control" id="singin-email"
+                                                name="singin-email" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-group">
                                             <label for="singin-password">Password *</label>
-                                            <input type="password" class="form-control" id="singin-password" name="singin-password" required>
+                                            <input type="password" class="form-control" id="singin-password"
+                                                name="singin-password" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-footer">
@@ -539,8 +591,10 @@
                                             </button>
 
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="signin-remember">
-                                                <label class="custom-control-label" for="signin-remember">Remember Me</label>
+                                                <input type="checkbox" class="custom-control-input"
+                                                    id="signin-remember">
+                                                <label class="custom-control-label" for="signin-remember">Remember
+                                                    Me</label>
                                             </div><!-- End .custom-checkbox -->
 
                                             <a href="#" class="forgot-link">Forgot Your Password?</a>
@@ -568,12 +622,14 @@
                                     <form action="#">
                                         <div class="form-group">
                                             <label for="register-email">Your email address *</label>
-                                            <input type="email" class="form-control" id="register-email" name="register-email" required>
+                                            <input type="email" class="form-control" id="register-email"
+                                                name="register-email" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-group">
                                             <label for="register-password">Password *</label>
-                                            <input type="password" class="form-control" id="register-password" name="register-password" required>
+                                            <input type="password" class="form-control" id="register-password"
+                                                name="register-password" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-footer">
@@ -583,8 +639,10 @@
                                             </button>
 
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
-                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
+                                                <input type="checkbox" class="custom-control-input" id="register-policy"
+                                                    required>
+                                                <label class="custom-control-label" for="register-policy">I agree to the
+                                                    <a href="#">privacy policy</a> *</label>
                                             </div><!-- End .custom-checkbox -->
                                         </div><!-- End .form-footer -->
                                     </form>
@@ -625,78 +683,122 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script>
-        function removebotton(id){
+        function removebotton(id) {
             console.log('enter the removebotton')
-            axios.post('/removeCart',{
+            axios.post('/removeCart', {
                 id
 
             })
-            .then((response)=>{
-                if(response.data.message){
-                    document.getElementById('tableId').remove()
-                }else{
-                    console.log('error else case')
-                }
-            })
-            .catch((error)=>{
-                console.log('error case case')
-            })
+                .then((response) => {
+                    if (response.data.message) {
+                        document.getElementById('tableId').remove()
+                    } else {
+                        console.log('error else case')
+                    }
+                })
+                .catch((error) => {
+                    console.log('error case case')
+                })
         }
 
-        function quantity (index,product,maxQty){
-            console.log('enter the quantity');
-            const price = document.getElementById(`price-${index}`).textContent;
-            const corqnt = document.getElementById(`inc-${index}`).value
+        function quantity(index, product, maxQty) {
+            // console.log('enter the quantity');
+            const price = document.getElementById(`price-${index}`).innerHTML;
+            const corqnt = document.getElementById(`inc-${index}`).value;
             let total = parseInt(corqnt) * parseInt(price);
-            console.log(price )
-            console.log(corqnt,'it is current quantity' )
+            // console.log(price )
+            console.log(corqnt, 'it is current quantity')
 
-            let totalprice = document.getElementById(`totalPrice-${index}`).textContent = total
-            console.log('enter maxqnty',maxQty)
-            console.log('enter maxqnty',corqnt)
-            if(corqnt>=maxQty){
-                Swal.fire({
-                    title: 'Error',
-                    text: 'stock is not available',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                })
+            let totalprice = document.getElementById(`totalPrice-${index}`).innerHTML = total
+            console.log('enter maxqnty', maxQty)
+            // console.log('enter current',corqnt)
+            // 5>6
+            // 6>6
+            if (corqnt > maxQty) {
+                console.log('in the condition');
 
-            }else{
-                if(corqnt>10){
                 Swal.fire({
-                    title: 'Error',
-                    text: 'You are not permitted to increase the quantity beyond 10.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                })
-            }else{
-                const data = {
-                    currentQuantity: corqnt,
-                    productId: product
+  title: 'Error',
+  text: 'Stock is not available',
+  icon: 'error',
+  confirmButtonText: 'OK'
+}).then((result) => {
+  if (result.isConfirmed) {
+    // Reload the page when the OK button is clicked
+    window.location.reload();
+  }
+});
+                
+
+            } else {
+                if (corqnt > 10) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'You are not permitted to increase the quantity beyond 10.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+
+                    })
                 }
+                else if (corqnt > maxQty) {
+                    Swal.fire({
+  title: 'Error',
+  text: 'Stock is not available',
+  icon: 'error',
+  confirmButtonText: 'OK'
+}).then((result) => {
+  if (result.isConfirmed) {
+    // Reload the page when the OK button is clicked
+    window.location.reload();
+  }
+});
 
-                axios.patch('/ProductQuantity', data)
-                    .then(response => {
-                        console.log('respose find ');
-                        let data = response.data.cartDocument
-                        let subTotal = data.Products.reduce((acc, cur) => acc + cur.quantity * cur.product.price, 0)
-                        document.getElementById('subTotal').innerHTML = subTotal
-                        document.getElementById('summaryTotal').innerHTML = subTotal + 50
-                        
+                } else {
+                    const data = {
+                        currentQuantity: corqnt,
+                        productId: product
+                    }
 
-                    })
-                    .catch(error => {
-                        console.log('Error:', error)
-                    })
+                    axios.patch('/ProductQuantity', data)
+                        .then(response => {
+                            let data = response.data.cartDocument
+                            console.log('respose data ' + data);
+                            let subTotal = data.products.reduce((acc, cur) => acc + cur.quantity * cur.product.price, 0)
+                            document.getElementById('subTotal').innerHTML = subTotal
+                            document.getElementById('summaryTotal').innerHTML = subTotal + 50
+                          
+
+
+                        })
+                        .catch(error => {
+                            console.log('Error:', error)
+
+                        })
+                }
             }
+
+        }
+        
+
+
+    </script>
+    <script>
+        function procedeToCheckout(totalResult){
+            if(totalResult==0){
+                Swal.fire({
+  title: 'Error',
+  text: 'cart is empty',
+  icon: 'error',
+  confirmButtonText: 'OK'
+})
+            }else{
+                window.location.href='/checkout'
             }
         }
-
-
     </script>
 </body>
 
 
 <!-- molla/cart.html  22 Nov 2019 09:55:06 GMT -->
+
 </html>

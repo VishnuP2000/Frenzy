@@ -386,7 +386,8 @@ const LoadProduct=async (req,res)=>{
             productDetails:users,
             totalPages:totalPages,
             totalUsers:totalUsers,
-            currentPage:page})
+            currentPage:page
+        })
 
         }else{
             res.render('product',{users:[]})
@@ -591,8 +592,16 @@ const changeStatus=async(req,res)=>{
         console.log('enter the changeStatus')
         const id=req.body.productid
         const stat=req.body.status
+        const amount=req.body.amount
+        const statuses=req.body.statuses
+        console.log('enter the amount ',amount)
+        console.log('enter the statuses ',statuses)
         console.log('enter the changeStatus id',id)
         const changeData=await order.findOneAndUpdate({'orderdProducts._id':id},{$set:{'orderdProducts.$.status':stat}},{new:true})
+        if(changeData.status=='cancelled'){
+            const updatedWallet=await wallet.findOneAndUpdate({},{$inc:{balance:-amount},$addToSet:{amount:{amount:amount,date,paymentMethod:statuses,status:'debit'}}},{new:true});
+            console.log('enter the updatedWallet',updatedWallet)
+        }
         console.log('changeData',changeData)
         if(changeData){
 

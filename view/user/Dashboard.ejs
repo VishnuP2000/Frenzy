@@ -245,151 +245,155 @@
                                                     margin: 5px 0;
                                                 }
                                             </style>
-                                            <% if(orders.length>0){%>
-                                                <p id="OpenId" hidden ><%= OpOrder %></p>
-                                                <% orders.forEach((ord,index)=>{%>
-                                        
-                                        
-                                            
-                                          
-                                                <div class="order-list" style="border: 1px solid black;">
-                                                   
-                                                        <% ord.orderdProducts.forEach((product)=>{%>
-                                                    <div class="order-item" id="orderid">
-                                                        <img src="/userImages/<%=product.product.images[0]%>" alt="Product Image" class="product-image">    
-                                                        <div class="product-info">
-                                                            <h5><%=product.product.name%></h5>
-                                                        </div>
-                                                        <div style="margin-right: 209px;">
+<% if(orders.length>0){ %>
+    <p id="OpenId" hidden><%= OpOrder %></p>
+    <% orders.forEach((ord, index) => { %>
+        <div class="order-list" style="border: 1px solid black;">
+            <% ord.orderdProducts.forEach((product) => { %>
+                <div class="order-item" id="orderid">
+                    <img src="/userImages/<%=product.product.images[0]%>" alt="Product Image" class="product-image">    
+                    <div class="product-info">
+                        <h5><%= product.product.name %></h5>
+                    </div>
+                    <div style="margin-right: 209px;">
+                        <p>Status: <%= product.status %></p>
+                    </div>
 
-                                                            <p>status :<%=product.status %></p>
-                                                        </div>
-                                                        <% if(product.status!='cancelled' &&product.status!='delivered'){%>
+                    <% if(product.status !== 'delivered' && product.status !== 'cancelled' && product.status !== 'Failed' && product.status !== 'Returned') { %>
+                        <div class="order-actions">
+                            <button class="btn btn-danger" onclick="cancel('<%= product.product.name %>', '<%= product._id %>')">Cancel</button>
+                         
+                        </div>
+                    <% } %>
+                    <% if(product.status == 'Failed'){ %>
+                     <button class="btn-primary" style="margin-left: 41px; border-radius: 20px;" onclick="retry('<%=ord.subTotal%>','<%=ord.orderId%>')" data-toggle="modal" data-target="#viewOrderDetails"> Retry  </button>
+                    <% } %>
+                    <% if(product.status === 'delivered') { %>
+                        <button style="width: 5em; font-size: small; border-radius: 10px; border: 1px solid #eea287; background-color: white;" data-toggle="modal" data-target="#returnModal<%= product._id %>">Return</button>
+                      
+                    <% } %>
 
-                                                            <div class="order-actions">
-                                                                <button class="btn btn-danger" onclick="cancel('<%=product._id%>')">Cancel</button>
-                                                            </div>
-                                                    <%    } %>
-                                                    </div>
-                                                    <%   }) %>
-                                                   
-                                                    <button class="btn btn-primary" style="margin-left: 592px;" data-toggle="modal" data-target="#viewOrderDetails<%= index %>">View Detail</button>
-                                                    <% console.log('orderdProducts',ord.orderdProducts[0]) %>
-                                                   <% if(ord.orderdProducts[0].status=='Failed'){%>
+                    <!-- Return Modal -->
+                    <div class="modal fade" id="returnModal<%= product._id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content p-4" style="border-radius: 20px;">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLongTitle">Return</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body pl-3 pr-3">
+                                    <form id="ReturnId" action="/ReturnOrder" method="post">
+                                        <div class="form-group p-4">
+                                            <label for="wallet_amount">Enter the reason for returning <strong style="color: black;"><%= product.product.name %></strong>*</label>
+                                            <input type="text" name="product_id" value="<%= product._id %>" hidden>
+                                            <input type="text" name="product" value="<%= product.product._id %>" hidden>
+                                            <input type="text" class="form-control" id="return_reason" name="reason" style="border-radius: 10px;" autocomplete="off">
+                                            <span id="return_reason_error" class="error-message" style="color: red; font-size: smaller;"></span>
+                                        </div>
+                                </div>
+                                <div class="modal-footer mx-auto">
+                                    <button type="button" class="btn btn-outline-primary-2" data-dismiss="modal" style="border-radius: 10px; height: 2.9em;">
+                                        Close
+                                    </button>
+                                    <button type="submit" style="border-radius: 10px;" class="btn btn-primary">Submit</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
 
+            <div class="modal fade" id="viewOrderDetails<%= index %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Order Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <% ord.orderdProducts.forEach((ordData) => { %>
+                                <div style="display: flex;" class="product-info">
+                                    <img style="width: 116px;" src="/userImages/<%= ordData.product.images[0] %>" alt="">
+                                    <div>
+                                        <h5><strong>Name:</strong> <%= ordData.product.name %></h5>
+                                        <h5><strong>Price:</strong> <%= ordData.product.price %></h5>
+                                        <h5><strong>Quantity:</strong> <%= ordData.product.quantity %></h5>
+                                        <h5><strong>Total amount:</strong> <%= ordData.totalPrice %></h5>
+                                    </div>
+                                    <div>
+                                        <h5><strong>Status:</strong> <%= ordData.status %></h5>
+                                        <h5><strong>OrderId:</strong> <%= ord.orderId %></h5>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                        <h5><strong>SubTotal:</strong> <%= ord.subTotal %></h5>
+                        <div style="display: flex;">
+                            <h5><strong>FirstName:</strong> <%= ord.shipAddress.firstName %></h5>
+                            <h5 style="margin-left: 70px;"><strong>LastName:</strong> <%= ord.shipAddress.lastName %></h5>
+                        </div>
+                        <div style="display: flex;">
+                            <h5><strong>country:</strong> <%= ord.shipAddress.country %></h5>
+                            <h5 style="margin-left: 70px;"><strong>streetName:</strong> <%= ord.shipAddress.streetName %></h5>
+                        </div>
+                        <div style="display: flex;">
+                            <h5><strong>Town:</strong> <%= ord.shipAddress.town %></h5>
+                            <h5 style="margin-left: 70px;"><strong>State:</strong> <%= ord.shipAddress.state %></h5>
+                        </div>
+                        <div style="display: flex;">
+                            <h5><strong>Postcode:</strong> <%= ord.shipAddress.postCode %></h5>
+                            <h5 style="margin-left: 70px;"><strong>Phone number:</strong> <%= ord.shipAddress.phone %></h5>
+                        </div>
+                        <div style="display: flex;">
+                            <h5><strong>Postcode:</strong> <%= ord.shipAddress.postCode %></h5>
+                            <h5 style="margin-left: 70px;"><strong>Phone number:</strong> <%= ord.shipAddress.phone %></h5>
+                            
+                        </div>
+                        <div>
+                            <h5 ><strong>Email:</strong> <%= ord.shipAddress.email %></h5>
+                        </div>
+                        
+                        <!-- Additional shipping details here -->
+                    </div>
+                </div>
+            </div>
 
-                                                    <button class="btn btn-danger" style="margin-left: 41px; border-radius: 20px;" data-toggle="modal" data-target="#viewOrderDetails" onclick="retry('<%=ord.subTotal%>','<%=ord.orderId%>')">RETRY</button>
-                                                    <%  }else if(ord.paymentMethode=='online'&&ord.orderdProducts[0].status=='placed'){%>
-                                                        <a href="/invoice?id=<%=ord.orderId%>"><button class=" btn-primary" style="margin-left: 41px; border-radius: 20px;" data-toggle="modal" data-target="#viewOrderDetails">INVOICE</button></a>
-                                                        
-                                                        <% }else if(ord.paymentMethode=='cash'&&ord.orderdProducts[0].status=='delivered'){%>
-                                                            <a href="/invoice?id=<%=ord.orderId%>"><button class=" btn-primary" style="margin-left: 41px; border-radius: 20px;" data-toggle="modal" data-target="#viewOrderDetails">INVOICE</button></a>
-                                                            
-                                                            <% }else if(ord.paymentMethode=='wallet'&&ord.orderdProducts[0].status=='placed'){%>
-                                                                <a href="/invoice?id=<%=ord.orderId%>"><button class=" btn-primary" style="margin-left: 41px; border-radius: 20px;" data-toggle="modal" data-target="#viewOrderDetails">INVOICE</button></a>
-
-                                             <%  } %>
-                                                   
-
-                                                    <div class="modal fade" id="viewOrderDetails<%= index %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                                        
-                                                        <div class="modal-dialog" role="document">
-                                                          <div class="modal-content">
-                                                            <div class="modal-header">
-                                                              <h5 class="modal-title" id="exampleModalLongTitle">Order Details</h5>
-                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                              </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <%ord.orderdProducts.forEach((ordData)=>{ %>
-
-                                                               
-                                                 <div>
-                                                         <div style="display: flex;" class="product-info">
-                                                                <img style="width: 116px;" src="/userImages/<%=ordData.product.images[0]%>" alt="" >
-                                                                <div style="display: block;">
-
-                                                                    <h5>Name:<%=ordData.product.name%></h5>
-                                                                    
-                                                                    <h5>Price:<%=ordData.product.price%></h5>
-                                                                    <h5>Quantity:<%=ordData.product.quantity%></h5>
-                                                                </div>
-                                                                    <div>
-                                                                        <h5 style="margin-left: 59px;">Status:<%=ordData.status%></h5>
-                                                                    <h5 style="margin-left: 59px;">orderId:<%=ord.orderId%></h5>
-                                                                    </div>
-                                                                    
-                                                          </div>
-                                                            
-                                                            
-                                                  </div>
-
-                                                         <div>
-                                                           
-                                                           
-                                                           
-                                                           
-                                                            
-                                                            <br>
-                                                        </div>
-                                                           
-                                                           
-                                                             
-                                                              <% })  %>
-                                                            </div>
-                                                            <div style="display: flex;" >
-                                                                <h5>FirstName:<%=ord.shipAddress.firstName%></h5>
-                                                                <h5 style="margin-left: 20px;">LastName:<%=ord.shipAddress.lastName%></h5>
-                                                            </div>
-                                                            <br>
-                                                            <div style="display: flex;">
-                                                                <h5>country:<%=ord.shipAddress.country%></h5>
-                                                                <h5 style="margin-left: 20px;">streetName:<%=ord.shipAddress.streetName%></h5>
-                                                            </div>
-                                                            <br>
-                                                            <div style="display: flex;">
-                                                                <h5>town:<%=ord.shipAddress.town%></h5>
-                                                                <h5 style="margin-left: 20px;">state:<%=ord.shipAddress.state%></h5>
-                                                            </div>
-                                                            <br>
-                                                            <div style="display: flex;">
-                                                                <h5>postCode:<%=ord.shipAddress.postCode%></h5>
-                                                                <h5 style="margin-left: 20px;">phone:<%=ord.shipAddress.phone%></h5>
-                                                            </div>
-                                                            <br>
-                                                            <div style="display: flex;">
-                                                                <h5>Email:<%=ord.shipAddress.email%></h5>
-                                                               
-                                                            </div>  
-                                                            <div style="display: flex;">
-                                                                <h5>Date:<%=ord.purchaseData%></h5>
-                                                               
-                                                            </div>
-                                                            
-                                                            
-                                                          </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <p><%=ord.purchaseData%></p>
-                                                    <!-- Repeat .order-item for each order -->
-                                                </div>
-
-                                           
-                                            <%   }) %>
-                                            <% }else{%>
-                                                <p>NO ORDERS</p>
-                                          <%  } %>
+            <p><%= ord.purchaseData %></p>
+            <button class="btn btn-primary" style="margin-left: 592px;" data-toggle="modal" data-target="#viewOrderDetails<%= index %>">View Detail</button>
+            <% if(ord.orderdProducts[0].status == 'delivered') { %>
+            <a href="/invoice?id=<%= ord.orderId %>">
+                <button class="btn-primary" style="margin-left: 41px; border-radius: 20px;" data-toggle="modal" data-target="#viewOrderDetails">
+                    INVOICE
+                </button>
+            </a>
+            <% } %>
+        </div>
+    <% }) %>
+<% } else { %>
+    <p>No Orders</p>
+<% } %>
 
 
                                         </div>
 
-                                        <!-- here dashboard data in notpad -->
+                                       
                                       
 
 
 								    </div><!-- .End .tab-pane -->
+                                    
+                                    <script>
+
+
+                                        function passReturnpId(productId){
+                                         const returnData=document.getElementById('returnPId').value = productId
+                                        }
+                                    </script>
 
                                     
 
@@ -398,31 +402,39 @@
                               
                              
 								    <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
-                                        <% if(walletData){%>
+                                        
                                         
 								    	
                                         <div class="card card-dashboard shadow-lg" style="border-radius: 20px;width: 361px; ">
                                             <div class="card-body">
                                                 <div class="d-flex ">   
-                                                   
+                                                   <% if(walletData){%>
 
-                                                        <strong style="color: #000000; font-size: medium;">Balance: ₹</strong><p style="color: #00b530; font-size: medium;" id="wallet_balance"><%=walletData.balance%></p>
+                                                    <strong style="color: #000000; font-size: medium;">Balance: ₹</strong><p style="color: #00b530; font-size: medium;" id="wallet_balance"><%=Math.floor(walletData.balance )  %></p>
+                                                 <%  }else{%>
+                                                    
+                                                    <strong style="color: #000000; font-size: medium;">Balance: ₹</strong><p style="color: #00b530; font-size: medium;" id="wallet_balance">NO BALANCE</p>
+                                                 <%} %>
+
                                                  
                                                 </div>
                                                 <div class="d-flex">
+                                                    <% if(walletData){%>
                                                     <a href="/addWallet" class="btn btn-outline-primary-2 mx-auto" style="border-radius: 10px;" data-toggle="modal" data-target="#withdrawModalCenter">
                                                         <span>Withdraw</span>
                                                         <i class="icon-long-arrow-right"></i>
                                                     </a>
+                                                    <%  }else{%>
+                                                        
+                                                        <%} %>
                                                     <a  class="btn btn-outline-primary-2 mx-auto" style="border-radius: 10px;" data-toggle="modal" data-target="#viewModalCenter">
                                                         <span>View history</span>
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <%  }else{ %>
-                                           <p>NO wallet data</p>
-                                        <%  } %>
+                                        
+                                          
 
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
                                             ADD AMOUNT
@@ -686,7 +698,7 @@
                                                                     <p style="margin-left: 104px;">NO ADDRESS</p>
                                                              <% } %>
 
-                                                                <% console.log('address',address) %>
+                                                                
 														
 								    				</div><!-- End .card-body -->
 								    			</div><!-- End .card-dashboard -->
@@ -1230,18 +1242,53 @@ console.log('enter the error',error)
 </script>
 
 <script>
-    function cancel(cancelId){
-        axios.post('/cancelProducts',{
-            cancelId
-        })
-        .then((response)=>{
-            window.location.reload()
-           console.log('responced')
-        })
-        .catch((error)=>{
-                console.log('enter the error')
-        })
-    }
+ 	function cancel(productName ,productId){
+        console.log('productName,productId',productName,productId);
+    Swal.fire({
+        title: "Are you sure?",
+        text: `You Sure you want to cancell ${productName} from your order ? `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Cancell it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            console.log('enter the result')
+            fetch(`/cancelProducts?productId=${productId}`, { method: 'post' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success==true) {
+                        // Swal.fire({
+                        //     title: "Product cancelled",
+                        //     text: "Product cancelled Successfully",
+                        //     icon: "success"
+                        // }).then(() => {
+                        //     window.location.reload();
+                        // });
+                        // $('#main-id').load('/cart #main-id');
+                        window.location.reload()
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: "An error occurred while deleting the cart.",
+                            icon: "error"
+                        }).then(() => {
+                           
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "An error occurred while processing your request."+error,
+                        icon: "error"
+                    });
+                });
+        }
+    });
+}
 
 </script>
 
@@ -1269,10 +1316,11 @@ console.log('enter the error',error)
   <script>
 
     function retry(orderAmount,id){
+        console.log('enter the orderAmount',orderAmount)
 
         const options = {
                                     key: "rzp_test_NlKpT8z0NsaS7K",
-                                    amount: orderAmount,
+                                    amount: orderAmount*100,
                                     currency: "INR",
                                     name: "Frenzy",
                                     description: "Test Transaction",

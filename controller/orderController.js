@@ -1,4 +1,5 @@
 const { name } = require('ejs')
+const { format } = require('date-fns');
 const Order = require('../model/orderModel')
 const cartData = require('../model/cartModel')
 const Address = require('../model/Address')
@@ -7,6 +8,7 @@ const product = require('../model/product_Model')
 const wallet=require('../controller/walletController')
 const razorp=require('../controller/checkoutController')
 const coupon=require('../model/coupomModel')
+const wall=require('../model/walletModel')
 
 
 
@@ -21,7 +23,7 @@ const LoadOrderPage = async (req, res) => {
         const OrderDetails = await Order.find({userId})
       
         // console.log('enter the load order page', orders)
-        console.log('Orders after sorting:', orders);
+        console.log('Orders after sorting:', OrderDetails);
 
         if (OrderDetails.length) {
             const que = parseInt(req.query.page) || 1;
@@ -62,11 +64,11 @@ const verifyOrderPage = async (req, res) => {
          console.log('couponId',couponId)
          console.log('method',method)
        
+         console.log('address id', addId)
 
 
         
 
-        console.log('address id', addId)
 
         const userId = req.session.user_id
         const cart = await cartData.findOne({ userId: userId })
@@ -102,10 +104,14 @@ const verifyOrderPage = async (req, res) => {
         console.log('orderid', orderid)
         const subtotal = orderedProducts.reduce((sum, item) => sum + item.totalPrice, 0) + 50
         console.log('enter the subtotal', subtotal)
-        if(couponId!='no'){
+        if(couponId!='no'){ 
             console.log('reach the couponId if')
             
             const couponSelect=await coupon.findOneAndUpdate({_id:couponId},{$set:{is_claimed:true}})
+            console.log('eneter the couponselect',couponSelect)
+            if(couponSelect.length){
+
+            }
             const subTotal=parseInt(subtotal-((subtotal*couponSelect.discount)/100))
             console.log('subtotal',subTotal)
            
@@ -224,37 +230,74 @@ const verifyOrderPage = async (req, res) => {
     }
 }
 
-const verifyCancelProducts=async(req,res)=>{
+
+const verifyCancelProducts = async (req, res) => {
     try {
-        console.log('enter the verificancel')
-       const ordId=req.body.cancelId
-       console.log('enter the ordid',ordId)
-        const ord=await Order.findOne({'orderdProducts._id':ordId})
-        console.log('enter ',ord)
-        if(ord){
-            const cancel=await Order.findOneAndUpdate({'orderdProducts._id':ordId},{$set:{'orderdProducts.$.status':'cancelled'}},{new:true})
-            if(cancel){
-                res.json(true)
-            }else{
-                res.json(false)
+        const { productId } = req.query;
+        console.log(productId, 'remove');
+        const userid=req.session.user_id
+        console.log(userid, 'userid');
+
+        const result = await Order.findOneAndUpdate(
+            { "orderdProducts._id": productId },
+            { $set: { "orderdProducts.$.status": 'cancelled' } },
+            { new: true }
+        );
+        console.log('enter the result',result)
+
+        
+        if (result) {
+            console.log('etnere the if result')
+            const orderedProduct = result.orderdProducts.find(product => product._id.toString() === productId);
+            if (orderedProduct && (result.paymentMethode === 'wallet' || result.paymentMethode === 'online')) {
+                const amount = orderedProduct.price;
+                
+                console.log('etnere the amount',amount);
+                
+                // const date = format(new Date(), 'dd/MM/yy, hh:mm a');
+                const date = format(new Date(), 'dd/MM/yy, hh:mm a');
+                console.log('etnere the if orderedProduct')
+
+                const wallet = await wall.findOneAndUpdate(
+                    { userId: userid},
+                    {   $inc: { balance: amount },
+                        $addToSet: {
+                            transactionHistory: {
+                                amount:amount,
+                                date,
+                                paymentMethod: 'cancell amount',
+                                status: 'credit'
+                            }
+                        }
+                    },
+                    { new: true }
+                );
+
+                console.log("wallet",wallet); // log wallet to see if the update was successful
             }
+
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
         }
     } catch (error) {
-        
+        console.log(error.message);
+        res.status(400).send(error.message);
     }
-}
+};
 
 const loadInvoice=async(req,res)=>{
     try {
         console.log('enter the loadInvoice')
         const invoiceId=req.query.id
         console.log('invoiceId',invoiceId)
+        const date=Date
         const invoiceData=await Order.find({orderId:invoiceId}).populate('orderdProducts.product')
         console.log('invoiceData',invoiceData)
         if(invoiceData){
             console.log('inside the invoiceData')
 
-            res.render('user/invoice',{invoiceData})
+            res.render('user/invoice',{invoiceData,date})
         }
     } catch (error) {
         console.log('enter the error',error)

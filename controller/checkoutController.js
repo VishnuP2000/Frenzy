@@ -64,8 +64,9 @@ const Loadcheckout = async (req, res) => {
             
     // }
     const data = await cartData.findOne({ userId: id }).populate('products.product').exec();
+    // const ordersData=await orders.findOne({ userId: id })
  
-    res.render('user/checkout', { showAddress, data ,coupons})
+    res.render('user/checkout', { showAddress, data,coupons})
        
        
     } catch (error) {
@@ -78,7 +79,8 @@ const LoadSuccessOrder = async (req, res) => {
         console.log("body : ", req.body);
         const ordid=req.body.orderId
         console.log('enter the LoadSuccess page')
-        res.render('user/successOrder')
+        const order='success'
+        res.render('user/successOrder',{order})
     } catch (error) {
         console.log('error')
     }
@@ -94,8 +96,9 @@ const instance = new razPay({
 
 const razorpayRes = async (subTotal,orderId)=>{
     try {
-        // console.log(subTotal,orderId);
+        console.log('enter the razorpayRes');
         subTotal = subTotal.toFixed(2)
+        console.log('after the razorpayRes');
         const options = {
             amount: (subTotal*100),
             currency: "INR",
@@ -163,7 +166,8 @@ const paymentFailed=async(req,res)=>{
                 { new: true }
             );
     console.log('orderUpdateFailed',orderUpdateFailed)
-    res.render('user/successOrder')
+    
+    res.redirect('/Dashboard')
         }else{
             console.log('enter the paymentfailed')
 

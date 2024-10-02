@@ -2,6 +2,9 @@
 const { format } = require('date-fns');
 const wallet=require('../model/walletModel')
 const users=require('../model/userModel')
+const returnProduct=require('../model/Return')
+const orderModel=require('../model/orderModel')
+const mongoose=require('mongoose')
 
 const loadWallet=async(req,res)=>{
     try {
@@ -103,7 +106,7 @@ const paymentWallet=async(subTotal,userId)=>{
         console.log('enter the paymentWallet')
         console.log('enter the subTotal,userid',subTotal,userId)
         const wallets=await wallet.findOne({userId:userId})
-        console.log('wallets',Number(wallets.balance))
+        console.log('wallets',Number(wallets.balance)) 
         if(Number(wallets.balance)>subTotal){
 
          
@@ -176,9 +179,100 @@ const paymentWallet=async(subTotal,userId)=>{
         
     }
 }
+const OrderReturn = async (req, res) => {
+    try {
+        console.log('enter the orders')
+
+        const { product_id, product, reason } = req.body
+        const userid=req.session.user_id
+        
+        console.log('userid', userid)
+        console.log('product_id', product_id)
+        console.log('product', product)
+        console.log('reason', reason)
+        const objectId = new mongoose.Types.ObjectId(product_id)
+
+        const result = await orderModel.findOneAndUpdate(
+            { "orderdProducts._id": product_id },
+            { $set: { "orderdProducts.$.status": 'Returned' } },
+            { new: true }
+        );
+        console.log('changeStatus', result)
+        const orderedProduct = result.orderdProducts.find(product => product._id.toString() === product_id);
+        const amount = orderedProduct.price;
+        console.log('etnere the amount',amount);
+
+        const date = format(new Date(), 'dd/MM/yy, hh:mm a');
+        console.log('etnere the if orderedProduct',date)
+
+        const wall = await wallet.findOneAndUpdate(
+            { userId: userid},
+            {   $inc: { balance: amount },
+                $addToSet: {
+                    transactionHistory: {
+                        amount:amount,
+                        date,
+                        paymentMethod: 'Returned amount',
+                        status: 'credit'
+                    }
+                }
+            },
+            { new: true }
+        );
+
+        console.log('wallet',wall);
+
+        const producters = await orderModel.aggregate([
+            { $match: { "orderdProducts._id": objectId } },
+            {
+                $addFields: {
+                    orderdProducts: {
+                        $filter: {
+                            input: "$orderdProducts",
+                            as: "item",
+                            cond: { $eq: ["$$item._id", objectId] }
+                        }
+                    }
+                }
+            }
+        ]);
+
+        if (result && producters[0].shipAddress[0]) {
+            const shipAddress = producters[0].shipAddress[0];
+
+            // Ensure required fields are present in shipAddress
+            const requiredFields = ['email', 'phone', 'postCode', 'state', 'town', 'streetName', 'country', 'lastName', 'firstName'];
+            const hasRequiredFields = requiredFields.every(field => shipAddress[field]);
+
+            if (hasRequiredFields) {
+                const prReturn = new returnProduct({
+                    return: reason,
+                    userId: producters[0].userId,
+                    orderId: producters[0].orderId,
+                    name: producters[0].name,
+                    shipAddress: shipAddress,
+                    orderdProducts: producters[0].orderdProducts[0],
+                    purchaseData: producters[0].purchaseData,
+                    purchaseTime: new Date(), // Use a Date object instead of formatted string
+                    paymentMethode: producters[0].paymentMethode,
+                });
+
+                await prReturn.save();
+                console.log('prReturn', prReturn);
+            } else {
+                console.log('Missing required fields in shipAddress');
+            }
+        }
+
+        res.redirect('/Dashboard');
+    } catch (error) {
+        console.log('enter the order error', error);
+    }
+};
 module.exports={
     loadWallet,
     verifyWallet,
     withdrowFormWallet,
-    paymentWallet
+    paymentWallet,
+    OrderReturn
 }

@@ -16,16 +16,13 @@
       <div class="form-group">
         <label for="username">Username:</label>
         <input type="text" class="form-control" id="username" value="<%=loadData.name %>" name="username" required minlength="3" maxlength="20">
-        <div class="invalid-feedback">
-          Please provide a valid username (3-20 characters).
-        </div>
+        <span id="errorName" style="color: red;"></span>
       </div>
       <div class="form-group">
         <label for="phone">Phone Number:</label>
         <input type="tel" class="form-control" id="phone" value="<%=loadData.mobile%>" name="phone" pattern="[0-9]{10}" required>
-        <div class="invalid-feedback">
-          Please provide a valid 10-digit phone number.
-        </div>
+        <span id="errorMobile" style="color: red;"></span>
+        
       </div>
       <button type="submit" class="btn btn-primary">Update Profile</button>
     </form>
@@ -35,8 +32,8 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script>
-    // Custom JavaScript validation
+  <!-- <script>
+   
     (function() {
       'use strict';
       window.addEventListener('load', function() {
@@ -50,6 +47,34 @@
         }, false);
       }, false);
     })();
+  </script> -->
+
+  <script>
+    const editForm=document.getElementById('editProfileForm')
+    editForm.addEventListener('submit',(event)=>{
+      event.preventDefault()
+      const name=document.getElementById('username').value
+      const mobile=document.getElementById('phone').value
+
+       const errorName=document.getElementById('errorName')
+       const errorMobile=document.getElementById('errorMobile')
+       
+       errorName.innerHTML='';
+       errorMobile.innerHTML='';
+
+       if(name.trim()==''){
+        errorName.innerHTML='Please enter the name';
+        return false
+       }
+       const phoneRegex = /^\d{10}$/;
+       if(!phoneRegex.test(mobile)){
+        errorMobile.innerHTML='Please enter a valid 10-digit mobile number';
+        return false
+       }
+       editForm.submit();
+
+    })
+
   </script>
 
   <style>

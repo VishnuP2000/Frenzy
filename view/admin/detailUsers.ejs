@@ -61,7 +61,7 @@
             <h5>Product Price: <%= data.product.price %></h5>
             <h5>Quantity: <%= data.quantity %></h5>
             <label for="status" style="font-size: 16px; font-weight: 600;">Status</label>
-            <select class="form-control" onchange="changeOrder(event,'<%=data._id%>')" id="status" name="status">
+            <select class="form-control" onchange="changeOrder(event,'<%=data._id%>','<%=data.amount%>','<%=data.status%>')" id="status" name="status">
                 <% if(data.status=='placed'){ %>
 
                     <option value="placed" hidden>placed</option>
@@ -83,6 +83,13 @@
 
                 <% }else if(data.status=='delivered'){%>
                     <option value="shipped" hidden>delivered</option>
+
+                    <%  }else if(data.status=='Returned'){ %>
+                        <option value="Returned" hidden>Returned</option>
+                        <option value="shipped">shipped</option>
+                        <option value="placed">placed</option>
+                        <option value="delivered">delivered</option>
+                        <option value="cancelled">cancelled</option>
 
             <% } %>
                 
@@ -117,12 +124,16 @@
     </div>
 </div>
 <script>
-    function changeOrder(even,productid){
+    function changeOrder(even,productid,amount,statuses){
         console.log('enter the changeOrder',)
+        console.log('enter the changeOrder',amount)
         axios.post('/admin/productStatus',{
 
             status:event.target.value,
-            productid
+            productid,
+            amount,
+            statuses
+
         })
         .then((response)=>{
             console.log('enter the changeOrder response')

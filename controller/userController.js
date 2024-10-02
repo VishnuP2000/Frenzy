@@ -15,6 +15,7 @@ const Address = require('../model/Address');
 const wallet=require('../model/walletModel')
 const productOffer=require('../model/productOfferModel')
 const categoryOffer=require('../model/categoryOfferModel')
+const wall=require('../model/walletModel')
 
 
 
@@ -61,6 +62,7 @@ const loadShope = async (req, res) => {
 
         for(let produ of products){
             let finalPrice=produ.price
+            
         let offer=0
 
              const proOffer=await productOffer.findOne({product:produ._id, is_activated:true})
@@ -104,9 +106,9 @@ const loadShope = async (req, res) => {
 
             const paginatedProducts = producters.slice(start, end);
 
-            res.render('user/shope', { producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, users: users, catData: catData });
+            res.render('user/shope', { producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, users: users, catData: catData,Id:'',searchString:'' });
         } else {
-            res.render('user/shope', { producters: [], catData: catData });
+            res.render('user/shope', { producters: [], catData: catData,Id:'',searchString:'',que: que });
         }
 
     } catch (error) {
@@ -145,9 +147,9 @@ const filterShope = async (req, res) => {
 
             const paginatedProducts = producters.slice(start, end);
 
-            res.render('user/Shope', { catData, producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData })
+            res.render('user/Shope', { catData, producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData,Id:'',searchString:'' })
         } else {
-            res.render('user/shope', { producters: [], catData: catData });
+            res.render('user/shope', { producters: [], catData: catData,Id:'',searchString:'',que: que });
 
         }
     } catch (error) {
@@ -157,61 +159,80 @@ const filterShope = async (req, res) => {
 
 const shopeSort = async (req, res) => {
     try {
-        console.log('enter the varifyHighToLow')
-        let producter
-        const Id = req.query.id
+        console.log('enter the varifyHighToLow');
+        let producter;
+        const Id = req.query.id;
+        console.log('enter the Id', Id);
+
+        // Sorting logic based on the value of Id
         if (Id == 'High to low') {
-
-            producter = await product.find({ is_blocked: false }).sort({ price: -1 })
+            producter = await product.find({ is_blocked: false }).sort({ price: -1 });
         } else if (Id == 'Low to high') {
-            producter = await product.find({ is_blocked: false }).sort({ price: 1 })
-
+            producter = await product.find({ is_blocked: false }).sort({ price: 1 });
         } else if (Id == 'aA - zZ') {
-            producter = await product.find({ is_blocked: false }).sort({ name: 1 })
-
+            producter = await product.find({ is_blocked: false }).sort({ name: 1 });
         } else if (Id == 'zZ - aA') {
-            producter = await product.find({ is_blocked: false }).sort({ name: -1 })
-
+            producter = await product.find({ is_blocked: false }).sort({ name: -1 });
         }
 
-        const catData = await cat.find({ is_Listed: true })
-        console.log('hightolowData')
-        if (producter) {
-            console.log('enter product');
+        console.log('producter', producter);
 
+        // Fetch category data
+        const catData = await cat.find({ is_Listed: true });
+        console.log('hightolowData');
+
+        // Check if producter is defined and not empty
+        if (producter && producter.length > 0) {
+            // Define que for pagination
             const que = parseInt(req.query.page) || 1;
             const limit = 7;
-            const totalUsers = producter.length;
-            const totalPages = Math.ceil(totalUsers / limit);
             const start = (que - 1) * limit;
+            const totalPages = Math.ceil(producter.length / limit);
             const end = que * limit;
             const paginatedProducts = producter.slice(start, end);
-            console.log('highToLow datas', producter)
-            console.log('stand in near the shop in hightolow')
 
-            res.render('user/shope', { producters: paginatedProducts, totalUsers: totalUsers, totalPages: totalPages, catData: catData, que: que })
+            console.log('enter product');
+            console.log('stand in near the shop in hightolow');
+
+            res.render('user/shope', {
+                producters: paginatedProducts,
+                totalPages: totalPages,
+                catData: catData,
+                que: que,
+                Id: Id || '',
+                searchString: ''
+            });
         } else {
-            console.log('enter the else case in highToShope')
-            res.render('user/shope', { producters: [], catData: catData });
+            // Handle the case where no products are found
+            console.log('No products found or producter is undefined');
+            res.render('user/shope', {
+                producters: [],
+                totalPages: 0,
+                catData: catData,
+                que: 1,
+                Id: Id || '',
+                searchString: ''
+            });
         }
+        
     } catch (error) {
-        console.log('error', error)
-
+        console.log('error', error);
     }
-}
+};
 
 const searchProducts = async (req, res) => {
     try {
         console.log('enter the searchProducts ')
         let page = 0
         let searchString = req.query.search
+        console.log('enter the searchString',searchString)
         const catData = await cat.find({ is_Listed: true })
 
         console.log('enter the searchProcts catData', catData)
-        if (!searchString) {
-            console.log('enter the !searchString ')
-            return res.status(400).json({ error: 'Search string is required' });
-        }
+        // if (!searchString) {
+        //     console.log('enter the !searchString ')
+        //     return res.status(400).json({ error: 'Search string is required' });
+        // }
 
         let searchNumber = parseInt(searchString, 10);
 
@@ -248,7 +269,7 @@ const searchProducts = async (req, res) => {
 
             const paginatedProducts = producters.slice(start, end);
 
-            res.render('user/shope', { products, searchString, productCount: products.length, page, catData: catData, totalUsers: totalUsers, que: que, totalPages: totalPages, producters: paginatedProducts })
+            res.render('user/shope', { products, searchString, productCount: products.length, page, catData: catData, totalUsers: totalUsers, que: que, totalPages: totalPages, producters: paginatedProducts,Id:'',searchString:searchString || ''  })
         }
 
     } catch (error) {
@@ -397,6 +418,7 @@ const transporter = nodemailer.createTransport({
 const loadRegister = async (req, res) => {
 
     try {
+        // const userId=req.session.user_id
         console.log('dsdddddddddd', req.body);
 
 
@@ -424,7 +446,17 @@ const loadRegister = async (req, res) => {
             })
             console.log(name, email, password, mobile)
             const save = await dBase.save()
+
             console.log('save', save)
+            console.log('dBase', dBase)
+
+            const userWallet=new wall({
+                userId:save._id,
+                balance:0,
+                transactionHistory:[]
+            })
+           await userWallet.save()
+           console.log('entere the userWallet')
 
             //    const{otp,email}=req.body
             const genOtp = generateOTP()

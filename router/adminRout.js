@@ -90,6 +90,8 @@ admin_rount.post('/couponEdit',adminAuth.isLogin,couponController.varifyCouponEd
 
 admin_rount.get('/salesReport',adminAuth.isLogin,salerpt.salesReport)
 admin_rount.get('/sortReport',adminAuth.isLogin,salerpt.sortReport)
+admin_rount.post('/searchWithDate',adminAuth.isLogin,salerpt.searchWithDate)
+admin_rount.get('/searchWithDate',adminAuth.isLogin,salerpt.searchWithDateGet)
 
 // admin_rount.get('/deletProduct',adminAuth.isLogin, adminController.deletProduct)
 

@@ -210,15 +210,16 @@
                                             <h3 class="product-title"><a href="product.html"><%= product.name %></a></h3><!-- End .product-title -->
                                             <% if(product.offer >0){%>
                                             <div class="old-price" style="font-size: 18px;">
-                                                ₹ <%=product.price  %>
+                                                ₹<%=Math.floor(product.price )  %>
                                                 
                                                 
                                             </div><!-- End .product-price -->
                                             <div class="new-price" style="font-size: 20px;">
-                                                ₹ <%=product.finalPrice  %>
+                                              
+                                                ₹<%=Math.floor(product.finalPrice)  %>
                                             </div>
                                             <%  }else{%>
-                                                ₹ <%=product.price  %>
+                                                ₹<%=Math.floor(product.price )  %>
 
                                                <% } %>
                                             <!-- <div class="ratings-container">
@@ -247,13 +248,13 @@
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-center">
                                         <% if (que > 1) { %>
-                                            <li class="page-item"><a class="page-link" href="?page=<%= que - 1 %>">&laquo;</a></li>
+                                            <li class="page-item"><a class="page-link" href="?page=<%=que - 1 %>&Id=<%=Id || '' %>&searchString=<%=searchString||''%>">&laquo;</a></li>
                                         <% } %>
                                         <% for (let i = 1; i <= totalPages; i++) { %>
-                                            <li class="page-item <%= que === i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
+                                            <li class="page-item <%=que === i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>&Id=<%=Id || '' %>&searchString=<%=searchString||''%>"><%= i %></a></li>
                                         <% } %>
                                         <% if (que < totalPages) { %>
-                                            <li class="page-item"><a class="page-link" href="?page=<%= que + 1 %>">&raquo;</a></li>
+                                            <li class="page-item"><a class="page-link" href="?page=<%=que + 1 %>&Id=<%=Id || '' %>&searchString=<%=searchString||''%>">&raquo;</a></li>
                                         <% } %>
                                     </ul>
                                 </nav>

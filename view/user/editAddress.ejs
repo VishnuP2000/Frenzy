@@ -46,42 +46,50 @@
                             <div class="form-group col-md-6">
                                 <input type="hidden" value="<%= editid%>" name="id">
                                 <label for="firstName">First Name:</label>
-                                <input type="text" class="form-control" id="firstName" value="<%=val.firstName%>" name="firstName" required>
+                                <input type="text" class="form-control" id="firstName" value="<%=val.firstName%>" name="firstName" >
+                                <span id="errorFirstName" style="color: red;" ></span>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="lastName">Last Name:</label>
-                                <input type="text" class="form-control" id="lastName" value="<%=val.lastName %>" name="lastName" required>
+                                <input type="text" class="form-control" id="lastName" value="<%=val.lastName %>" name="lastName" >
+                                <span id="errorLastName" style="color: red;" ></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="phone">Phone:</label>
-                                <input type="tel" class="form-control" id="phone" value="<%=val.phone%>" name="phone" required>
+                                <input type="tel" class="form-control" id="phone" value="<%=val.phone%>" name="phone" >
+                                <span id="errorMobil" style="color: red;"></span>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="email">Email:</label>
-                                <input type="email" class="form-control" id="email" value="<%=val.email  %>" name="email" required>
+                                <input type="email" class="form-control" id="email" value="<%=val.email  %>" name="email" >
+                                <span id="errorEmail" style="color: red;"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="street">Street:</label>
-                            <input type="text" class="form-control" id="street" value="<%=val.streetName%>" name="streetName" required>
+                            <input type="text" class="form-control" id="street" value="<%=val.streetName%>" name="streetName" >
+                            <span id="erroStreet" style="color: red;" ></span>
                         </div>
                         <div class="form-group">
                             <label for="town">Town:</label>
-                            <input type="text" class="form-control" id="town" value="<%=val.town%>" name="town" required>
+                            <input type="text" class="form-control" id="town" value="<%=val.town%>" name="town" >
+                            <span id="erroTown" style="color: re;" ></span>
                         </div>
                         <div class="form-group">
                             <label for="state">State/Province:</label>
-                            <input type="text" class="form-control" id="state" value="<%=val.state%>" name="state" required>
+                            <input type="text" class="form-control" id="state" value="<%=val.state%>" name="state" >
+                            <span id="errorState" style="color: red;"></span>
                         </div>
                         <div class="form-group">
                             <label for="postalCode">Post Code:</label>
-                            <input type="text" class="form-control" id="postalCode" value="<%=val.postCode%>" name="postCode" required>
+                            <input type="text" class="form-control" id="postalCode" value="<%=val.postCode%>" name="postCode" >
+                            <span id="errorPostCode" style="color: red;" ></span>
                         </div>
                         <div class="form-group">
                             <label for="country">Country:</label>
-                            <select class="form-control" id="country" name="country" required>
+                            <select class="form-control" id="country" name="country" >
                                 <option value="">Select a country</option>
                                 <option value="USA">United States</option>
                                 <option value="CAN">Canada</option>
@@ -100,6 +108,7 @@
                                 <option value="ZAF">South Africa</option>
                                 <!-- Add more countries as needed -->
                             </select>
+                            <span id="errorCountry" style="color: red;"></span>
                         </div>
                         <div class="form-group btn-block">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -112,6 +121,82 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const addForm=document.getElementById('addressForm');
+        addForm.addEventListener('submit',(event)=>{
+            event.preventDefault();
+            console.log('enter the address form')
+            
+            const name=document.getElementById('firstName').value
+            const lastName=document.getElementById('lastName').value
+            const phone=document.getElementById('phone').value
+            const email=document.getElementById('email').value
+            const street=document.getElementById('street').value
+            const town=document.getElementById('town').value
+            const state=document.getElementById('state').value
+            const postalCode=document.getElementById('postalCode').value
+            const country=document.getElementById('country').value
+
+
+            const errorFirstName=document.getElementById('errorFirstName')
+            const errorLastName=document.getElementById('errorLastName')
+            const errorMobil=document.getElementById('errorMobil')
+            const errorEmail=document.getElementById('errorEmail')
+            const erroStreet=document.getElementById('erroStreet')
+            const erroTown=document.getElementById('erroTown')
+            const errorState=document.getElementById('errorState')
+            const errorPostCode=document.getElementById('errorPostCode')
+            const errorcountry=document.getElementById('country')
+            const errorCountry=document.getElementById('errorCountry')
+
+            errorFirstName.innerHTML='';
+            errorLastName.innerHTML='';
+            errorMobil.innerHTML='';
+            errorEmail.innerHTML='';
+            erroStreet.innerHTML='';
+            erroTown.innerHTML='';
+            errorState.innerHTML='';
+            errorPostCode.innerHTML='';
+
+
+            if(name.trim()==''){
+                console.log('enter the Firstname')
+                errorFirstName.innerHTML='please enter the Firstname';
+                return false;
+            }
+            if(lastName.trim()==''){
+                errorLastName.innerHTML='please enter the Lastname';
+                return false;
+            }
+            const phoneRegex = /^\d{10}$/;
+            if (!phoneRegex.test(phone)) {
+                errorMobil.innerHTML = 'Please enter a valid 10-digit mobile number';
+                return false
+            }
+
+            const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (!emailRegex.test(email)) {
+                errorEmail.innerHTML = 'Please enter a valid email';
+                return false
+            }
+
+            if(street.trim()==''){
+                erroStreet.innerHTML='please enter the street name'
+                return false
+            }
+            if(town.trim()==''){
+                erroTown.innerHTML='please enter the town name'
+                return false
+            }
+            if(state.trim()==''){
+                errorState.innerHTML='please enter the state name'
+                return false
+            }
+            addForm.submit();
+        })
+
+    </script>
   
 </body>
 </html>
