@@ -118,11 +118,12 @@ const loadShope = async (req, res) => {
 
 const filterShope = async (req, res) => {
     try {
+        const Id = req.query.id
+
         console.log('filtershope22222222222222222222222222');
         const catData = await cat.find({ is_Listed: true })
-        const id = req.query.id
-        console.log(id, ' it is id of categoryu')
-        let cData = await product.find({ category: id }).populate('category')
+        console.log(Id, ' it is Id of categoryu')
+        let cData = await product.find({ category: Id }).populate('category')
         console.log('CData', cData);
         let producters = cData.filter((value) => {
             return value.category.is_Listed == true
@@ -147,9 +148,9 @@ const filterShope = async (req, res) => {
 
             const paginatedProducts = producters.slice(start, end);
 
-            res.render('user/Shope', { catData, producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData,Id:'',searchString:'' })
+            res.render('user/shope',{ catData, producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData,Id:'',searchString:'' })
         } else {
-            res.render('user/shope', { producters: [], catData: catData,Id:'',searchString:'',que: que });
+            res.render('user/shope',{ producters: [], catData: catData,Id:'',searchString:'',que: que });
 
         }
     } catch (error) {
@@ -247,7 +248,7 @@ const searchProducts = async (req, res) => {
             searchQuery.$or.push({ price: { $lte: searchNumber } });
         }
 
-        console.log(searchQuery);
+        console.log('searchQuery',searchQuery);
 
         let products = await product.find(searchQuery).sort({ price: -1 }).populate('category')
         // console.log(products);
@@ -524,7 +525,7 @@ const verifyresendOtp = async (req, res) => {
             text: `Your OTP for email verification${genOtp}`
         }
         await transporter.sendMail(mailOptions)
-
+ console.log('enter the redirect otp');
         res.redirect(`/otp?email=${email}`)
     } catch (error) {
         // res.status(404).json({ err:error.message})

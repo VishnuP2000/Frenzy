@@ -88,39 +88,50 @@
             <button onclick="window.location.href='/resend?email=<%= email %>'" id="resendLink" class="btn btn-link disabled" disabled>Resend OTP</button>
         </div>
     </div>
-
     <script>
-        // Countdown timer setup
         var timerElement = document.getElementById('timer');
         var resendLink = document.getElementById('resendLink');
-        var countdown = 60; // 60 seconds countdown
         var countdownInterval;
         var resendDisabled = true;
-
+        var initialCountdown = 60; // Initial countdown in seconds
+    
+        // Function to start or continue the timer
         function startTimer() {
-            countdownInterval = setInterval(function() {
+            var countdown = getCookie('countdown') || initialCountdown;
+            if (countdown <= 0) {
+                enableResendLink();
+                return;
+            }
+    
+            countdownInterval = setInterval(function () {
                 if (countdown > 0) {
+                    setCookie('countdown', countdown, 1); // Store remaining countdown in a cookie
                     timerElement.textContent = countdownFormat(countdown);
                     countdown--;
                 } else {
                     clearInterval(countdownInterval);
                     timerElement.textContent = '';
-                    resendDisabled = false;
-                    resendLink.classList.remove('disabled');
-                    resendLink.disabled = false;
+                    setCookie('countdown', 0, 1); // Reset the cookie
+                    enableResendLink();
                 }
             }, 1000);
         }
-
+    
+        // Format countdown into minutes and seconds
         function countdownFormat(seconds) {
             var min = Math.floor(seconds / 60);
             var sec = seconds % 60;
             return min + ':' + (sec < 10 ? '0' : '') + sec;
         }
-
-        startTimer();
-
-        // Example of setting OTP in cookie
+    
+        // Enable the resend link when the timer ends
+        function enableResendLink() {
+            resendDisabled = false;
+            resendLink.classList.remove('disabled');
+            resendLink.disabled = false;
+        }
+    
+        // Set cookie with expiration days
         function setCookie(name, value, days) {
             var expires = '';
             if (days) {
@@ -130,9 +141,31 @@
             }
             document.cookie = name + '=' + (value || '') + expires + '; path=/';
         }
-
+    
+        // Get cookie value by name
+        function getCookie(name) {
+            var nameEQ = name + '=';
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+    
+        // Clear cookie by setting expiration in the past
+        function clearCookie(name) {
+            document.cookie = name + '=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+        }
+    
+        // Start the timer on page load
+        startTimer();
+    
+        // Example of setting OTP in cookie
         var otp = '1234'; // Replace with actual OTP value
-        setCookie('otp', otp, 1); // Store OTP in cookie for 1 day (adjust as needed)
+        setCookie('otp', otp, 1); // Store OTP in cookie for 1 day
     </script>
+    
 </body>
 </html>

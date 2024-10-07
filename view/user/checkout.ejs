@@ -760,7 +760,13 @@
             const finalResult=document.getElementById('totalResult').innerHTML=final
             const inputId=document.getElementById('hiddenId').value=id
             console.log('inputId',inputId)
-        
+            
+            Swal.fire({
+                                    title: 'success',
+                                    text: respons.data.error,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                })
             
           
         }

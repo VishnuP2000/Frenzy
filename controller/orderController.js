@@ -250,7 +250,7 @@ const verifyCancelProducts = async (req, res) => {
             console.log('etnere the if result')
             const orderedProduct = result.orderdProducts.find(product => product._id.toString() === productId);
             if (orderedProduct && (result.paymentMethode === 'wallet' || result.paymentMethode === 'online')) {
-                const amount = orderedProduct.price;
+                const amount = orderedProduct.totalPrice;
                 
                 console.log('etnere the amount',amount);
                 
