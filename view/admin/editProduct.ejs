@@ -45,19 +45,29 @@
         <input type="text" class="form-control" id="quantity" value="<%=editData.description %>" name="description" placeholder="Enter Description">
       </div>
       <div class="form-group">
-        
-        <% editData.images.forEach((img,data)=>{ %>
-          
-          <img src="/userImages/<%=img%>" alt="No Images" style="width: 100px;">
-        
-          <input type="file" class="form-control-file" id="images"  name="images" accept="image/* " multiple>
-          
-          <input type="hidden" name="existingImages" value="<%=img %>"> 
+        <% editData.images.forEach((img, index) => { %>
+          <div class="image-wrapper" style="display: flex; align-items: center; margin-bottom: 10px;">
+            <img src="/userImages/<%= img %>" alt="Image" style="width: 100px; margin-right: 10px;">
             
-        <% })  %> 
+            <!-- Hidden input to keep track of existing images -->
+            <input type="hidden" name="existingImages" value="<%= img %>">
+
+            
+            <!-- Delete button -->
+            <button type="button" class="btn btn-danger delete-image-btn" data-image="<%= img %>" data-prod-id="<%= idEdit %>">
+              Delete
+            </button>
+          </div>
+          
+          
+          <% }) %>
+        </div>
         
+        <div class="form-group">
+          <label for="productUploadImage">Images:</label>
+          <input type="file" id="images" name="images" class="form-control" multiple>
+          <small id="imageError" class="form-text text-danger"></small>
       </div>
-      
       
       <button type="submit" class="btn " style="background-color: #4CAF50;">Save</button>
       <button type="button" class="btn btn-secondary" onclick="window.location.href='/products'">Cancel</button>
@@ -81,5 +91,34 @@ h1 {
   color: #333;
 }
 </style>
+<script>
+  document.querySelectorAll('.delete-image-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const image = this.getAttribute('data-image');
+      const prodId = this.getAttribute('data-prod-id');
+
+      // Confirm the deletion
+      if (confirm('Are you sure you want to delete this image?')) {
+        // Send delete request using Fetch API
+        fetch(`/admin/deleteImage?prodId=${prodId}&image=${image}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Reload the page or remove the image from the UI
+            window.location.reload();  // Optionally, remove the image without reloading the page
+          } else {
+            alert('Failed to delete the image');
+          }
+        })
+        .catch(err => console.error('Error:', err));
+      }
+    });
+  });
+</script>
 </body>
 </html>

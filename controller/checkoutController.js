@@ -17,6 +17,7 @@ const razPay=require('razorpay')
 const orders=require('../model/orderModel')
 
 
+
 const Loadcheckout = async (req, res) => {
     try {
         // console.log('enter the LoadCheckout')
@@ -73,6 +74,21 @@ const Loadcheckout = async (req, res) => {
         console.log('errror')
     }
 }
+
+// const DataCoupon=async(req,res)=>{
+//     try {
+//         console.log('enter the DataCoupon')
+//         const {discount,id}=req.body
+//         console.log('discount',discount)
+//         console.log('id',id)
+//        const claimedData=await coupon.find({is_claimed:true})
+//        if(claimedData){
+        
+//        }
+//     } catch (error) {
+        
+//     }
+// }
 
 const LoadSuccessOrder = async (req, res) => {
     try {

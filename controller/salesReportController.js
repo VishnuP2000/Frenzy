@@ -98,14 +98,10 @@ const sortReport = async (req, res) => {
 };
 const searchWithDate = async (req, res) => {
     try {
-        console.count("searchwithdate");
-        const searchDate=req.body?.searchDate;  
-        console.log("searchDate : ",searchDate);
+        const searchDate = req.body?.searchDate || req.query?.searchDate;
+        console.log("searchDate:", searchDate);
 
-       
         let searchedDate = searchDate ? new Date(searchDate) : null;
-        console.log('enter the searchDate'+searchDate)
-
         let report = [];
         if (searchedDate) {
             report = await orderList.find({ purchaseTime: { $gt: searchedDate } })
@@ -124,14 +120,13 @@ const searchWithDate = async (req, res) => {
             let end = page * limit;
             let users = report.slice(start, end);
 
-            // Pass searchDate to the view, ensure it is not undefined
             res.render('salesReport', {
                 result: users,
                 totalPages: totalPages,
                 totalUsers: totalUsers,
                 currentPage: page,
-                searchDate: searchDate || '' ,// Make sure searchDate is a string, not undefined
-                sortData:""
+                searchDate: searchDate || '',  // Make sure searchDate is passed back to the view
+                sortData: ""
             });
         }
     } catch (error) {
@@ -152,7 +147,7 @@ const searchWithDateGet = async (req, res) => {
         if (searchedDate) {
             report = await orderList.find({ purchaseTime: { $gt: searchedDate } })
                                     .populate('orderdProducts.product')
-                                    .sort({ purchaseTime: -1 });
+                                    .sort({ purchaseTime: 1 });
         }
 
         let page = parseInt(req.query.page) || 1;

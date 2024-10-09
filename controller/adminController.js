@@ -6,6 +6,8 @@ const product = require('../model/product_Model')
 const order=require('../model/orderModel')
 const path=require('path')
 const multer=require('multer')
+const fs = require('fs');
+
 
 // multer
 const storage = multer.diskStorage({
@@ -554,7 +556,41 @@ const updateProduct = async (req, res) => {
     }
  };
 
-
+ 
+const deleteProductImage = async (req, res) => {
+    try {
+      const { prodId, image } = req.query;
+      
+      // Find the product by ID
+      const product = await sProduct.findById(prodId);
+      if (!product) {
+        return res.status(404).json({ success: false, message: 'Product not found' });
+      }
+  
+      // Remove the image from the product's images array
+      const updatedImages = product.images.filter(img => img !== image);
+      product.images = updatedImages;
+  
+      // Save the updated product
+      await product.save();
+  
+      // Remove the image file from the file system (optional)
+      const imagePath = path.join(__dirname, '..', 'public', 'userImages', image);
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.error('Error deleting image file:', err);
+        } else {
+          console.log('Image file deleted:', imagePath);
+        }
+      });
+  
+      // Send success response
+      res.json({ success: true, message: 'Image deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  };
   
 
 const deletProduct=async(req,res)=>{
@@ -635,7 +671,7 @@ module.exports={
     ProductEdit,
     updateProduct,
     deletProduct,
-    
+    deleteProductImage,
     PoductStatus,
     detailAdmin,
     changeStatus

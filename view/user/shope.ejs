@@ -83,20 +83,19 @@
                                 
                                     <li>
                                         
-                                           <form action="/sort" method="get">
-                                            <div class="dropdown show" >
+                                        <form action="/sort" method="get">
+                                            <div class="dropdown show">
                                                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                  sort
+                                                    Sort
                                                 </a>
-                                              
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    <a class="dropdown-item" href="/sort?id=High to low">High to low</a>
-                                                    <a class="dropdown-item" href="/sort?id=Low to high">Low to high</a>
-                                                    <a class="dropdown-item" href="/sort?id=aA - zZ">aA - zZ</a>
-                                                    <a class="dropdown-item" href="/sort?id=zZ - aA">zZ - aA</a>
-                                                  </div>
-                                              </div>    
-                                           </form>
+                                                    <a class="dropdown-item" href="/sort?id=High to low&searchName=<%=searchString || '' %>">High to low</a>
+                                                    <a class="dropdown-item" href="/sort?id=Low to high&searchName=<%=searchString || '' %>">Low to high</a>
+                                                    <a class="dropdown-item" href="/sort?id=aA - zZ&searchName=<%=searchString || '' %>">aA - zZ</a>
+                                                    <a class="dropdown-item" href="/sort?id=zZ - aA&searchName=<%=searchString || '' %>">zZ - aA</a>
+                                                </div>
+                                            </div>
+                                        </form>
                                        
                                      </li>
                               
@@ -108,25 +107,17 @@
                                     <!-- <a href="" class="sf-with" style="margin-left: 612px;">Filter</a> -->
                                    
                                     <div class="dropdown">
-                                       
                                         <button class="btn btn-secondary dropdown-toggle" style="margin-left: 30px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         Filter
+                                            Filter
                                         </button>
-                                        <% if(catData.length>0){ %>
-                                            
+                                        <% if(catData.length > 0){ %>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <% catData.forEach((res)=>{ %>
-                                                    <a class="dropdown-item" href="/filterShope?id=<%=res._id%>"><%=res.name %></a>
-                                                     
-                                                    
-                                                   
-                                                    <%  }) %>
-                                                  </div>
-
-
-                                     <%   } %>
-                                       
-                                      </div>
+                                                <% catData.forEach((res) => { %>
+                                                    <a class="dropdown-item" href="/filterShope?id=<%=res._id%>&searchName=<%=searchString || '' %>"><%=res.name %></a>
+                                                <% }) %>
+                                            </div>
+                                        <% } %>
+                                    </div>
 
                                    
                                 </li>

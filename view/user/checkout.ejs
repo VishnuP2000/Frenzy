@@ -748,7 +748,7 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script>
-        function couponButton(coupon,discount,id){
+         function couponButton(coupon,discount,id){
             console.log('coupon',coupon,'discount',discount,'id',id)
             const Result=document.getElementById('ResultTotal').textContent
             console.log('inputId',typeof id)
@@ -760,13 +760,7 @@
             const finalResult=document.getElementById('totalResult').innerHTML=final
             const inputId=document.getElementById('hiddenId').value=id
             console.log('inputId',inputId)
-            
-            Swal.fire({
-                                    title: 'success',
-                                    text: respons.data.error,
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                })
+        
             
           
         }

@@ -99,6 +99,7 @@
         <h2 class="text-center frenzy-title" style="font-family: cursive;">FRENZY</h2>
        </div>
         <% console.log(' invoice head') %>
+        <% let subtotal=0 %>
         <%if(invoiceData.length>0){%>
             
            <% console.log('reach the invoice',invoiceData) %>
@@ -164,6 +165,7 @@
                                 <td>₹<%=Math.floor( DataInvoice.orderdProducts[0].price  )  %></td>
                                 <td>₹<%=Math.floor(DataInvoice.orderdProducts[0].product.finalPrice*DataInvoice.orderdProducts[0].quantity )  %></td>
                                 
+                                <% subtotal+=DataInvoice.orderdProducts.totalPrice%>
                                 
                             </tr>
                           
@@ -175,33 +177,57 @@
                         <% } %>
                     </tbody>
                 </table>
-            
-
                 <div class="row">
                     <div class="col-md-6 offset-md-6 invoice-summary">
-                        <h5 style="margin-left: 123px;font-family: system-ui;">Summary</h5>
-                        <table class="table">
-                            <tbody style="background-color: silver;">
-                                <tr>
-                                    <td>Subtotal</td>
-                                    <td class="text-end">₹  <%=Math.floor(DataInvoice.subTotal )-50%>
-                                       
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping</td>
-                                    <td class="text-end">₹ 50</td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><strong>Total</strong></td>
-                                    
-                                    <td class="text-end"><strong>₹  <%=Math.floor(DataInvoice.subTotal )%></strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        <h5 style="margin-left: 123px;font-family: system-ui;"></h5>
+                        
+                <table class="table">
+                    <tbody style="background-color: silver;">
+                <tr>
+                 
+                    <td>coupon</td>
+                    <td class="text-end">
+                        <!-- ₹  <%=DataInvoice.coupon %> -->
+                         <% let totalCoupon=0 %>
+                        <%totalCoupon= (DataInvoice.coupon / 100) * DataInvoice.subTotal?(DataInvoice.coupon / 100) * DataInvoice.subTotal:0 %>
+                        ₹<%=totalCoupon  %>
+                        
+                       
+                    </td>
+                    
+                 
+                   
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+            
+<div class="row">
+    <div class="col-md-6 offset-md-6 invoice-summary">
+        <h5 style="margin-left: 123px;font-family: system-ui;">Summary</h5>
+        <table class="table">
+            <tbody style="background-color: silver;">
+                <tr>
+                    <td>Subtotal</td>
+                    <td class="text-end">₹  <%=Math.floor(DataInvoice.subTotal )-50%>
+                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>Shipping</td>
+                    <td class="text-end">₹ 50</td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Total</strong></td>
+                    
+                    <td class="text-end"><strong>₹  <%=Math.floor(DataInvoice.subTotal )%></strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
                 
             </div>
 

@@ -109,14 +109,11 @@ const verifyOrderPage = async (req, res) => {
             
             const couponSelect=await coupon.findOneAndUpdate({_id:couponId},{$set:{is_claimed:true}})
             console.log('eneter the couponselect',couponSelect)
-            if(couponSelect.length){
-
-            }
+         
             const subTotal=parseInt(subtotal-((subtotal*couponSelect.discount)/100))
             console.log('subtotal',subTotal)
            
-
-            console.log('reach the userId')
+           
             if (AddressData) {
                 const newOrder = new Order({
                     userId,
@@ -126,6 +123,7 @@ const verifyOrderPage = async (req, res) => {
                     orderdProducts: orderedProducts,
                     purchaseData: new Date().toDateString(),
                     paymentMethode: method,
+                    coupon:couponSelect.discount,
                     subTotal: subTotal,
                     purchaseTime:new Date(),
                 })

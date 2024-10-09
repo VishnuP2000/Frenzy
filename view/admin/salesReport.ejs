@@ -163,28 +163,27 @@
                         </div>
                     </div>
                     
-                    
-                    <div class="pagination-container text-center"  >
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-start" style="margin-left: 419px;">
-                            <% if (currentPage > 1) { %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%=currentPage - 1 %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>">&laquo;</a>
-                                </li>
-                            <% } %>
-                            <% for (let i = 1; i <= totalPages; i++) { %>
-                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                    <a class="page-link" href="?page=<%= i %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>"><%= i %></a>
-                                </li>
-                            <% } %>
-                            <% if (currentPage < totalPages) { %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%=currentPage + 1 %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>">&raquo;</a>
-                                </li>
-                            <% } %>
-                        </ul>
-                    </nav>
-                </div>
+                    <div class="pagination-container text-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-start" style="margin-left: 419px;">
+                                <% if (currentPage > 1) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%=currentPage - 1 %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>">&laquo;</a>
+                                    </li>
+                                <% } %>
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= i %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>"><%= i %></a>
+                                    </li>
+                                <% } %>
+                                <% if (currentPage < totalPages) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%=currentPage + 1 %>&searchDate=<%=searchDate || '' %>&selectMenu=<%=sortData || '' %>">&raquo;</a>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </nav>
+                    </div>
               
                 
 

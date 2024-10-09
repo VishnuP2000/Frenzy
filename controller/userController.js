@@ -118,106 +118,128 @@ const loadShope = async (req, res) => {
 
 const filterShope = async (req, res) => {
     try {
-        const Id = req.query.id
+        const Id = req.query.id; // Category ID
+        const NameSearch = req.query.searchName; // Search string
+        let producters = [];
+        
+        // Build search query
+        let searchQuery = {};
+        if (NameSearch) {
+            let searchNumber = parseInt(NameSearch, 10);
+            searchQuery = {
+                $or: [
+                    { name: { $regex: new RegExp(NameSearch, 'i') } }
+                ]
+            };
 
-        console.log('filtershope22222222222222222222222222');
-        const catData = await cat.find({ is_Listed: true })
-        console.log(Id, ' it is Id of categoryu')
-        let cData = await product.find({ category: Id }).populate('category')
-        console.log('CData', cData);
-        let producters = cData.filter((value) => {
-            return value.category.is_Listed == true
-
-
-        })
-        console.log('producters', producters);
-        console.log('catData', catData);
-        if (producters) {
-
-
-            const que = parseInt(req.query.page) || 1;
-            const limit = 7;
-            // const usersDetails = await product.find({}).sort({ Date: -1 })
-
-            const totalUsers = producters.length;
-            const totalPages = Math.ceil(totalUsers / limit);
-
-            const start = (que - 1) * limit;
-            const end = que * limit;
-            // let users = usersDetails.slice(start, end)
-
-            const paginatedProducts = producters.slice(start, end);
-
-            res.render('user/shope',{ catData, producters: paginatedProducts, que: que, totalUsers: totalUsers, totalPages: totalPages, catData: catData,Id:'',searchString:'' })
-        } else {
-            res.render('user/shope',{ producters: [], catData: catData,Id:'',searchString:'',que: que });
-
+            if (!isNaN(searchNumber)) {
+                searchQuery.$or.push({ price: { $lte: searchNumber } });
+            }
         }
+
+        // Get products based on search query
+        let products = await product.find(searchQuery).sort({ price: -1 }).populate('category');
+        
+        // Filter products by category and ensure category is listed
+        if (Id) {
+            producters = products.filter(prod => prod.category && prod.category._id == Id && prod.category.is_Listed);
+        } else {
+            producters = products; // No category filter, return all
+        }
+
+        // Fetch categories for the dropdown
+        const catData = await cat.find({ is_Listed: true });
+
+        // Pagination logic
+        const que = parseInt(req.query.page) || 1;
+        const limit = 7;
+        const totalUsers = producters.length;
+        const totalPages = Math.ceil(totalUsers / limit);
+        const start = (que - 1) * limit;
+        const end = que * limit;
+        const paginatedProducts = producters.slice(start, end);
+
+        res.render('user/shope', {
+            catData,
+            producters: paginatedProducts,
+            que: que,
+            totalUsers: totalUsers,
+            totalPages: totalPages,
+            Id: Id || '', // Ensure category ID persists
+            searchString: NameSearch || '' // Ensure search string persists
+        });
     } catch (error) {
-        console.log('error', error)
+        console.log('error', error);
+        res.render('user/shope', { producters: [], catData: [], Id: '', searchString: '', que: 1, totalPages: 0 });
     }
-}
+};
 
 const shopeSort = async (req, res) => {
     try {
-        console.log('enter the varifyHighToLow');
-        let producter;
-        const Id = req.query.id;
-        console.log('enter the Id', Id);
+        // Extract search and sorting parameters from query
+        const namesearch = req.query.searchName || '';
+        const sortId = req.query.id; // Sorting criterion (e.g., "High to low", "aA - zZ")
+        console.log('namesearch:', namesearch);
+        console.log('sortId:', sortId);
 
-        // Sorting logic based on the value of Id
-        if (Id == 'High to low') {
-            producter = await product.find({ is_blocked: false }).sort({ price: -1 });
-        } else if (Id == 'Low to high') {
-            producter = await product.find({ is_blocked: false }).sort({ price: 1 });
-        } else if (Id == 'aA - zZ') {
-            producter = await product.find({ is_blocked: false }).sort({ name: 1 });
-        } else if (Id == 'zZ - aA') {
-            producter = await product.find({ is_blocked: false }).sort({ name: -1 });
+        // Build the search query based on the search string (namesearch)
+        let searchQuery = { is_blocked: false }; // Default filter to exclude blocked products
+        if (namesearch) {
+            searchQuery.$or = [
+                { name: { $regex: new RegExp(namesearch, 'i') } } // Search products by name (case-insensitive)
+            ];
         }
 
-        console.log('producter', producter);
+        // Determine the sorting option based on the selected criterion (sortId)
+        let sortOptions = {};
+        if (sortId === 'High to low') {
+            sortOptions.price = -1; // Sort by price descending
+        } else if (sortId === 'Low to high') {
+            sortOptions.price = 1;  // Sort by price ascending
+        } else if (sortId === 'aA - zZ') {
+            sortOptions.name = 1;   // Sort alphabetically (A-Z)
+        } else if (sortId === 'zZ - aA') {
+            sortOptions.name = -1;  // Sort alphabetically (Z-A)
+        }
 
-        // Fetch category data
+        // Fetch products based on the search query and apply sorting
+        let products = await product.find(searchQuery).sort(sortOptions).populate('category');
+        console.log('Found products:', products.length);
+
+        // Filter products to ensure the category is listed and not blocked
+        let producter = products.filter(prod => prod.category && prod.category.is_Listed);
+
+        // Fetch category data for displaying in dropdown
         const catData = await cat.find({ is_Listed: true });
-        console.log('hightolowData');
 
-        // Check if producter is defined and not empty
-        if (producter && producter.length > 0) {
-            // Define que for pagination
-            const que = parseInt(req.query.page) || 1;
-            const limit = 7;
-            const start = (que - 1) * limit;
-            const totalPages = Math.ceil(producter.length / limit);
-            const end = que * limit;
-            const paginatedProducts = producter.slice(start, end);
+        // Paginate the results
+        const que = parseInt(req.query.page) || 1;
+        const limit = 7;
+        const totalProducts = producter.length;
+        const totalPages = Math.ceil(totalProducts / limit);
+        const start = (que - 1) * limit;
+        const paginatedProducts = producter.slice(start, start + limit);
 
-            console.log('enter product');
-            console.log('stand in near the shop in hightolow');
+        // Render the result with the searched and sorted products
+        res.render('user/shope', {
+            producters: paginatedProducts,
+            totalPages: totalPages,
+            catData: catData,
+            que: que,
+            Id: sortId || '',
+            searchString: namesearch
+        });
 
-            res.render('user/shope', {
-                producters: paginatedProducts,
-                totalPages: totalPages,
-                catData: catData,
-                que: que,
-                Id: Id || '',
-                searchString: ''
-            });
-        } else {
-            // Handle the case where no products are found
-            console.log('No products found or producter is undefined');
-            res.render('user/shope', {
-                producters: [],
-                totalPages: 0,
-                catData: catData,
-                que: 1,
-                Id: Id || '',
-                searchString: ''
-            });
-        }
-        
     } catch (error) {
-        console.log('error', error);
+        console.log('Error in shopeSort:', error);
+        res.render('user/shope', {
+            producters: [],
+            totalPages: 0,
+            catData: [],
+            que: 1,
+            Id: '',
+            searchString: ''
+        });
     }
 };
 
@@ -227,6 +249,7 @@ const searchProducts = async (req, res) => {
         let page = 0
         let searchString = req.query.search
         console.log('enter the searchString',searchString)
+        console.log('enter the searchProcts ', searchString)
         const catData = await cat.find({ is_Listed: true })
 
         console.log('enter the searchProcts catData', catData)

@@ -85,6 +85,7 @@ user_Rout.patch('/ProductQuantity',userAuth.isLogin, cartController.productQuant
 user_Rout.post('/removeCart',userAuth.isLogin, cartController.removeCart)
 
 user_Rout.get('/checkout',userAuth.isLogin, checkoutController.Loadcheckout)
+// user_Rout.post('/couponData',userAuth.isLogin, checkoutController.DataCoupon)
 user_Rout.get('/successOrder',userAuth.isLogin, checkoutController.LoadSuccessOrder)
 user_Rout.post('/razor',userAuth.isLogin, checkoutController.razorpayRes)
 user_Rout.post('/verifyPayment',userAuth.isLogin, checkoutController.verifyPayment)
