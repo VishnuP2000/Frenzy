@@ -42,6 +42,7 @@ app.use('/', userRoute);
 app.use('/admin', adminRoute);
 
 // Server
-app.listen(3002, () => {
-    console.log('Server started on port 3002');
+const port=process.env.port || 3000;
+app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
 });
