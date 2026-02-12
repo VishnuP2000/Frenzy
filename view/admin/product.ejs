@@ -43,9 +43,9 @@ width: 421px; /* or any other larger value */
                     </thead>
                     <tbody>
                         <tr>
-                            <% if(productDetails.length >0){ %>
+                            
+                            <% if(productDetails && productDetails.length > 0){ %>
                                 <% productDetails.forEach((val,i)=>{%>
-
                             <td> <%= val.name  %></td>
                             <td><%= val.category ? val.category.name : 'No Category' %></td>                         
                             <td><%= val.price  %></td>
@@ -96,7 +96,9 @@ width: 421px; /* or any other larger value */
                     <% }) %>
 
                     <%  } else{%>
-                        <p>NO Products</p>
+                          <tr>
+    <td colspan="8">No Products</td>
+  </tr>
                     <%  }%>
                 </table>
                 <!-- card end// -->

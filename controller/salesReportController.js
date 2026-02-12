@@ -38,7 +38,14 @@ const salesReport = async (req, res) => {
             sortData:""
         })
     }else{
-        res.render('salesReport',{users:[]})
+                res.render('salesReport',{
+            result:[],
+            totalPages:totalPages,
+            totalUsers:totalUsers,
+            currentPage:page,
+            searchDate:"",
+            sortData:""
+        })
     }
     } catch (error) {
         console.log('Error in salesReport:', error);

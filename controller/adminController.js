@@ -170,13 +170,8 @@ password:2255
 const verifyloagin=async (req,res)=>{
     try {
         console.log('what happening here');
-        // const admindetail=await User.find({is_admin:true})
         const email=req.body.email
         const password=req.body.password
-        
-        // const emailMatch=email==admindetail.email
-        // const passwordMatch=password==admindetail.password
-        // console.log(email,password,emailMatch,passwordMatch)
 
         if(email==admindetail.email&&password==admindetail.password){
             req.session.admin=admindetail
@@ -392,7 +387,13 @@ const LoadProduct=async (req,res)=>{
         })
 
         }else{
-            res.render('product',{users:[]})
+            console.log('product else case')
+                res.render('product',{
+        productDetails: [],
+        totalPages: 0,
+        totalUsers: 0,
+        currentPage: 1
+    })
         }
 
     } catch (error) {
