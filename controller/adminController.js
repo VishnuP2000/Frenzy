@@ -1,6 +1,6 @@
 const User=require('../model/userModel')
 const sProduct=require('../model/product_Model')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const category=require('../model/categoryModel')
 const product = require('../model/product_Model')
 const order=require('../model/orderModel')
