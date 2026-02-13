@@ -128,7 +128,7 @@
                                         
                                     
                                         <figure class="product-main-image">
-                                            <img id="product-zoom" src="/userImages/<%=prod.images[0]%>" data-zoom-image="/userImages/<%=prod.images[0]%>" alt="product image">                                           
+                                            <img id="product-zoom" src="<%= prod.images[0] && prod.images[0].startsWith('http') ? prod.images[0] : ('/userImages/' + prod.images[0]) %>" data-zoom-image="<%= prod.images[0] && prod.images[0].startsWith('http') ? prod.images[0] : ('/userImages/' + prod.images[0]) %>" alt="product image">                                           
                                             <% if(prod.quantity <= 0){ %>
                                                 <span class="product-label label-sale">Outof stock</span>
                                             <% } %>
@@ -147,8 +147,8 @@
                                         <div id="product-zoom-gallery" class="product-image-gallery">
                                             <div class="image-container">
                                             <% prod.images.forEach((val)=>{ %>
-                                            <a class="product-gallery-item " href="#" data-image="/userImages/<%=val%>" data-zoom-image="/userImages/<%=val%>">
-                                                <img src="/userImages/<%=val%>" alt="product side">
+                                            <a class="product-gallery-item " href="#" data-image="<%= val && val.startsWith('http') ? val : ('/userImages/' + val) %>" data-zoom-image="<%= val && val.startsWith('http') ? val : ('/userImages/' + val) %>">
+                                                <img src="<%= val && val.startsWith('http') ? val : ('/userImages/' + val) %>" alt="product side">
                                             </a>
                                             <%  }) %>
                                           </div>

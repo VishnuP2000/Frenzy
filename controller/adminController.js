@@ -1,27 +1,28 @@
-const User=require('../model/userModel')
-const sProduct=require('../model/product_Model')
-const bcrypt = require('bcryptjs')
-const category=require('../model/categoryModel')
-const product = require('../model/product_Model')
-const order=require('../model/orderModel')
-const path=require('path')
-const multer=require('multer')
+const User = require('../model/userModel');
+const sProduct = require('../model/product_Model');
+const bcrypt = require('bcryptjs');
+const category = require('../model/categoryModel');
+const product = require('../model/product_Model');
+const order = require('../model/orderModel');
+const path = require('path');
+const multer = require('multer');
 const fs = require('fs');
+const cloudinary = require('../config/cloudinary');
 
 
-// multer
+// multer (still using disk storage, but files are immediately sent to Cloudinary)
 const storage = multer.diskStorage({
-    destination: function(req,file,callback){
-        callback(null,path.join(__dirname,'../public/userImages'));
+    destination: function (req, file, callback) {
+        callback(null, path.join(__dirname, '../public/userImages'));
     },
-    filename: function(req,file,callback){
-        callback(null, Date.now()+'-'+file.originalname)
-    }
-})
+    filename: function (req, file, callback) {
+        callback(null, Date.now() + '-' + file.originalname);
+    },
+});
 
-const upload = multer({storage: storage }).fields([
-    { name: "images",maxCount: 4},
-])
+const upload = multer({ storage: storage }).fields([
+    { name: 'images', maxCount: 4 },
+]);
 
 
 
@@ -433,40 +434,67 @@ const ProductAdd=async(req,res)=>{
         const categoryData=await category.find({is_Listed:true})
         console.log('categoryData',categoryData);
         res.render('AddProduct',{category:categoryData})
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.log('product Add err',err)
     }
 }
 
 
-const ProductAdding=async(req,res)=>{
+const ProductAdding = async (req, res) => {
     try {
         console.log('this is product adding ');
-        console.log("req.files", req.files);
-        const {name,category,price,quantity,description}=req.body
-        console.log('enter the productdata',name,category,price,quantity,description)
-        const images = req.files.images.map(file => file.filename);
-        console.log('image',images)
-        const data=new product({
+        console.log('req.files', req.files);
+        const { name, category: categoryId, price, quantity, description } = req.body;
+        console.log('enter the productdata', name, categoryId, price, quantity, description);
+
+        let images = [];
+
+        if (req.files && req.files.images && Array.isArray(req.files.images)) {
+            // Upload each file from local disk (saved by multer) to Cloudinary
+            const uploadResults = await Promise.all(
+                req.files.images.map((file) =>
+                    cloudinary.uploader.upload(
+                        path.join(__dirname, '../public/userImages', file.filename),
+                        {
+                            folder: 'frenzy/products',
+                        }
+                    )
+                )
+            );
+
+            images = uploadResults.map((result) => result.secure_url);
+            console.log('Cloudinary images', images);
+
+            // Remove local files after upload
+            await Promise.all(
+                req.files.images.map((file) =>
+                    fs.promises
+                        .unlink(path.join(__dirname, '../public/userImages', file.filename))
+                        .catch((err) => {
+                            console.error('Error deleting local image file:', err);
+                        })
+                )
+            );
+        }
+
+        const data = new product({
             name,
-            category,
+            category: categoryId,
             price,
             quantity,
-           images:images,
-           description,
-            
-            is_Listed:true
-        })
-        
-        await data.save()
-        console.log('data',data);
-        res.redirect('/admin/Product')
+            images: images,
+            description,
+            is_Listed: true,
+        });
+
+        await data.save();
+        console.log('data', data);
+        res.redirect('/admin/Product');
     } catch (error) {
-        console.log(error)
-        console.log('not woeking')
-        
+        console.log('not working',error);
+        res.status(500).send('Internal Server Error');
     }
-}
+};
 
 const ProductEdit=async(req,res)=>{
     try {
@@ -512,15 +540,36 @@ const updateProduct = async (req, res) => {
       let images = [];
     
       if (req.files && req.files.images && Array.isArray(req.files.images) && req.files.images.length > 0) {
-        images = req.files.images.map(file => file.filename);
-        console.log('Uploaded images:', images);
+        // New images uploaded: send them to Cloudinary
+        const uploadResults = await Promise.all(
+            req.files.images.map((file) =>
+              cloudinary.uploader.upload(
+                path.join(__dirname, '../public/userImages', file.filename),
+                {
+                  folder: 'frenzy/products',
+                }
+              )
+            )
+        );
+        images = uploadResults.map((result) => result.secure_url);
+        console.log('Uploaded images to Cloudinary:', images);
+
+        // Remove local files after upload
+        await Promise.all(
+          req.files.images.map((file) =>
+            fs.promises
+              .unlink(path.join(__dirname, '../public/userImages', file.filename))
+              .catch((err) => {
+                console.error('Error deleting local image file:', err);
+              })
+          )
+        );
       } else {
         if (req.body.existingImages) {
           images = Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages];
         }
-        // console.log('Using existing images:', images);
       }
-      console.log('Uploaded images:', images);
+      console.log('Final images array:', images);
   
       
       const editStatus = await sProduct.findOneAndUpdate(
@@ -575,15 +624,34 @@ const deleteProductImage = async (req, res) => {
       // Save the updated product
       await product.save();
   
-      // Remove the image file from the file system (optional)
-      const imagePath = path.join(__dirname, '..', 'public', 'userImages', image);
-      fs.unlink(imagePath, (err) => {
-        if (err) {
-          console.error('Error deleting image file:', err);
-        } else {
-          console.log('Image file deleted:', imagePath);
+      // Remove the image from Cloudinary or local filesystem depending on how it was stored
+      if (image && image.startsWith('http')) {
+        // Cloudinary URL
+        try {
+          const urlParts = image.split('/');
+          const fileNameWithExt = urlParts[urlParts.length - 1];
+          const dotIndex = fileNameWithExt.lastIndexOf('.');
+          const fileNameWithoutExt = dotIndex !== -1 ? fileNameWithExt.substring(0, dotIndex) : fileNameWithExt;
+
+          // This must match the folder used during upload
+          const publicId = `frenzy/products/${fileNameWithoutExt}`;
+
+          await cloudinary.uploader.destroy(publicId);
+          console.log('Deleted image from Cloudinary:', publicId);
+        } catch (err) {
+          console.error('Error deleting image from Cloudinary:', err);
         }
-      });
+      } else {
+        // Legacy local file
+        const imagePath = path.join(__dirname, '..', 'public', 'userImages', image);
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error('Error deleting image file:', err);
+          } else {
+            console.log('Image file deleted:', imagePath);
+          }
+        });
+      }
   
       // Send success response
       res.json({ success: true, message: 'Image deleted successfully' });

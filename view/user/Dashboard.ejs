@@ -251,7 +251,7 @@
         <div class="order-list" style="border: 1px solid black;">
             <% ord.orderdProducts.forEach((product) => { %>
                 <div class="order-item" id="orderid">
-                    <img src="/userImages/<%=product.product.images[0]%>" alt="Product Image" class="product-image">    
+                    <img src="<%= product.product.images[0] && product.product.images[0].startsWith('http') ? product.product.images[0] : ('/userImages/' + product.product.images[0]) %>" alt="Product Image" class="product-image">    
                     <div class="product-info">
                         <h5><%= product.product.name %></h5>
                     </div>
@@ -318,7 +318,7 @@
                         <div class="modal-body">
                             <% ord.orderdProducts.forEach((ordData) => { %>
                                 <div style="display: flex;" class="product-info">
-                                    <img style="width: 116px;" src="/userImages/<%= ordData.product.images[0] %>" alt="">
+                                    <img style="width: 116px;" src="<%= ordData.product.images[0] && ordData.product.images[0].startsWith('http') ? ordData.product.images[0] : ('/userImages/' + ordData.product.images[0]) %>" alt="">
                                     <div>
                                         <h5><strong>Name:</strong> <%= ordData.product.name %></h5>
                                         <h5><strong>Price:</strong> <%= ordData.product.price %></h5>

@@ -138,7 +138,7 @@
 									<div class="product">
 										<figure class="product-media">
 											<a href="#">
-												<img src="/userImages/<%=datas.product.images[0]%>" alt="Product image">
+												<img src="<%= datas.product.images[0] && datas.product.images[0].startsWith('http') ? datas.product.images[0] : ('/userImages/' + datas.product.images[0]) %>" alt="Product image">
 											</a>
 										</figure>
 

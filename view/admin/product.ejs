@@ -55,7 +55,7 @@ width: 421px; /* or any other larger value */
                             <td>
                                 <% val.images.forEach((image)=>{ %>
 
-                                    <img src="/userImages/<%= image %>" class="img-sm img-thumbnail" alt="Item"style="margin-left: -9px" />
+                                    <img src="<%= image.startsWith('http') ? image : ('/userImages/' + image) %>" class="img-sm img-thumbnail" alt="Item" style="margin-left: -9px" />
                                 <% }) %>
                             </td>
                             <td><%= val.description  %></td>

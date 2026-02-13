@@ -146,7 +146,7 @@
                                                                 <div class="product">
                                                                     <figure class="product-media">
                                                                         <a href="#">
-                                                                            <img src="/userImages/<%= (cartItem.product && cartItem.product.images && cartItem.product.images.length > 0) ? cartItem.product.images[0] : 'default.jpg' %>"
+                                                                            <img src="<%= (cartItem.product && cartItem.product.images && cartItem.product.images.length > 0) ? (cartItem.product.images[0].startsWith('http') ? cartItem.product.images[0] : ('/userImages/' + cartItem.product.images[0])) : '/userImages/default.jpg' %>"
                                                                                 alt="">
                                                                         </a>
                                                                     </figure>

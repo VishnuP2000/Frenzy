@@ -54,7 +54,7 @@
     <% orderDAta.orderdProducts.forEach((data) => { %>
     <div class="product-info d-flex align-items-center">
         <div>
-            <img class="img-fluid" src="/userImages/<%= data.product.images[0] %>" alt="Product Image">
+            <img class="img-fluid" src="<%= data.product.images[0] && data.product.images[0].startsWith('http') ? data.product.images[0] : ('/userImages/' + data.product.images[0]) %>" alt="Product Image">
         </div>
         <div>
             <h5>Product Name: <%= data.product.name %></h5>

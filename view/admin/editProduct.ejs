@@ -47,7 +47,7 @@
       <div class="form-group">
         <% editData.images.forEach((img, index) => { %>
           <div class="image-wrapper" style="display: flex; align-items: center; margin-bottom: 10px;">
-            <img src="/userImages/<%= img %>" alt="Image" style="width: 100px; margin-right: 10px;">
+            <img src="<%= img.startsWith('http') ? img : ('/userImages/' + img) %>" alt="Image" style="width: 100px; margin-right: 10px;">
             
             <!-- Hidden input to keep track of existing images -->
             <input type="hidden" name="existingImages" value="<%= img %>">

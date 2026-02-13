@@ -178,8 +178,8 @@
 
                                             <figure class="product-media">
                                                 <a href="/productDetail?ProductId=<%= pr._id  %>">
-                                                    <img src="/userImages/<%=pr.images[0]  %>" alt="Product image" class="product-image">
-                                                    <img src="/userImages/<%=pr.images[0]  %>" alt="Product image" class="product-image-hover">
+                                                    <img src="<%= pr.images[0] && pr.images[0].startsWith('http') ? pr.images[0] : ('/userImages/' + pr.images[0]) %>" alt="Product image" class="product-image">
+                                                    <img src="<%= pr.images[0] && pr.images[0].startsWith('http') ? pr.images[0] : ('/userImages/' + pr.images[0]) %>" alt="Product image" class="product-image-hover">
                                                     <% if(pr.quantity <= 0){ %>
                                                         <span class="product-label label-sale" style="margin-left: -21px;">Outof stock</span>
                                                     <% } %>
