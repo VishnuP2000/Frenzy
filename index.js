@@ -5,7 +5,6 @@ const path = require('path');
 const nocache = require('nocache');
 const session = require('express-session');
 const passport = require('passport');
-const bcrypt = require('bcryptjs');
 
 const userRoute = require('./router/userRout');
 const adminRoute = require('./router/adminRout');
